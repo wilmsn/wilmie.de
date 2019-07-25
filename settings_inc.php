@@ -1,4 +1,4 @@
 <?php
-$menu_tab=" menu "; 
-$is_public=true;
+$menu_tab=" menu_intern ";
+$is_public=false;
 ?>

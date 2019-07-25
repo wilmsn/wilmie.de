@@ -1,1 +1,1 @@
-/sd_p2/web/wiki_extern/mediawiki
+/sd_p2/web/wiki_intern/mediawiki
