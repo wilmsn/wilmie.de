@@ -179,7 +179,7 @@ function set_divs() {
 	var w = screen.width;
 	if ( w > 850 ) { w = 850; } else { if ( w > 500 ) { w = w-50; } }
     switch($('#wetter_t1').html()) {
-    case "30":
+    case "1m":
 		$('#wetter_s1').css('backgroundColor', but_color1);
 		$('#wetter_s2').css('backgroundColor', but_color2);
 		$('#wetter_s3').css('backgroundColor', but_color1);
@@ -187,7 +187,7 @@ function set_divs() {
         $('#wetter_s5').css('backgroundColor', but_color1);
         $('#wetter_s6').css('backgroundColor', but_color1);
         break;
-    case "365":
+    case "1y":
 		$('#wetter_s1').css('backgroundColor', but_color1);
 		$('#wetter_s2').css('backgroundColor', but_color1);
 		$('#wetter_s3').css('backgroundColor', but_color2);
@@ -195,7 +195,7 @@ function set_divs() {
         $('#wetter_s5').css('backgroundColor', but_color1);
         $('#wetter_s6').css('backgroundColor', but_color1);
         break;
-    case "730":
+    case "2y":
 		$('#wetter_s1').css('backgroundColor', but_color1);
 		$('#wetter_s2').css('backgroundColor', but_color1);
 		$('#wetter_s3').css('backgroundColor', but_color1);
@@ -203,7 +203,7 @@ function set_divs() {
         $('#wetter_s5').css('backgroundColor', but_color1);
         $('#wetter_s6').css('backgroundColor', but_color1);
         break;
-    case "1825":
+    case "5y":
         $('#wetter_s1').css('backgroundColor', but_color1);
         $('#wetter_s2').css('backgroundColor', but_color1);
         $('#wetter_s3').css('backgroundColor', but_color1);
@@ -211,7 +211,7 @@ function set_divs() {
         $('#wetter_s5').css('backgroundColor', but_color2);
         $('#wetter_s6').css('backgroundColor', but_color1);
         break;
-    case "3650":
+    case "10y":
         $('#wetter_s1').css('backgroundColor', but_color1);
         $('#wetter_s2').css('backgroundColor', but_color1);
         $('#wetter_s3').css('backgroundColor', but_color1);
@@ -264,32 +264,32 @@ function set_divs() {
 	$('#wetter_dia').attr('src', '/content/wetter_diagramm.php?sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&range='+$('#wetter_t1').html()+'&t='+n)
 } 
 $('#zeit').css('backgroundColor', but_color1);
-$('#wetter_t1').hide().html('1');  
-$('#wetter_t2').hide().html('1a');  
-$('#wetter_t3').hide().html('1'); 
+$('#wetter_t1').hide();  
+$('#wetter_t2').hide();  
+$('#wetter_t3').hide(); 
 set_divs();
 $("#wetter_s1").click(function(){
-  $('#wetter_t1').html('1')
+  $('#wetter_t1').html('1d')
   set_divs();
 });  
 $("#wetter_s2").click(function(){
-  $('#wetter_t1').html('30')
+  $('#wetter_t1').html('1m')
   set_divs();
 });  
 $("#wetter_s3").click(function(){
-  $('#wetter_t1').html('365')
+  $('#wetter_t1').html('1y')
   set_divs();
 });  
 $("#wetter_s4").click(function(){
-  $('#wetter_t1').html('730')
+  $('#wetter_t1').html('2y')
   set_divs();
 });  
 $("#wetter_s5").click(function(){
-  $('#wetter_t1').html('1825')
+  $('#wetter_t1').html('5y')
   set_divs();
 });  
 $("#wetter_s6").click(function(){
-  $('#wetter_t1').html('3650')
+  $('#wetter_t1').html('10y')
   set_divs();
 });  
 $("#wetter1a").click(function(){
@@ -383,11 +383,11 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </div>
 <div id='wetter_s6'>Diagramm<br>10 Jahre
 </div>
-<div id='wetter_t1'>
+<div id='wetter_t1'>1d
 </div>
-<div id='wetter_t2'>
+<div id='wetter_t2'>1a
 </div>
-<div id='wetter_t3'>
+<div id='wetter_t3'>1
 </div>
 
 </center>
