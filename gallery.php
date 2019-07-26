@@ -33,7 +33,9 @@ $mygallery=$_GET["dir"];
 # No configuration below
 #
 ###################################################################################
-include "php_inc/check_mobile.php";
+$instance="intern";
+require_once ('/etc/webserver/'.$instance.'_config.php');
+require_once ($webroot."/php_inc/check_mobile.php");
 $mobile_browser=is_mobile_browser();
 $mytext = file_get_contents($basedir.$htmlprefix."/".$mygallery."/".$textfile);
 
