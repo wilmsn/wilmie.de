@@ -5,7 +5,10 @@ require_once ('jpgraph/jpgraph_utils.inc.php');
 require_once ('/sd_p2/web/var_db_sensorhub_norbert.php');
 
 function  TimeCallbackY( $aVal) {
-   return Date ('m/y',$aVal);
+   return Date ('Y',$aVal);
+}
+function  TimeCallbackYM( $aVal) {
+   return Date ('y/m',$aVal);
 }
 function  TimeCallbackM( $aVal) {
    return Date ('d.m',$aVal);
@@ -167,28 +170,28 @@ $graph->xaxis->SetColor('black','black');
 $graph->xgrid->Show();
 
 switch ($range) {
-	case '10y':
+    case '10y':
     case '5y':
         $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackY'); 
         list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_YEAR1);
         $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
     break;
-	case '2y':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackY'); 
+    case '2y':
+        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
         list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH2);
         $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-	break;
-	case '1y':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackY'); 
+    break;
+    case '1y':
+        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
         list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
         $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-	break;
-	case '1m':
+    break;
+    case '1m':
         $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackD'); 
         list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_DAY1);
         $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-	break;
-	default:
+    break;
+    default:
         $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackH'); 
         $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
 //        $graph->xaxis->SetTickPositions($xdataTick);
