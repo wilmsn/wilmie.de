@@ -3,9 +3,11 @@
  
 <head>
 <?php
-require_once("/sd_p2/web/php_inc/config.inc.php");
-require_once("settings_inc.php");
-require_once("/sd_p2/web/php_inc/check_mobile.php");
+$instance="intern";
+require_once ('/etc/webserver/'.$instance.'_config.php');
+require_once ($webroot."/php_inc/check_mobile.php");
+
+$www_db = new PDO("mysql:host=$db_www_server;dbname=$db_www_db", $db_www_user, $db_www_pass);
 
 $login_msg = "";
 $reload_needed = "";
@@ -34,7 +36,6 @@ if( $is_mobile_browser ) {
 
 <link rel="stylesheet" type="text/css" href="/css/cookieconsent.3.1.0.min.css" />
 <script src="/js/cookieconsent.3.1.0.min.js"></script>
-<?php if ($is_public): ?>
 <script>
 window.addEventListener("load", function(){
 window.cookieconsent.initialise({
@@ -56,7 +57,6 @@ window.cookieconsent.initialise({
   }
 })});
 </script>
-<?php endif; ?>
 
 <?php if(is_mobile_browser()): ?>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>

@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<?php
+$instance="intern";
+require_once ('/etc/webserver/'.$instance.'_config.php');
+?>
 <html>
  
 <head>
@@ -8,10 +12,6 @@
 </head>
 
 <?php
-//Hostname und Telnet-Port des FHEM-Servers
-$fhemhost = "localhost";
-$fhemport = 7072;
-require_once("/sd_p2/web/php_inc/config.inc.php");
 
 if (isset($_GET["geraet"])) {
     $geraet = $_GET["geraet"];
@@ -43,7 +43,7 @@ switch($geraet) {
     break;
 }
   
-$fhemsock = fsockopen($fhemhost, $fhemport, $errno, $errstr, 30);
+$fhemsock = fsockopen($fhem_server, $fhem_port, $errno, $errstr, 30);
 $fhemcmd = $fhemcmd." \r\nquit\r\n";
 fwrite($fhemsock, $fhemcmd);
 while(!feof($fhemsock)) {

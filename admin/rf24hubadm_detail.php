@@ -1,5 +1,7 @@
 <?php
-require_once("/sd_p2/web/php_inc/sensorhub.inc.php");
+$instance="intern";
+require_once ('/etc/webserver/'.$instance.'_config.php');
+$sensorhub_db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user, $db_sh_pass);
 
 function one_col($sensorhub_db,$mypage,$id) {
 	$limit1=($mypage)*10;

@@ -1,8 +1,11 @@
 <?php
+$instance="intern";
+require_once ('/etc/webserver/'.$instance.'_config.php');
+
 error_reporting(E_ALL);
 
 $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-$result = socket_connect($socket, '127.0.0.1', 7001);
+$result = socket_connect($socket, $rf24_server, $rf24_tn_port);
 
 $in = "html order\n";
 $buf = '';

@@ -1,3 +1,8 @@
+<?php
+$instance="intern";
+require_once ('/etc/webserver/'.$instance.'_config.php');
+require_once ($webroot.'/php_inc/check_mobile.php');
+?>
 <script>
 function sysinfo(){
    alert("HTTP_USER_AGENT:\n<?php echo $_SERVER['HTTP_USER_AGENT']; ?>\n"+
@@ -6,7 +11,6 @@ function sysinfo(){
 }	
 </script>
 <?php
-include "/sd_p2/web/php_inc/check_mobile.php";
 $mobile_browser = is_mobile_browser(); 
 if($mobile_browser) { 
   echo "<small><small>";
