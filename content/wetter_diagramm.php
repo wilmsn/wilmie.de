@@ -1,8 +1,9 @@
 <?php // content="text/plain; charset=utf-8"
+$instance="prod";
+require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ('jpgraph/jpgraph.php');
 require_once ('jpgraph/jpgraph_line.php');
 require_once ('jpgraph/jpgraph_utils.inc.php');
-require_once ('/sd_p2/web/var_db_sensorhub_norbert.php');
 
 function  TimeCallbackY( $aVal) {
    return Date ('Y',$aVal);
@@ -107,7 +108,7 @@ if (isset($_GET["sensor1"])) {
 $xdata = array();
 $xdataTick = array();
 $ydata = array();
-$db = new mysqli($db_server, $db_user, $db_pass, $db_db);
+$db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
 	$stmt = " select value, utime ". 
 		    " from ".$table.
 		    " where sensor_id = ".$sensor1. 

@@ -1,5 +1,7 @@
 <?php
-require_once("/sd_p2/web/php_inc/sensorhubdemo.inc.php");
+$instance="demo";
+require_once ('/etc/webserver/'.$instance.'_config.php');
+$sensorhub_db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user, $db_sh_pass);
 
 function one_col($sensorhub_db,$mypage,$id) {
 	$limit1=($mypage)*10;
@@ -32,11 +34,11 @@ if (isset($_GET["page"]))  {
 if ( $sensor > 0 ) { 
 	$id=$sensor;
 	print "<center>&nbsp<b>";
-	foreach ($sensorhub_db->query("select sensor_id, sensor_name, type from sensor where sensor_id = ".$id." ") as $row) {
+	foreach ($sensorhub_db->query("select sensor_id, sensor_name, s_type, node_name from node, sensor where node.node_id = sensor.node_id and sensor_id = ".$id." ") as $row) {
 		if ( $row[2] == "s" ) {
-			print "Sensor: <br>".$row[1]." (".$row[0].")";
+			print "Sensor: ". $row[0]. "<br>".$row[3]."<br>".$row[1]." ";
 		} else {
-			print "Actor:  <br>".$row[1]." (".$row[0].")";
+			print "Actor: ". $row[0]. "<br>".$row[3]."<br>".$row[1]." ";
 		}
 	}
 	echo "</b></center>".
