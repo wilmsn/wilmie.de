@@ -3,9 +3,11 @@
  
 <head>
 <?php
-require_once("/sd_p2/web/php_inc/config.inc.php");
-require_once("settings_inc.php");
-require_once("/sd_p2/web/php_inc/check_mobile.php");
+$instance="entw";
+require_once ('/etc/webserver/'.$instance.'_config.php');
+require_once ($webroot."/php_inc/check_mobile.php");
+
+$www_db = new PDO("mysql:host=$db_www_server;dbname=$db_www_db", $db_www_user, $db_www_pass);
 
 $login_msg = "";
 $reload_needed = "";

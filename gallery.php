@@ -33,7 +33,7 @@ $mygallery=$_GET["dir"];
 # No configuration below
 #
 ###################################################################################
-include "/sd_p2/web/php_inc/check_mobile.php";
+include "php_inc/check_mobile.php";
 $mobile_browser=is_mobile_browser();
 $mytext = file_get_contents($basedir.$htmlprefix."/".$mygallery."/".$textfile);
 
