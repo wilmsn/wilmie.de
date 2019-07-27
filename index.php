@@ -34,7 +34,6 @@ if( $is_mobile_browser ) {
 <link rel='stylesheet' href='/css/jquery.mobile.structure-1.4.5.min.css' />
 <script src='/js/jquery.mobile-1.4.5.js'></script>
 
-<link rel="stylesheet" type="text/css" href="/css/cookieconsent.3.1.0.min.css" />
 <script src="/js/cookieconsent.3.1.0.min.js"></script>
 <script>
 window.addEventListener("load", function(){
