@@ -46,6 +46,23 @@ function get_sw_data(dev_no, dev_disp_name, dev_disp_read, dev_fhem_name) {
 //	alert("Test");
 }
 
+function dev_status_init(dev_no, dev_label, y_size) {
+    $("#haus").append("<div class='device' id='dev"+dev_no+"'>");
+//    $("#dev"+dev_no).append("<div class='device_status' id='dev"+dev_no+"l'></div>");
+	$("#dev"+dev_no).append("<div class='device_status_head' id='dev"+dev_no+"head'>"+dev_label+"</div>");
+//	$("#dev"+dev_no+"l").append("<div class='device_status_r' id='dev"+dev_no+"lr'></div>");
+//	$("#dev"+dev_no+"lr").append("<div class='device_status_line' id='dev"+dev_no+"lr0'></div>");
+	$("#dev"+dev_no).css("height",y_size+"px");
+}
+
+function dev_status(dev_no, line_no, dev_label, dev_fhem_name, dev_fhem_read) {
+	$("#dev"+dev_no).append("<div class='device_status_line' id='dev"+dev_no+"l"+line_no+"'></div>");
+	$.get(basedir+'getfhem.php',{geraet: dev_fhem_name, eigenschaft: dev_fhem_read }, function(data) {
+		$("#dev"+dev_no+"l"+line_no).html(dev_label+" = "+data);
+		//alert(dev_fhem_name + ": "+data);
+    });	
+}
+
 function dev_init(dev_no, dev_typ, dev_label, dev_disp_name, dev_disp_read, dev_fhem_name) {
 // Parameter:
 // dev_no = Devicenummer (nur fuer die ID verwendet) muss unique sein!

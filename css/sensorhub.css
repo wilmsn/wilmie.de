@@ -42,6 +42,29 @@
         position: relative; 
 		width: 100%; 
 	}
+	.device_status {
+        position: relative; 
+		width: 100%;
+		background-color: #666666; 
+		border: 3px solid #a80329;
+		text-align: left;
+	}
+	.device_status_head {
+        position: relative; 
+		height: 20px;
+		width: 100%; 
+		text-align: center;
+		color: white;
+		background-color: #111111; 
+	}
+	.device_status_line {
+        position: relative; 
+		height: 20px;
+		right: 2%;
+		top: 0px;
+		text-align: center;
+		color: black;
+	}
 	.device_label {
         position: relative; 
 		height: 40px;
