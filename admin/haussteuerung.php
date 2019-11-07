@@ -20,6 +20,7 @@ $(document).ready(function(){
   dev_init(7,"ht", "K&uuml;che",        "Kueche_Temp",          "state",       "HT_Kueche1");
   dev_init(8,"ht", "Bastelzimmer",      "Bastelzimmer_Temp",      "state", "HT_Bastelzimmer");
   dev_init(9,"di","Schlafzimmer",  "Schlafzimmer_Temp", "state","cccc");
+  dev_init(10,"di","Flur",  "Flur_Node_Temp", "state","cccc");
 });
 </script>
  
