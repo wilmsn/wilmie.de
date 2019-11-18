@@ -20,13 +20,22 @@ function  TimeCallbackD( $aVal) {
 function  TimeCallbackH( $aVal) {
    return Date ('H',$aVal);
 }
-
+if (isset($_GET["ymin"])) {
+	$ymin = $_GET["ymin"];
+} else {
+    $ymin='auto';
+}	
+if (isset($_GET["ymax"])) {
+	$ymax = $_GET["ymax"];
+} else {
+    $ymax='auto';
+}	
 if (isset($_GET["sizex"])) {
 	$sizex = $_GET["sizex"];
 } else {
     $sizex=650;
 }	
-if ($sizex > 1000) { $sizex = 1000; }
+if ($sizex > 1200) { $sizex = 1200; }
 if (isset($_GET["sizey"])) {
 	$sizey = $_GET["sizey"];
 } else {
@@ -146,32 +155,50 @@ while ($row = $results->fetch_assoc()) {
    }
 }		
 //if ( $firstOfHour == 1 ) { array_shift($tickPos); }
-
-$ydataMin=min($ydata);
-$ydataMax=max($ydata);
-if ($ydataMax-$ydataMin > 2 ) { 
-	if ($ydataMin > 0) {
-		$yscaleMin=floor($ydataMin/10)*10;
-	} else {
-		$yscaleMin=floor($ydataMin/10)*10;
-	}	
-	if ($ydataMax > 0) {
-		$yscaleMax=ceil($ydataMax/10)*10;
-	} else {
-		$yscaleMax=ceil($ydataMax/10)*10;
+if ( $ymin == 'auto' ) {
+    $ydataMin=min($ydata);
+} else {
+    $ydataMin=$ymin;
+}
+if ( $ymax == 'auto' ) {
+    $ydataMax=max($ydata);
+} else {
+    $ydataMax=$ymax;
+}
+if ( $ymin == 'auto' ) {
+    if ($ydataMax-$ydataMin > 2 ) { 
+        if ($ydataMin > 0) {
+            $yscaleMin=floor($ydataMin/10)*10;
+        } else {
+            $yscaleMin=floor($ydataMin/10)*10;
+        }
+    } else {
+        if ($ydataMin > 0) {
+            $yscaleMin=floor($ydataMin);
+        } else {
+            $yscaleMin=floor($ydataMin)-1;
+        }
 	}	
 } else {
-	if ($ydataMin > 0) {
-		$yscaleMin=floor($ydataMin);
-	} else {
-		$yscaleMin=floor($ydataMin)-1;
-	}	
-	if ($ydataMax > 0) {
-		$yscaleMax=floor($ydataMax)+1;
-	} else {
-		$yscaleMax=floor($ydataMax);
-	}	
-}	
+    $yscaleMin=$ydataMin;
+}
+if ( $ymax == 'auto' ) {
+    if ($ydataMax-$ydataMin > 2 ) { 
+        if ($ydataMax > 0) {
+            $yscaleMax=ceil($ydataMax/10)*10;
+        } else {
+            $yscaleMax=ceil($ydataMax/10)*10;
+        }	
+    } else {
+        if ($ydataMax > 0) {
+            $yscaleMax=floor($ydataMax)+1;
+        } else {
+            $yscaleMax=floor($ydataMax);
+        }
+    }
+} else {
+    $yscaleMax=$ydataMax;
+}
 array_pop($xdataTick);
 $dateUtils = new DateScaleUtils();
 $graph = new Graph($sizex, $sizey);
