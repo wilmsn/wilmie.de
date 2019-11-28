@@ -30,6 +30,9 @@ $(document).ready(function(){
   dev_status_init( 5, "Node Bastelzimmer", 60);
   dev_status(5,1,"Temperatur","Bastelzimmer_Temp", "state");
   dev_status(5,2,"Batteriespannung", "Bastelzimmer_Ubatt", "state");
+  dev_status_init( 6, "Node Ankleidezimmer", 60);
+  dev_status(6,1,"Temperatur","Ankleidezimmer_Temp", "state");
+  dev_status(6,2,"Batteriespannung", "Ankleidezimmer_Ubatt", "state");
 });
 </script>
  

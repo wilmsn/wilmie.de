@@ -5,33 +5,49 @@ $sensorhub_db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user
 
 function node_details($db,$node) {
 	print "<div ID=dn".$node." style='background: #AAAAAA; color: black; display: none;'>";
-	$sql = " select node_id, node_name, add_info, sleeptime1, sleeptime2, sleeptime3, sleeptime4, radiomode, voltagefactor, battery_id, u_batt from node where node_id = '".$node."' ";
+	$sql = " select node_id, node_name, add_info, battery_id, heartbeat from node where node_id = '".$node."' ";
 	foreach ( $db->query($sql) as $row) { 
 		print "<center><table border=0>".
-			  "<tr><td width=200>Nodename:</td><td width=300><input type='hidden' id='in_nid_".$node."' value='".$node."'><input size=23 id='in_nn_".$node."' value='".$row[1]."'></td></tr>".
-			  "<tr><td width=200>Nodeinfo:</td><td width=300><textarea id='in_ni_".$node."' height=175>".$row[2]."</textarea></td></tr>".
-			  "<tr><td width=200>Sleeptime1:</td><td width=300><input size=5 id='in_st1_".$node."' value='".$row[3]."'></td></tr>".
-			  "<tr><td width=200>Sleeptime2:</td><td width=300><input size=5 id='in_st2_".$node."' value='".$row[4]."'></td></tr>".
-			  "<tr><td width=200>Sleeptime3:</td><td width=300><input size=5 id='in_st3_".$node."' value='".$row[5]."'></td></tr>".
-			  "<tr><td width=200>Sleeptime4:</td><td width=300><input size=5 id='in_st4_".$node."' value='".$row[6]."'></td></tr>".
-			  "<tr><td width=200>Radiomode:</td><td width=300><select id='in_rm_".$node."'>";
-			if ( $row[7] == 0 ) {
-				print "<option value=0 selected>Radio sleeps</option><option value=1>Radio on</option>";
-			} else {
-				print "<option value=0>Radio sleeps</option><option value=1 selected>Radio on</option>";
-			}				  
-		print "</select></td></tr>".	  
-			  "<tr><td width=200>voltagefactor:</td><td width=300><input size=5 id='in_vd_".$node."' value='".$row[8]."'></td></tr>".
-			  "<tr><td width=200>Battery:</td><td width=300><select id='in_bid_".$node."'>";
-		foreach ($db->query(" select battery_id, battery_sel_txt from battery where battery_id = '".$row[9]."' ") as $bat_row) { 
+			  "<tr><td width=150>Nodename:</td><td width=350 colspan=2><input type='hidden' id='in_nid_".$node."' value='".$node."'><input size=30 id='in_nn_".$node."' value='".$row[1]."'></td></tr>".
+			  "<tr><td width=200>Nodeinfo:</td><td width=350 colspan=2><textarea id='in_ni_".$node."' rows=4 cols=30>".$row[2]."</textarea></td></tr>".
+			  "<tr><td width=200>Battery:</td><td width=350 colspan=2><center>&nbsp;<select id='in_bid_".$node."'>";
+		foreach ($db->query(" select battery_id, battery_sel_txt from battery where battery_id = '".$row[3]."' ") as $bat_row) { 
 				print "<option value=".$bat_row[0]." selected>".$bat_row[1]."</option>";
 			} 				  
-		foreach ($db->query(" select battery_id, battery_sel_txt from battery where battery_id != '".$row[9]."' ") as $bat_row) { 
+		foreach ($db->query(" select battery_id, battery_sel_txt from battery where battery_id != '".$row[3]."' ") as $bat_row) { 
 				print "<option value=".$bat_row[0].">".$bat_row[1]."</option>";
 			} 				  
-		print "</select></td></tr>";	  
+		print "</select>&nbsp;</center></td></tr>".
+			  "<tr><td width=200>Heartbeat:</td><td width=350 colspan=2><center>&nbsp;<select id='in_hb_".$node."'>";
+        if ($row[4] == "y") {
+            print "<option value='y' selected>yes</option>".
+                  "<option value='n'>no</option>";
+        } else {
+            print "<option value='y'>yes</option>".
+                  "<option value='n' selected>no</option>";
+        }            
+        print "</select>&nbsp;</center></td></tr>";	  
 	}
-	print "</table><button class='ui-btn' onclick=\"savenode('$node')\">Werte speichern</button></center></div>";
+	$value111 = "";
+	$value114 = "";
+	$value116 = "";
+	$value117 = "";
+	$stmt = " select channel, value from node_config_v where node_id = '".$node."' ";
+	foreach ($db->query(" select channel, value from node_config_v where node_id = '".$node."' ") as $conf_row) { 
+		if ($conf_row[0] == "111") { $value111 = $conf_row[1]; }
+		if ($conf_row[0] == "114") { $value114 = $conf_row[1]; }
+		if ($conf_row[0] == "116") { $value116 = $conf_row[1]; }
+		if ($conf_row[0] == "117") { $value117 = $conf_row[1]; }
+	} 				  
+	print "<tr><td width=200>voltagefactor:</td><td width=100><input size=8 id='in_vf_".$node."' value='".$value116."'></td>".
+          "<td><button class='ui-btn' onclick=\"send_vf('$node')\">Wert setzen</button></td></tr>".
+	      "<tr><td width=200>voltageadded:</td><td width=100><input size=8 id='in_va_".$node."' value='".$value117."'></td>".
+          "<td><button class='ui-btn' onclick=\"send_va('$node')\">Wert setzen</button></td></tr>".
+	      "<tr><td width=200>sleeptime:</td><td width=100><input size=8 id='in_st_".$node."' value='".$value111."'></td>".
+          "<td><button class='ui-btn' onclick=\"send_st('$node')\">Wert setzen</button></td></tr>".
+	      "<tr><td width=200>emptyloopcount:</td><td width=100><input size=8 id='in_el_".$node."' value='".$value114."'></td>".
+          "<td><button class='ui-btn' onclick=\"send_el('$node')\">Wert setzen</button></td></tr>".
+	      "</table><button class='ui-btn' onclick=\"savenode('$node')\">Werte speichern</button></center></div>";
 }
 #######################
 #
@@ -69,17 +85,9 @@ print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-in
 	  " data-rel='popup' style='background: #666666; color: black; ' ><center>Neuen Node anlegen</center></a>".
 	  "<div ID='dn0' style='background: #AAAAAA; color: black; display: none;'>".
 	  "<center><table>".
-	  "<tr><td width=200>NodeID:</td><td width=300><input size=6 id='in_nid_0' ></td></tr>".
-	  "<tr><td width=200>Nodename:</td><td width=300><input size=23 id='in_nn_0' ></td></tr>".
-	  "<tr><td width=200>Nodeinfo:</td><td width=300><textarea id='in_ni_0' height=175></textarea></td></tr>".
-	  "<tr><td width=200>Sleeptime1:</td><td width=300><input size=5 id='in_st1_0' ></td></tr>".
-	  "<tr><td width=200>Sleeptime2:</td><td width=300><input size=5 id='in_st2_0' ></td></tr>".
-	  "<tr><td width=200>Sleeptime3:</td><td width=300><input size=5 id='in_st3_0' ></td></tr>".
-	  "<tr><td width=200>Sleeptime4:</td><td width=300><input size=5 id='in_st4_0' ></td></tr>".
-	  "<tr><td width=200>Radiomode:</td><td width=300><select id='in_rm_0'>".
-	  "<option value=0>Radio sleeps</option><option value=1>Radio on</option>".
-	  "</select></td></tr>".	  
-	  "<tr><td width=200>Voltagedivider:</td><td width=300><input size=5 id='in_vd_0' ></td></tr>".
+	  "<tr><td width=200>NodeID:</td><td width=300><input size=30 id='in_nid_0' ></td></tr>".
+	  "<tr><td width=200>Nodename:</td><td width=300><input size=30 id='in_nn_0' ></td></tr>".
+	  "<tr><td width=200>Nodeinfo:</td><td width=300><textarea id='in_ni_0' rows=4 cols=30></textarea></td></tr>".
 	  "<tr><td width=200>Battery:</td><td width=300><select id='in_bid_0'>";
 	foreach ($sensorhub_db->query(" select battery_id, battery_sel_txt from battery ") as $bat_row) { 
 		print "<option value=".$bat_row[0]." selected>".$bat_row[1]."</option>";
@@ -102,7 +110,7 @@ print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-in
 foreach ($sensorhub_db->query("select sensor_id, sensor_name, add_info, node_id, channel, s_type, store_days, fhem_dev from sensor order by sensor_id") as $row_sensor) {   
 	print "<a id='sa".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 	      " href='#' onclick=\"editsensor('".$row_sensor[0]."');\" ".
-	      " data-rel='popup' style='background: #AAAAAA; color: white;'>".$row_sensor[1]." (".$row_sensor[0].") </a>".
+	      " data-rel='popup' style='background: #AAAAAA; color: white;'> (".$row_sensor[0].") ".$row_sensor[1]." [".$row_sensor[3]."-".$row_sensor[4]."] </a>".
 		  "<div id='se".$row_sensor[0]."' style='display:none;'><center><table>".
 		  "<tr><td width=200>Sensornummer:</td><td width=300><input type=hidden id='is_sid_".$row_sensor[0]."'>".$row_sensor[0]."</td></tr>".
 		  "<tr><td width=200>Sensorname:</td><td width=300><input size=25 id='is_sn_".$row_sensor[0]."' value='".$row_sensor[1]."'></td></tr>".

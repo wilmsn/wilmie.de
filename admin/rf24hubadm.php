@@ -19,7 +19,8 @@ function listjobs(){
 		$('#jobs').hide();
 	} else {
 		$('#jobshead').attr('class','ui-btn ui-btn-icon-right ui-icon-carat-d ui-shadow');
-		$.get(mydir+'/rf24hubadm_jobs.php', function(data) { 
+        mytnin = 'html order';
+		$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
 			$('#jobs').html(data); 
 			$('#jobs').show();
 		});
@@ -47,14 +48,9 @@ function savenode(mynodeid){
 	mynid=$('#in_nid_'+mynodeid).val();
 	mynn=$('#in_nn_'+mynodeid).val();
 	myni=$('#in_ni_'+mynodeid).val();
-	myst1=$('#in_st1_'+mynodeid).val();
-	myst2=$('#in_st2_'+mynodeid).val();
-	myst3=$('#in_st3_'+mynodeid).val();
-	myst4=$('#in_st4_'+mynodeid).val();
-	myrm=$('#in_rm_'+mynodeid).val();
 	mybid=$('#in_bid_'+mynodeid).val();
-	myvd=$('#in_vd_'+mynodeid).val();
-	$.get(mydir+'/savenode.php',{nid: mynid, onid: mynodeid, nn: mynn, ni: myni, st1: myst1, st2: myst2, st3: myst3, st4: myst4, vd: myvd, rm: myrm, bid: mybid }, function(data) { 
+	myhb=$('#in_hb_'+mynodeid).val();
+	$.get(mydir+'/savenode.php',{nid: mynid, onid: mynodeid, nn: mynn, ni: myni, bid: mybid, hb: myhb }, function(data) { 
 		alert(data);
 	});
 }
@@ -75,6 +71,42 @@ function editsensor(sensor){
 	} else {
 		$('#sa'+sensor).attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');
 	}
+}
+
+// Voltagefactor Ch: 116 mit 100 multipliziert
+function send_vf(mynode){
+    myst=$('#in_vf_'+mynode).val();
+    mytnin = 'push '+mynode+' 116 '+myst;
+	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
+        alert("Emptyloops set to: "+myst+'tn: '+mytnin);
+    });
+}
+
+// Voltageadded Ch: 117 mit 100 multipliziert
+function send_va(mynode){
+    myst=$('#in_va_'+mynode).val();
+    mytnin = 'push '+mynode+' 117 '+myst;
+	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
+        alert("Voltageadded set to: "+myst+'tn: '+mytnin);
+    });
+}
+
+// Sleeptime Ch: 111 in ms
+function send_st(mynode){
+    myst=$('#in_st_'+mynode).val();
+    mytnin = 'push '+mynode+' 111 '+myst;
+	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
+        alert("Sleeptime:"+myst+'tn: '+mytnin);
+    });
+}
+
+// Empty Loops Ch: 114 
+function send_el(mynode){
+    myst=$('#in_el_'+mynode).val();
+    mytnin = 'push '+mynode+' 114 '+myst;
+	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
+        alert("Emptyloops set to: "+myst+'tn: '+mytnin);
+    });
 }
 
 function savesensor(mysensorid){
