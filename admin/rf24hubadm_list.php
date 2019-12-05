@@ -65,7 +65,7 @@ foreach ($sensorhub_db->query(" select node_id, node_name, add_info from node wh
 	      " data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></a>";	
 	node_details($sensorhub_db, $row_node[0]);
 	foreach ($sensorhub_db->query("select Sensor_id, Sensor_name ".
-	                              " from sensor where node_id = '$row_node[0]' and html_show = 'y' order by channel asc ") as $row_sensor) {   
+	                              " from sensor where node_id = '$row_node[0]' and html_show = 'y' order by html_sort asc ") as $row_sensor) {   
 		print "<a id='ss".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 		      " href='#' onclick='showsensor(".$row_sensor[0].");' ".
 		      " data-rel='popup' style='background: #AAAAAA; color: white;' >".$row_sensor[1]."(".$row_sensor[0].")</a>";
@@ -107,7 +107,7 @@ print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-in
 	  "<li><a id='senshead' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 	  " href='#' onclick=\"enablesensor();\" ".
 	  " data-rel='popup' style='background: #666666; color: black; '><center>Sensoren editieren</center></a><div id='sensoren' style='display:none;'>";			  
-foreach ($sensorhub_db->query("select sensor_id, sensor_name, add_info, node_id, channel, s_type, store_days, fhem_dev from sensor order by sensor_id") as $row_sensor) {   
+foreach ($sensorhub_db->query("select sensor_id, sensor_name, add_info, node_id, channel, html_show, store_days, fhem_dev, html_sort from sensor order by node_id, sensor_id") as $row_sensor) {   
 	print "<a id='sa".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 	      " href='#' onclick=\"editsensor('".$row_sensor[0]."');\" ".
 	      " data-rel='popup' style='background: #AAAAAA; color: white;'> (".$row_sensor[0].") ".$row_sensor[1]." [".$row_sensor[3]."-".$row_sensor[4]."] </a>".
@@ -124,13 +124,14 @@ foreach ($sensorhub_db->query("select sensor_id, sensor_name, add_info, node_id,
 	}		
     print "</select></td></tr>".
 	      "<tr><td width=200>Channel:</td><td width=300><input size=6 id='is_ch_".$row_sensor[0]."' value='".$row_sensor[4]."'></td></tr>".
-	      "<tr><td width=200>Typ:</td><td width=300><select id='is_ty_".$row_sensor[0]."' >";
-	if ( $row_sensor[5] == "s" ) {
-		print "<option value='s' selected>Sensor</option><option value='a'>Actor</option>";
+	      "<tr><td width=200>In Auflistung:</td><td width=300><select id='is_sh_".$row_sensor[0]."' >";
+	if ( $row_sensor[5] == "y" ) {
+		print "<option value='y' selected>anzeigen</option><option value='n'>nicht anzeigen</option>";
 	} else {
-		print "<option value='s'>Sensor</option><option value='a' selected>Actor</option>";
+		print "<option value='y'>anzeigen</option><option value='n' selected>nicht anzeigen</option>";
 	}
 	print "</select></td></tr>".
+		  "<tr><td width=200>Sortierung:</td><td width=300><input size=25 id='is_so_".$row_sensor[0]."' value='".$row_sensor[8]."'></td></tr>".
 		  "<tr><td width=200>Device FHEM:</td><td width=300><input size=25 id='is_fh_".$row_sensor[0]."' value='".$row_sensor[7]."'></td></tr>".
 		  "<tr><td width=200>Speicherdauer:</td><td width=300><input size=10 id='is_sd_".$row_sensor[0]."' value='".$row_sensor[6]."'></td></tr>".	
 		  "</table><button class='ui-btn' onclick='savesensor(".$row_sensor[0].")'>Werte speichern</button></center></div>";
