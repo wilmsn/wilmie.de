@@ -35,9 +35,9 @@ if($mobile_browser) {
 <h1>Batteriespannung Schlafzimmer</h1>
 <img src="/content/diagramm.php?sensor1=161&range=6m&sensor1legend=Batterie&ymin=3.5&ymax=4.2&sizex=1200">
 <h1>Batteriespannung Ankleidezimmer</h1>
-<img src="/content/diagramm.php?sensor1=181&range=1m&sensor1legend=Batterie&ymin=3.5&ymax=4.2&sizex=1200">
+<img src="/content/diagramm.php?sensor1=181&range=6m&sensor1legend=Batterie&ymin=3.5&ymax=4.2&sizex=1200">
 <h1>Batteriespannung Gästezimmer</h1>
-<img src="/content/diagramm.php?sensor1=201&range=1m&sensor1legend=Batterie&ymin=3.5&ymax=4.2&sizex=1200">
+<img src="/content/diagramm.php?sensor1=201&range=6m&sensor1legend=Batterie&ymin=3.5&ymax=4.2&sizex=1200">
 
 <?php
 } 

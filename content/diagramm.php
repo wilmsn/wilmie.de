@@ -1,5 +1,5 @@
 <?php // content="text/plain; charset=utf-8"
-$instance="entw";
+$instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ('jpgraph/jpgraph.php');
 require_once ('jpgraph/jpgraph_line.php');
