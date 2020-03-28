@@ -59,14 +59,15 @@ foreach ($sensorhub_db->query(" select node_id, node_name, add_info from node wh
     $mynode="'".$row_node[0]."'";					   
     print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
           "<li class='ui-li-divider ui-bar-inherit ui-first-child' data-role='list-divider' role='heading' ";
-    foreach ($sensorhub_db->query("select unix_timestamp() - max(utime) from sensordata ".
+    $myage = 100000;
+    foreach ($sensorhub_db->query("select ifnull(unix_timestamp() - max(utime), 100000) from sensordata ".
                                   "where sensor_id in (select sensor_id from sensor where node_id = ".$mynode.")") as $node_age ) {
         $myage = $node_age[0]+1;
-        if ( $myage > 70000 ) { 
-            print "style='background: #991111; color: white;'></li>";
-        } else {
-            print "style='background: #119911; color: white;'></li>";
-        }
+    }
+    if ( $myage > 70000 ) { 
+        print "style='background: #991111; color: white;'></li>";
+    } else {
+        print "style='background: #119911; color: white;'></li>";
     }
     print "<li><a id='n".$row_node[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 	  " href='#' onclick=editnode(".$mynode."); ".
