@@ -33,7 +33,7 @@ function node_details($db,$node) {
 	$value116 = "";
 	$value117 = "";
 	$stmt = " select channel, value from node_config_v where node_id = '".$node."' ";
-	foreach ($db->query(" select channel, value from node_config_v where node_id = '".$node."' ") as $conf_row) { 
+	foreach ($db->query(" select channel, value from node_configdata where node_id = '".$node."' ") as $conf_row) { 
 		if ($conf_row[0] == "111") { $value111 = $conf_row[1]; }
 		if ($conf_row[0] == "114") { $value114 = $conf_row[1]; }
 		if ($conf_row[0] == "116") { $value116 = $conf_row[1]; }
@@ -65,7 +65,7 @@ foreach ($sensorhub_db->query(" select node_id, node_name, add_info from node wh
 	      " data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></a>";	
 	node_details($sensorhub_db, $row_node[0]);
 	foreach ($sensorhub_db->query("select Sensor_id, Sensor_name ".
-	                              " from sensor where node_id = '$row_node[0]' and html_show = 'y' order by html_sort asc ") as $row_sensor) {   
+	                              " from sensor where node_id = '$row_node[0]' and html_show = 'y' order by html_order asc ") as $row_sensor) {   
 		print "<a id='ss".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 		      " href='#' onclick='showsensor(".$row_sensor[0].");' ".
 		      " data-rel='popup' style='background: #AAAAAA; color: white;' >".$row_sensor[1]."(".$row_sensor[0].")</a>";
@@ -107,7 +107,7 @@ print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-in
 	  "<li><a id='senshead' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 	  " href='#' onclick=\"enablesensor();\" ".
 	  " data-rel='popup' style='background: #666666; color: black; '><center>Sensoren editieren</center></a><div id='sensoren' style='display:none;'>";			  
-foreach ($sensorhub_db->query("select sensor_id, sensor_name, add_info, node_id, channel, html_show, store_days, fhem_dev, html_sort from sensor order by node_id, sensor_id") as $row_sensor) {   
+foreach ($sensorhub_db->query("select sensor_id, sensor_name, add_info, node_id, channel, html_show, store_days, fhem_dev, html_order from sensor where html_show = 'y' order by node_id, sensor_id") as $row_sensor) {   
 	print "<a id='sa".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 	      " href='#' onclick=\"editsensor('".$row_sensor[0]."');\" ".
 	      " data-rel='popup' style='background: #AAAAAA; color: white;'> (".$row_sensor[0].") ".$row_sensor[1]." [".$row_sensor[3]."-".$row_sensor[4]."] </a>".

@@ -204,7 +204,7 @@ function init_window() {
 						mynum_col=5;
 					} else {	
 						$('#details').css('width', '1200');
-						mynum_col=6;
+						mynum_col=5;
 					}
 				}
 			}

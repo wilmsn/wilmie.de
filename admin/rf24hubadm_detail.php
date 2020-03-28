@@ -34,12 +34,8 @@ if (isset($_GET["page"]))  {
 if ( $sensor > 0 ) { 
 	$id=$sensor;
 	print "<center>&nbsp<b>";
-	foreach ($sensorhub_db->query("select sensor_id, sensor_name, s_type, node_name from node, sensor where node.node_id = sensor.node_id and sensor_id = ".$id." ") as $row) {
-		if ( $row[2] == "s" ) {
-			print "Sensor: ". $row[0]. "<br>".$row[3]."<br>".$row[1]." ";
-		} else {
-			print "Actor: ". $row[0]. "<br>".$row[3]."<br>".$row[1]." ";
-		}
+	foreach ($sensorhub_db->query("select sensor_id, sensor_name, node_name from node, sensor where node.node_id = sensor.node_id and sensor_id = ".$id." ") as $row) {
+        print "Sensor/Actor: ". $row[0]. "<br>".$row[2]."<br>".$row[1]." ";
 	}
 	echo "</b></center>".
 		 "<center>&nbsp;<table class=noborder><tr><td>".one_col($sensorhub_db,$page,$id);
