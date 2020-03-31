@@ -64,44 +64,54 @@ if (isset($_GET["sensor1"])) {
 } else {
     $sensor1 = 1;
 }
+if (isset($_GET["starttime"])) {
+    $starttime = $_GET["starttime"];
+} else {
+    $starttime = -1;
+}
+if (isset($_GET["days_offset"])) {
+    $days_offset = $_GET["days_offset"];
+} else {
+    $days_offset = 0;
+}
 
 	$range = $_GET["range"];
 	$by_range = True;
 	switch ($range) {
 		case '10y':
-			$label_1 = 'Verlauf der letzten 10 Jahre'; 
+			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalenderjahr ->';
-			$utime_back = "3600 * 24 *365 *10";
+			$diagramtime = "3600 * 24 *365 *10";
 			$table = " sensordata_d ";
 		break;
         case '5y':
-            $label_1 = 'Verlauf der letzten 5 Jahre';
+			$label_date_format = '%d.%m.%y'; 
             $label_2 = ' Kalenderjahr ->';
-            $utime_back = "3600 * 24 *365 *5";
+            $diagramtime = "3600 * 24 *365 *5";
             $table = " sensordata_d ";
         break;
 		case '2y':
-			$label_1 = 'Verlauf der letzten 2 Jahre'; 
+			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
-			$utime_back = "3600 * 24 *365 *2";
+			$diagramtime = "3600 * 24 *365 *2";
 			$table = " sensordata_d ";
 		break;
 		case '1y':
-			$label_1 = 'Verlauf des letzten Jahres'; 
+			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
-			$utime_back = "3600 * 24 *365";
+			$diagramtime = "3600 * 24 *365";
 			$table = " sensordata_d ";
 		break;
 		case '1m':
-			$label_1 = 'Verlauf der letzten 30 Tage'; 
+			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
-			$utime_back = "3600 * 24 *30";
+			$diagramtime = "3600 * 24 *30";
 			$table = " sensordata_d ";
 		break;
 		default:
-			$label_1 = "Verlauf der letzten 24 Stunden"; 
+			$label_date_format = '%d.%m.%y %H:%i'; 
 			$label_2 = " Uhrzeit ->"; 
-			$utime_back = " 3600 * 24";
+			$diagramtime = " 3600 * 24";
 			$table = " sensordata_im ";
 	}
 
@@ -109,11 +119,43 @@ $xdata = array();
 $xdataTick = array();
 $ydata = array();
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
-	$stmt = " select value, utime ". 
-		    " from ".$table.
-		    " where sensor_id = ".$sensor1. 
-		    " and utime > unix_timestamp() - ".$utime_back.
-		    " order by utime asc";
+if ( $starttime < 0 ) {
+    #aktuelle UTIME ermitteln
+    $stmt = " select unix_timestamp() - ".$diagramtime." - 3600*24*".$days_offset; 
+    $results = $db->query($stmt);
+    $row = $results->fetch_row();
+    $starttime = $row[0];
+    $results->close();
+} 
+#Starttag für Label ermitteln
+$stmt = " select from_unixtime(unix_timestamp() - ".$diagramtime." - 3600*24*".$days_offset.",'".$label_date_format."')"; 
+$results = $db->query($stmt);
+$row = $results->fetch_row();
+$label_start = $row[0];
+$results->close();
+#Endtag für Label ermitteln
+$stmt = " select from_unixtime(unix_timestamp() - ".$diagramtime." - 3600*24*".$days_offset." + ".$diagramtime.",'".$label_date_format."')"; 
+$results = $db->query($stmt);
+$row = $results->fetch_row();
+$label_end = $row[0];
+$results->close();
+	switch ($range) {
+		case '10y':
+        case '5y':
+		case '2y':
+		case '1y':
+		case '1m':
+			$label_1 = 'Verlauf von '.$label_start.' bis '.$label_end; 
+		break;
+		default:
+			$label_1 = 'Verlauf seit '.$label_start; 
+	}
+
+$stmt = " select value, utime ". 
+	    " from ".$table.
+	    " where sensor_id = ".$sensor1. 
+	    " and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime.
+	    " order by utime asc";
 $results = $db->query($stmt);
 $last_utime=0;
 $minTickPos=array();
@@ -132,7 +174,10 @@ while ($row = $results->fetch_assoc()) {
             }
         $last_utime=$row['utime'];
    }
-}		
+}	
+$results->close();
+$db->close();
+
 //if ( $firstOfHour == 1 ) { array_shift($tickPos); }
 
 $ydataMin=min($ydata);
