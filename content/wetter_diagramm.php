@@ -82,37 +82,37 @@ if (isset($_GET["days_offset"])) {
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalenderjahr ->';
 			$diagramtime = "3600 * 24 *365 *10";
-			$table = " sensordata_d ";
+			$table = 'sensordata_d';
 		break;
         case '5y':
 			$label_date_format = '%d.%m.%y'; 
             $label_2 = ' Kalenderjahr ->';
             $diagramtime = "3600 * 24 *365 *5";
-            $table = " sensordata_d ";
+            $table = 'sensordata_d';
         break;
 		case '2y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = "3600 * 24 *365 *2";
-			$table = " sensordata_d ";
+			$table = 'sensordata_d';
 		break;
 		case '1y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = "3600 * 24 *365";
-			$table = " sensordata_d ";
+			$table = 'sensordata_d';
 		break;
 		case '1m':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
 			$diagramtime = "3600 * 24 *30";
-			$table = " sensordata_d ";
+			$table = 'sensordata_d';
 		break;
 		default:
 			$label_date_format = '%d.%m.%y %H:%i'; 
 			$label_2 = " Uhrzeit ->"; 
 			$diagramtime = " 3600 * 24";
-			$table = " sensordata_im ";
+			$table = 'sensordata_im';
 	}
 
 $xdata = array();
@@ -121,12 +121,25 @@ $ydata = array();
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
 if ( $starttime < 0 ) {
     #aktuelle UTIME ermitteln
-    $stmt = " select unix_timestamp() - ".$diagramtime." - 3600*24*".$days_offset; 
+    $stmt = " select unix_timestamp(), unix_timestamp() - ".$diagramtime." - 3600*24*".$days_offset; 
     $results = $db->query($stmt);
     $row = $results->fetch_row();
-    $starttime = $row[0];
+    $akttime = $row[0];
+    $starttime = $row[1];
     $results->close();
-} 
+} else {
+    #aktuelle UTIME ermitteln
+    $stmt = " select unix_timestamp()"; 
+    $results = $db->query($stmt);
+    $row = $results->fetch_row();
+    $akttime = $row[0];
+    $results->close();
+}
+if ( $days_offset > 2 ) {
+    if ( $table == 'sensordata_im' ) {
+        $table = 'sensordata';
+    }
+}
 #Starttag für Label ermitteln
 $stmt = " select from_unixtime(unix_timestamp() - ".$diagramtime." - 3600*24*".$days_offset.",'".$label_date_format."')"; 
 $results = $db->query($stmt);
@@ -145,7 +158,7 @@ $results->close();
 		case '2y':
 		case '1y':
 		case '1m':
-			$label_1 = 'Verlauf von '.$label_start.' bis '.$label_end; 
+			$label_1 = 'Verlauf vom '.$label_start.' bis '.$label_end; 
 		break;
 		default:
 			$label_1 = 'Verlauf seit '.$label_start; 
@@ -208,7 +221,6 @@ if ($ydataMax-$ydataMin > 2 ) {
 array_pop($xdataTick);
 $dateUtils = new DateScaleUtils();
 $graph = new Graph($sizex, $sizey);
-$graph->title->Set($label_1);
 $graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
 $graph->SetMargin(70,20,0,0);
 $graph->title->Set($label_1);
