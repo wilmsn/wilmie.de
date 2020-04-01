@@ -153,7 +153,7 @@ if($mobile_browser) {
   background: #AAAAAA;
   }
   #wetter_s8 {
-  left: 1150px;
+  left: 1140px;
   width: 50px;	  
   font-size: 28px;
   background: #AAAAAA;
@@ -435,9 +435,9 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </div>
 <div id='wetter_s6'>Diagramm<br>10 Jahre
 </div>
-<div id='wetter_s7'>&lt;
+<div id='wetter_s7'><img src="/img/arrow_left.gif" height="50" width="50">
 </div>
-<div id='wetter_s8'>&gt;
+<div id='wetter_s8'><img src="/img/arrow_right.gif" height="50" width="50">
 </div>
 <div id='wetter_t1'>1d
 </div>
