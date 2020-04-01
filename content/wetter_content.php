@@ -118,7 +118,7 @@ if($mobile_browser) {
   left: 350px;
   top: 30px;
   }
-  #wetter_s1, #wetter_s2, #wetter_s3, #wetter_s4, #wetter_s5, #wetter_s6{
+  #wetter_s1, #wetter_s2, #wetter_s3, #wetter_s4, #wetter_s5, #wetter_s6, #wetter_s7, #wetter_s8{
   height: 50px;
   width: 100px;	  
   background: #dddddd; 
@@ -146,6 +146,18 @@ if($mobile_browser) {
   #wetter_s6 {
   left: 950px;
   }
+  #wetter_s7 {
+  left: 1080px;
+  width: 50px;	 
+  font-size: 28px;
+  background: #AAAAAA;
+  }
+  #wetter_s8 {
+  left: 1150px;
+  width: 50px;	  
+  font-size: 28px;
+  background: #AAAAAA;
+  }
 
   \n";
 
@@ -168,10 +180,26 @@ function rgb2hex(rgb) {
     return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
 }
 
+function swipeleftHandler( event ) {
+    if (parseInt($('#wetter_t4').html()) > 0) {
+        var offset=parseInt($('#wetter_t4').html()) -1;
+        $('#wetter_t4').html(offset);
+        set_divs();
+    }
+}
+
+function swiperightHandler( event ) {
+    var offset=parseInt($('#wetter_t4').html()) +1;
+    $('#wetter_t4').html(offset);
+    set_divs();
+}
+
 $(window).resize(function() {
     set_divs();
-//	alert('Width: '+screen.width+'\n'+'Height:'+screen.height);
 });
+
+$( "#wetter_dia" ).on( "swipeleft", swipeleftHandler );
+$( "#wetter_dia" ).on( "swiperight", swiperightHandler );
 
 function set_divs() {
 //    alert($('#wetter_t1').html());
@@ -262,55 +290,78 @@ function set_divs() {
 		mylegend='Temperatur';
 	} 
 //	alert(mycolor);
-	$('#wetter_dia').attr('src', '/content/wetter_diagramm.php?sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&range='+$('#wetter_t1').html()+'&t='+n)
+	$('#wetter_dia').attr('src', '/content/wetter_diagramm.php?sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&offset='+$('#wetter_t4').html()+'&range='+$('#wetter_t1').html()+'&t='+n);
 } 
 $('#zeit').css('backgroundColor', but_color1);
 $('#wetter_t1').hide();  
 $('#wetter_t2').hide();  
 $('#wetter_t3').hide(); 
+$('#wetter_t4').hide(); 
 set_divs();
 $("#wetter_s1").click(function(){
   $('#wetter_t1').html('1d')
+  $('#wetter_t4').html('0')
   set_divs();
 });  
 $("#wetter_s2").click(function(){
   $('#wetter_t1').html('1m')
+  $('#wetter_t4').html('0')
   set_divs();
 });  
 $("#wetter_s3").click(function(){
   $('#wetter_t1').html('1y')
+  $('#wetter_t4').html('0')
   set_divs();
 });  
 $("#wetter_s4").click(function(){
   $('#wetter_t1').html('2y')
+  $('#wetter_t4').html('0')
   set_divs();
 });  
 $("#wetter_s5").click(function(){
   $('#wetter_t1').html('5y')
+  $('#wetter_t4').html('0')
   set_divs();
 });  
 $("#wetter_s6").click(function(){
   $('#wetter_t1').html('10y')
+  $('#wetter_t4').html('0')
   set_divs();
+});  
+$("#wetter_s7").click(function(){
+    var offset=parseInt($('#wetter_t4').html()) +1;
+    $('#wetter_t4').html(offset);
+    set_divs();
 });  
 $("#wetter1a").click(function(){
   $('#wetter_t2').html('1a')
-  $('#wetter_t3').html('1')
+  $('#wetter_t3').html('<?php echo $wetter_temp_sensor; ?>')
+  $('#wetter_t4').html('0')
   set_divs();
+});  
+$("#wetter_s8").click(function(){
+    if (parseInt($('#wetter_t4').html()) > 0) {
+        var offset=parseInt($('#wetter_t4').html()) -1;
+        $('#wetter_t4').html(offset);
+        set_divs();
+    }
 });  
 $("#wetter1b").click(function(){
   $('#wetter_t2').html('1b')
-  $('#wetter_t3').html('2')
+  $('#wetter_t3').html('<?php echo $wetter_pres_sensor; ?>')
+  $('#wetter_t4').html('0')
   set_divs();
 });  
 $("#wetter1c").click(function(){
   $('#wetter_t2').html('1c')
-  $('#wetter_t3').html('5')
+  $('#wetter_t3').html('<?php echo $wetter_humi_sensor; ?>')
+  $('#wetter_t4').html('0')
   set_divs();
 });  
 $("#wetter3").click(function(){
   $('#wetter_t2').html('3')
-  $('#wetter_t3').html('3')
+  $('#wetter_t3').html('<?php echo $wetter_ubat_sensor; ?>')
+  $('#wetter_t4').html('0')
   set_divs();
 });  
 
@@ -384,11 +435,17 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </div>
 <div id='wetter_s6'>Diagramm<br>10 Jahre
 </div>
+<div id='wetter_s7'>&lt;
+</div>
+<div id='wetter_s8'>&gt;
+</div>
 <div id='wetter_t1'>1d
 </div>
 <div id='wetter_t2'>1a
 </div>
 <div id='wetter_t3'>1
+</div>
+<div id='wetter_t4'>0
 </div>
 
 </center>
