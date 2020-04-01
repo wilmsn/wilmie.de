@@ -5,6 +5,67 @@ require_once ('jpgraph/jpgraph.php');
 require_once ('jpgraph/jpgraph_line.php');
 require_once ('jpgraph/jpgraph_utils.inc.php');
 
+function mk_starttime($my_offset, $my_range) {
+    $akttime=time();
+    $year=intval(date("Y",$akttime));
+    $mon=intval(date("n",$akttime));
+    $day=intval(date("d",$akttime)); 
+    if ( $my_offset == 0 ) {
+        switch ($my_range) {
+		case '10y':
+            $retval = $akttime - (86400*3650);
+		break;
+        case '5y':
+            $retval = $akttime - (86400*1825);
+		break;
+		case '2y':
+            $retval = $akttime - (86400*730);
+		break;
+		case '1y':
+            $retval = $akttime - (86400*365);
+		break;
+		case '1m':
+            $retval = $akttime - (86400*30);
+		break;
+		default:
+            $retval = $akttime - (86400);
+        }
+    } else {
+        switch ($my_range) {
+		case '10y':
+            $year=$year-$my_offset*10;
+            $retval = mktime(0, 0, 0, 1, 1, $year);
+		break;
+        case '5y':
+            $year=$year-$my_offset*5;
+            $retval = mktime(0, 0, 0, 1, 1, $year);
+		break;
+		case '2y':
+            $year=$year-$my_offset*2;
+            $retval = mktime(0, 0, 0, 1, 1, $year);
+		break;
+		case '1y':
+            $year=$year-$my_offset;
+            $retval = mktime(0, 0, 0, 1, 1, $year);
+		break;
+		case '1m':
+            for($i=$my_offset;$i>0;$i--) {
+                if ($mon > 1) {
+                    $mon--;
+                } else {
+                    $year--;
+                    $mon=12;
+                }
+            }
+            $retval = mktime(0, 0, 0, $mon, 1, $year);
+		break;
+		default:
+            $retval = mktime(0, 0, 0, $mon, $day, $year) - (3600*24*$my_offset);
+        }
+	}
+	return $retval;
+}	
+
 function  TimeCallbackY( $aVal) {
    return Date ('Y',$aVal);
 }
@@ -64,104 +125,77 @@ if (isset($_GET["sensor1"])) {
 } else {
     $sensor1 = 1;
 }
-if (isset($_GET["starttime"])) {
-    $starttime = $_GET["starttime"];
+if (isset($_GET["offset"])) {
+    $offset = $_GET["offset"];
 } else {
-    $starttime = -1;
+    $offset = 0;
 }
-if (isset($_GET["days_offset"])) {
-    $days_offset = $_GET["days_offset"];
-} else {
-    $days_offset = 0;
-}
-
+error_log("offset: ".$offset." range: ".$range."\n");
 	$range = $_GET["range"];
 	$by_range = True;
 	switch ($range) {
 		case '10y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalenderjahr ->';
-			$diagramtime = "3600 * 24 *365 *10";
+			$diagramtime = 315360000;
 			$table = 'sensordata_d';
 		break;
         case '5y':
 			$label_date_format = '%d.%m.%y'; 
             $label_2 = ' Kalenderjahr ->';
-            $diagramtime = "3600 * 24 *365 *5";
+            $diagramtime = 157680000;
             $table = 'sensordata_d';
         break;
 		case '2y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
-			$diagramtime = "3600 * 24 *365 *2";
+			$diagramtime = 63072000;
 			$table = 'sensordata_d';
 		break;
 		case '1y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
-			$diagramtime = "3600 * 24 *365";
+			$diagramtime = 31536000;
 			$table = 'sensordata_d';
 		break;
 		case '1m':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
-			$diagramtime = "3600 * 24 *30";
+			$diagramtime = 2678400;
 			$table = 'sensordata_d';
 		break;
 		default:
 			$label_date_format = '%d.%m.%y %H:%i'; 
 			$label_2 = " Uhrzeit ->"; 
-			$diagramtime = " 3600 * 24";
-			$table = 'sensordata_im';
-	}
+			$diagramtime = 86400;
+            if ( $offset > 2 ) {
+                $table = 'sensordata';
+            } else {
+                $table = 'sensordata_im';
+            }
+    }
 
 $xdata = array();
-$xdataTick = array();
+//$xdataTick = array();
 $ydata = array();
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
-if ( $starttime < 0 ) {
-    #aktuelle UTIME ermitteln
-    $stmt = " select unix_timestamp(), unix_timestamp() - ".$diagramtime." - 3600*24*".$days_offset; 
-    $results = $db->query($stmt);
-    $row = $results->fetch_row();
-    $akttime = $row[0];
-    $starttime = $row[1];
-    $results->close();
-} else {
-    #aktuelle UTIME ermitteln
-    $stmt = " select unix_timestamp()"; 
-    $results = $db->query($stmt);
-    $row = $results->fetch_row();
-    $akttime = $row[0];
-    $results->close();
-}
-if ( $days_offset > 2 ) {
-    if ( $table == 'sensordata_im' ) {
-        $table = 'sensordata';
-    }
-}
+$starttime = mk_starttime($offset, $range);
 #Starttag für Label ermitteln
-$stmt = " select from_unixtime(unix_timestamp() - ".$diagramtime." - 3600*24*".$days_offset.",'".$label_date_format."')"; 
-$results = $db->query($stmt);
-$row = $results->fetch_row();
-$label_start = $row[0];
-$results->close();
-#Endtag für Label ermitteln
-$stmt = " select from_unixtime(unix_timestamp() - ".$diagramtime." - 3600*24*".$days_offset." + ".$diagramtime.",'".$label_date_format."')"; 
-$results = $db->query($stmt);
-$row = $results->fetch_row();
-$label_end = $row[0];
-$results->close();
 	switch ($range) {
 		case '10y':
         case '5y':
 		case '2y':
 		case '1y':
 		case '1m':
-			$label_1 = 'Verlauf vom '.$label_start.' bis '.$label_end; 
+			$label_1 = 'Verlauf vom '.date("d.m.Y", $starttime).' bis '.date("d.m.Y", $starttime + $diagramtime -10000); 
 		break;
 		default:
-			$label_1 = 'Verlauf seit '.$label_start; 
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf der letzten 24 Stunden'; 
+			} else {
+			    //$label_start = date("d.m.Y", $starttime);
+                $label_1 = 'Verlauf am '.date("d.m.Y", $starttime); 
+			}
 	}
 
 $stmt = " select value, utime ". 
@@ -169,6 +203,7 @@ $stmt = " select value, utime ".
 	    " where sensor_id = ".$sensor1. 
 	    " and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime.
 	    " order by utime asc";
+error_log("\n".$stmt."\n");	    
 $results = $db->query($stmt);
 $last_utime=0;
 $minTickPos=array();
@@ -190,8 +225,6 @@ while ($row = $results->fetch_assoc()) {
 }	
 $results->close();
 $db->close();
-
-//if ( $firstOfHour == 1 ) { array_shift($tickPos); }
 
 $ydataMin=min($ydata);
 $ydataMax=max($ydata);
@@ -218,7 +251,7 @@ if ($ydataMax-$ydataMin > 2 ) {
 		$yscaleMax=floor($ydataMax);
 	}	
 }	
-array_pop($xdataTick);
+//array_pop($xdataTick);
 $dateUtils = new DateScaleUtils();
 $graph = new Graph($sizex, $sizey);
 $graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
