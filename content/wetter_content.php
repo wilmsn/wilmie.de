@@ -71,7 +71,10 @@ if($mobile_browser) {
   #wetter_s3 {
   left: 67%;
   }
-  
+  #wetter_s5, #wetter_s6, #wetter_s7, #wetter_s8 {
+  visibility: hidden;
+  }
+
   \n";
 } else { 
   echo "
