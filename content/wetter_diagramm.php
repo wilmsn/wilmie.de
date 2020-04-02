@@ -162,21 +162,16 @@ error_log("offset: ".$offset." range: ".$range."\n");
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
 			$diagramtime = 2678400;
-			$table = 'sensordata_d';
+			$table = 'sensordata_im';
 		break;
 		default:
 			$label_date_format = '%d.%m.%y %H:%i'; 
 			$label_2 = " Uhrzeit ->"; 
 			$diagramtime = 86400;
-            if ( $offset > 2 ) {
-                $table = 'sensordata';
-            } else {
-                $table = 'sensordata_im';
-            }
+                	$table = 'sensordata_im';
     }
 
 $xdata = array();
-//$xdataTick = array();
 $ydata = array();
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
 $starttime = mk_starttime($offset, $range);
@@ -251,7 +246,6 @@ if ($ydataMax-$ydataMin > 2 ) {
 		$yscaleMax=floor($ydataMax);
 	}	
 }	
-//array_pop($xdataTick);
 $dateUtils = new DateScaleUtils();
 $graph = new Graph($sizex, $sizey);
 $graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
@@ -285,7 +279,6 @@ switch ($range) {
     default:
         $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackH'); 
         $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-//        $graph->xaxis->SetTickPositions($xdataTick);
 }
 if ($sizex < 500 ) {
     $graph->xaxis->SetTextLabelInterval(2);
