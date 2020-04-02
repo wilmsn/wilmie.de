@@ -1,5 +1,5 @@
 <?php
-$instance="prod";
+$instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
@@ -394,28 +394,28 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </div>
 <div id='wetter1a'<center>Temperatur:<br><b>
 <?php
-  $results = $db->query("SELECT value FROM sensor_im where sensor_id = 1 LIMIT 1");
+  $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_temp_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
  C</b></center></div>
 <div id='wetter1b'><center>Luftdruck:<br><b>
 <?php
-  $results = $db->query("SELECT value FROM sensor_im where sensor_id = 2 LIMIT 1");
+  $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_pres_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],0, ",", ".");
 ?>
  hPa</b></center></div>
 <div id='wetter1c'><center>rel. Luftfeuchte:<br><b>
 <?php
-  $results = $db->query("SELECT value FROM sensor_im where sensor_id = 5 LIMIT 1");
+  $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_humi_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
  &#37;</b></center></div>
 <div id='wetter3'><center>Batterie:<br><b>
 <?php
-  $results = $db->query("SELECT value FROM sensor_im where sensor_id = 3 LIMIT 1");
+  $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_ubat_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],2, ",", ".");
 ?>
@@ -443,7 +443,7 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </div>
 <div id='wetter_t2'>1a
 </div>
-<div id='wetter_t3'>1
+<div id='wetter_t3'><?php echo $wetter_temp_sensor; ?>
 </div>
 <div id='wetter_t4'>0
 </div>
