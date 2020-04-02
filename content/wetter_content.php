@@ -197,6 +197,22 @@ function swiperightHandler( event ) {
     set_divs();
 }
 
+function md_wetter_s7() {
+    $('#wetter_s7').css('backgroundColor', but_color2);
+}
+
+function mu_wetter_s7() {
+    $('#wetter_s7').css('backgroundColor', but_color1);
+}
+
+function md_wetter_s8() {
+    $('#wetter_s8').css('backgroundColor', but_color2);
+}
+
+function mu_wetter_s8() {
+    $('#wetter_s8').css('backgroundColor', but_color1);
+}
+
 $(window).resize(function() {
     set_divs();
 });
@@ -438,9 +454,9 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </div>
 <div id='wetter_s6'>Diagramm<br>10 Jahre
 </div>
-<div id='wetter_s7'><img src="/img/arrow_left.gif" height="50" width="50">
+<div id='wetter_s7' onmousedown="md_wetter_s7()" onmouseup="mu_wetter_s7()" ><img src="/img/arrow_left.gif" height="50" width="50">
 </div>
-<div id='wetter_s8'><img src="/img/arrow_right.gif" height="50" width="50">
+<div id='wetter_s8' onmousedown="md_wetter_s8()" onmouseup="mu_wetter_s8()" ><img src="/img/arrow_right.gif" height="50" width="50">
 </div>
 <div id='wetter_t1'>1d
 </div>
