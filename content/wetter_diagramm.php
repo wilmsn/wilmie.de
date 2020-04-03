@@ -130,10 +130,9 @@ if (isset($_GET["offset"])) {
 } else {
     $offset = 0;
 }
-error_log("offset: ".$offset." range: ".$range."\n");
-	$range = $_GET["range"];
-	$by_range = True;
-	switch ($range) {
+$range = $_GET["range"];
+//$by_range = True;
+switch ($range) {
 		case '10y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalenderjahr ->';
@@ -168,8 +167,8 @@ error_log("offset: ".$offset." range: ".$range."\n");
 			$label_date_format = '%d.%m.%y %H:%i'; 
 			$label_2 = " Uhrzeit ->"; 
 			$diagramtime = 86400;
-                	$table = 'sensordata_im';
-    }
+            $table = 'sensordata_im';
+}
 
 $xdata = array();
 $ydata = array();
@@ -212,7 +211,6 @@ $stmt = " select value, utime ".
 	    " where sensor_id = ".$sensor1. 
 	    " and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime.
 	    " order by utime asc";
-error_log("\n".$stmt."\n");	    
 $results = $db->query($stmt);
 $last_utime=0;
 $minTickPos=array();
@@ -231,89 +229,101 @@ while ($row = $results->fetch_assoc()) {
             }
         $last_utime=$row['utime'];
    }
-}	
+}
 $results->close();
 $db->close();
-
-$ydataMin=min($ydata);
-$ydataMax=max($ydata);
-if ($ydataMax-$ydataMin > 2 ) { 
-	if ($ydataMin > 0) {
-		$yscaleMin=floor($ydataMin/10)*10;
-	} else {
-		$yscaleMin=floor($ydataMin/10)*10;
-	}	
-	if ($ydataMax > 0) {
-		$yscaleMax=ceil($ydataMax/10)*10;
-	} else {
-		$yscaleMax=ceil($ydataMax/10)*10;
-	}	
-} else {
-	if ($ydataMin > 0) {
-		$yscaleMin=floor($ydataMin);
-	} else {
-		$yscaleMin=floor($ydataMin)-1;
-	}	
-	if ($ydataMax > 0) {
-		$yscaleMax=floor($ydataMax)+1;
-	} else {
-		$yscaleMax=floor($ydataMax);
-	}	
-}	
-$dateUtils = new DateScaleUtils();
 $graph = new Graph($sizex, $sizey);
-$graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
 $graph->SetMargin(70,20,0,0);
 $graph->title->Set($label_1);
-$graph->xaxis->SetColor('black','black');
-$graph->xgrid->Show();
 
-switch ($range) {
-    case '10y':
-    case '5y':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackY'); 
-        list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_YEAR1);
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-    break;
-    case '2y':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
-        list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH2);
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-    break;
-    case '1y':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
-        list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-    break;
-    case '1m':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackD'); 
-        list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_DAY1);
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-    break;
-    default:
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackH'); 
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+if (count($ydata) < 20) {
+    $graph->SetScale('intlin',0,1,0,1);
+    $dummydata=array();
+    $dummydata[]=0;
+    $line = new LinePlot($dummydata,$dummydata);
+    $line->SetLegend("No valid Data");
+    $graph->Add($line);
+    $graph->legend->SetFrameWeight(2);
+    $graph->legend->SetShadow();
+    $graph->legend->SetColor('darkred');
+    $graph->legend->SetFillColor('lightyellow');
+} else {
+    $ydataMin=min($ydata);
+    $ydataMax=max($ydata);
+    if ($ydataMax-$ydataMin > 2 ) { 
+        if ($ydataMin > 0) {
+            $yscaleMin=floor($ydataMin/10)*10;
+        } else {
+            $yscaleMin=floor($ydataMin/10)*10;
+        }	
+        if ($ydataMax > 0) {
+            $yscaleMax=ceil($ydataMax/10)*10;
+        } else {
+            $yscaleMax=ceil($ydataMax/10)*10;
+        }	
+    } else {
+        if ($ydataMin > 0) {
+            $yscaleMin=floor($ydataMin);
+        } else {
+            $yscaleMin=floor($ydataMin)-1;
+        }	
+        if ($ydataMax > 0) {
+            $yscaleMax=floor($ydataMax)+1;
+        } else {
+            $yscaleMax=floor($ydataMax);
+        }	
+    }	
+    $graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
+    $dateUtils = new DateScaleUtils();
+    $graph->xaxis->SetColor('black','black');
+    $graph->xgrid->Show();
+    switch ($range) {
+        case '10y':
+        case '5y':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackY'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_YEAR1);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        case '2y':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH2);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        case '1y':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        case '1m':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackD'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_DAY1);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        default:
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackH'); 
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+    }
+    if ($sizex < 500 ) {
+        $graph->xaxis->SetTextLabelInterval(2);
+    }
+    $graph->xaxis->SetLabelAlign(1);
+    $graph->xaxis->SetLabelSide(SIDE_BOTTOM);
+    $line = new LinePlot($ydata,$xdata);
+    $line->SetLegend($sensor1legend);
+    $graph->Add($line);
+    $line->SetColor($sensor1color);
+    $graph->yaxis->title->Set($einheit);
+    $graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
+    $graph->yaxis->SetTitleMargin(50);
+    $graph->xaxis->title->Set($label_2); 
+    $graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
+    $graph->xaxis->SetTitleMargin(10);
+    $graph->legend->SetAbsPos(10,30,'right','top');
+    $graph->legend->SetFrameWeight(2);
+    $graph->legend->SetShadow();
+    $graph->legend->SetColor('darkgreen');
+    $graph->legend->SetFillColor('lightyellow');
 }
-if ($sizex < 500 ) {
-    $graph->xaxis->SetTextLabelInterval(2);
-}
-$graph->xaxis->SetLabelAlign(1);
-$graph->xaxis->SetLabelSide(SIDE_BOTTOM);
-$line = new LinePlot($ydata,$xdata);
-$line->SetLegend($sensor1legend);
-$graph->Add($line);
-$line->SetColor($sensor1color); 
-$graph->yaxis->title->Set($einheit);
-$graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
-$graph->yaxis->SetTitleMargin(50);
-$graph->xaxis->title->Set($label_2); 
-$graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
-$graph->xaxis->SetTitleMargin(10);
-$graph->legend->SetAbsPos(10,30,'right','top');
-$graph->legend->SetFrameWeight(2);
-$graph->legend->SetShadow();
-$graph->legend->SetColor('darkgreen');
-$graph->legend->SetFillColor('lightyellow');
 $graph->xaxis->SetPos('min');
 # Achtung: Folgende Zeile verhindert Abstand unter Grafik !!!
 $graph->graph_theme=null;
