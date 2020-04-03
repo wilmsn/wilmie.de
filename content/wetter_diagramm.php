@@ -33,15 +33,15 @@ function mk_starttime($my_offset, $my_range) {
     } else {
         switch ($my_range) {
 		case '10y':
-            $year=$year-$my_offset*10;
+            $year=$year-($my_offset*10);
             $retval = mktime(0, 0, 0, 1, 1, $year);
 		break;
         case '5y':
-            $year=$year-$my_offset*5;
+            $year=$year-($my_offset*5);
             $retval = mktime(0, 0, 0, 1, 1, $year);
 		break;
 		case '2y':
-            $year=$year-$my_offset*2;
+            $year=$year-($my_offset*2);
             $retval = mktime(0, 0, 0, 1, 1, $year);
 		break;
 		case '1y':
@@ -60,7 +60,7 @@ function mk_starttime($my_offset, $my_range) {
             $retval = mktime(0, 0, 0, $mon, 1, $year);
 		break;
 		default:
-            $retval = mktime(0, 0, 0, $mon, $day, $year) - (3600*24*$my_offset);
+            $retval = strtotime(gmdate("Y-m-d", strtotime("- ".$my_offset." days")));
         }
 	}
 	return $retval;
@@ -180,15 +180,29 @@ $starttime = mk_starttime($offset, $range);
 		case '10y':
         case '5y':
 		case '2y':
+            $label_1 = 'Verlauf seit '.date("Y", $starttime); 
+		break;
 		case '1y':
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf des letzten Jahres'; 
+			} else {
+                $label_1 = 'Verlauf im Jahr '.date("Y", $starttime); 
+			}
+		break;
 		case '1m':
-			$label_1 = 'Verlauf vom '.date("d.m.Y", $starttime).' bis '.date("d.m.Y", $starttime + $diagramtime -10000); 
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf der letzten 30 Tage'; 
+			} else {
+            $monate = array(1=>"Januar", 2=>"Februar", 3=>"M&auml;rz", 4=>"April", 5=>"Mai", 6=>"Juni",
+                            7=>"Juli", 8=>"August", 9=>"September", 10=>"Oktober", 11=>"November", 12=>"Dezember");
+            $monat = intval(date("m", $starttime));
+			$label_1 = 'Verlauf im Monat '.$monate[$monat]." ".date("Y", $starttime); 
+			}
 		break;
 		default:
 		    if ( $offset == 0 ) {
                 $label_1 = 'Verlauf der letzten 24 Stunden'; 
 			} else {
-			    //$label_start = date("d.m.Y", $starttime);
                 $label_1 = 'Verlauf am '.date("d.m.Y", $starttime); 
 			}
 	}
