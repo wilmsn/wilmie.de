@@ -216,9 +216,6 @@ function init_window() {
 
 $(document).ready(function(){
 	init_window();
-	$.get(mydir+'/rf24hubadm_trans_im.php', function(data) { 
-    //    alert(data);
-    });
 });
 
 </script>

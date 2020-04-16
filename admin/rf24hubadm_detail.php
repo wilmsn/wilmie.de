@@ -7,7 +7,7 @@ function one_col($sensorhub_db,$mypage,$id) {
 	$limit1=($mypage)*10;
 	$limit2=10;
 	$returnstr="<table><tr><th>Zeitpunkt</th><th>Wert</th></th></tr>";
-	foreach ($sensorhub_db->query("select date_format(from_unixtime(utime),'%d.%m.%y %H:%i'), substr(value,1,4) from sensordata ".
+	foreach ($sensorhub_db->query("select date_format(from_unixtime(utime),'%d.%m.%y %H:%i'), substr(value,1,4) from sensordata_im ".
 	               " where sensor_id = ".$id." order by utime desc LIMIT ".$limit1.", ".$limit2) as $row) {
   	    $returnstr=$returnstr."<tr><td>$row[0]</td><td>$row[1]</td></tr>";
 	}
