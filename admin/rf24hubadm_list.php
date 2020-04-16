@@ -57,19 +57,15 @@ function node_details($db,$node) {
 foreach ($sensorhub_db->query(" select node_id, node_name, add_info from node where html_show = 'y' ".
 						   " order by html_sort ") as $row_node) { 
     $mynode="'".$row_node[0]."'";					   
-    print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
-          "<li class='ui-li-divider ui-bar-inherit ui-first-child' data-role='list-divider' role='heading' ";
     $myage = 100000;
-    foreach ($sensorhub_db->query("select ifnull(unix_timestamp() - max(utime), 100000) from sensordata ".
-                                  "where sensor_id in (select sensor_id from sensor where node_id = ".$mynode.")") as $node_age ) {
+    $bgcolor = "#119911"; 
+    foreach ($sensorhub_db->query("select ifnull(unix_timestamp() - max(utime), 100000) from sensor_im where node_id = ".$mynode." group by node_id ") as $node_age ) {
         $myage = $node_age[0]+1;
     }
-    if ( $myage > 70000 ) { 
-        print "style='background: #991111; color: white;'></li>";
-    } else {
-        print "style='background: #119911; color: white;'></li>";
-    }
-    print "<li><a id='n".$row_node[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
+    if ( $myage > 70000 ) { $bgcolor = "#991111";  } 
+    print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
+          "<li class='ui-li-divider ui-bar-inherit ui-first-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li>".
+          "<li><a id='n".$row_node[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 	  " href='#' onclick=editnode(".$mynode."); ".
 	  " data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></a>";	
     node_details($sensorhub_db, $row_node[0]);
@@ -79,7 +75,7 @@ foreach ($sensorhub_db->query(" select node_id, node_name, add_info from node wh
               " href='#' onclick='showsensor(".$row_sensor[0].");' ".
               " data-rel='popup' style='background: #AAAAAA; color: white;' >".$row_sensor[1]."(".$row_sensor[0].")</a>";
 	}	  
-    print "<li class='ui-li-divider ui-bar-inherit ui-last-child' data-role='list-divider' role='heading'></li></ul>";	
+    print "<li class='ui-li-divider ui-bar-inherit ui-last-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li></ul>";
 }
 #######################
 #
