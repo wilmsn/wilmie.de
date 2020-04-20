@@ -225,7 +225,7 @@ function set_divs() {
 	var d = new Date();
 	var n = d.getTime();
 	var w = screen.width;
-	if ( w > 850 ) { w = 850; } else { if ( w > 500 ) { w = w-50; } }
+	if ( w > 846 ) { w = 846; } else { if ( w > 500 ) { w = w-50; } }
     switch($('#wetter_t1').html()) {
     case "1m":
 		$('#wetter_s1').css('backgroundColor', but_color1);
