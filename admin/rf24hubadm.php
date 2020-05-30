@@ -20,7 +20,7 @@ function listjobs(){
 	} else {
 		$('#jobshead').attr('class','ui-btn ui-btn-icon-right ui-icon-carat-d ui-shadow');
         mytnin = 'html order';
-		$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
+		$.get(mydir+'/rf24hubadm_tn.php',{tn_in: mytnin}, function(data) { 
 			$('#jobs').html(data); 
 			$('#jobs').show();
 		});
@@ -36,14 +36,14 @@ function shownodes() {
 }
 
 function editnode(mynode){
-	$('#dn'+mynode).toggle();
-	if ($('#dn'+mynode).is(":visible")) {
-		$('#n'+mynode).attr('class','ui-btn ui-btn-icon-right ui-icon-carat-d ui-shadow');
-	} else {
-		$('#n'+mynode).attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');
-	}
+	$('#liste').hide();	
+    $('#nodedetail').show();
+    $.get(mydir+'/rf24hubadm_nodedetail.php',{node: mynode }, function(data) {
+        $('#nodedetail').html(data); 
+    });
 }
 
+/*
 function savenode(mynodeid){
 	mynid=$('#in_nid_'+mynodeid).val();
 	mynn=$('#in_nn_'+mynodeid).val();
@@ -54,7 +54,7 @@ function savenode(mynodeid){
 		alert(data);
 	});
 }
-
+*/
 function enablesensor(){
 	$('#sensoren').toggle();
 	if ($('#sensoren').is(":visible")) {
@@ -155,7 +155,7 @@ function showresult(mysensor, mypage) {
 		htmlrechts2="<a href='#' onclick='showresult("+mysensor+","+nextpage+");'><img src='/img/arrow_right.gif' height='100' width='40'></a>";
 	}	
 	htmlrechts3="</td></tr></table></center>";
-	$.get(mydir+'/rf24hubadm_detail.php',{sensor: mysensor, page: mypage, num_col: mynum_col }, function(data) { 
+	$.get(mydir+'/rf24hubadm_sensorvalue.php',{sensor: mysensor, page: mypage, num_col: mynum_col }, function(data) { 
 		$('#details').hide();
 		$('#details').html(htmllinks1+htmllinks2+htmllinks3+data+htmlrechts1+htmlrechts2+htmlrechts3); 
 		$('#details').show();
@@ -165,7 +165,7 @@ function showresult(mysensor, mypage) {
 function init_window() {
 	var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     $('#hideme').hide();
-	$('#node').hide();
+	$('#nodedetail').hide();
     $('#details_ctl').hide();
 	shownodes();
 	$('#zeigliste').click(function(){
@@ -244,6 +244,7 @@ $(document).ready(function(){
 	noborder {
 		border:0px solid black; 
 	}
+
 </style>
 
 	<div data-role="main" class="ui-content">
@@ -254,6 +255,9 @@ $(document).ready(function(){
         <div id="details_ctl">
 			<input type='range' id='myslider1' data-popup-enabled='true' value=0 min=0 max=10 step=1/>
 			<button id="zeigliste" class="ui-btn">Zurück zur Übersicht</button>
+		</div>
+		<div id="nodedetail" style="margin : 0 auto;">
+		Node Detail
 		</div>
 		<div id="hideme">	
 			<input id='mysensor'/>

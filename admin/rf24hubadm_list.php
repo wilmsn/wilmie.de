@@ -3,6 +3,7 @@ $instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 $sensorhub_db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user, $db_sh_pass);
 
+/*
 function node_details($db,$node) {
 	print "<div ID=dn".$node." style='background: #AAAAAA; color: black; display: none;'>";
 	$sql = " select node_id, node_name, add_info, battery_id, heartbeat from node where node_id = '".$node."' ";
@@ -47,8 +48,10 @@ function node_details($db,$node) {
           "<td><button class='ui-btn' onclick=\"send_st('$node')\">Wert setzen</button></td></tr>".
 	      "<tr><td width=200>emptyloopcount:</td><td width=100><input size=8 id='in_el_".$node."' value='".$value114."'></td>".
           "<td><button class='ui-btn' onclick=\"send_el('$node')\">Wert setzen</button></td></tr>".
-	      "</table><button class='ui-btn' onclick=\"savenode('$node')\">Werte speichern</button></center></div>";
+	      "</table>" 
+    print "<button class='ui-btn' onclick=\"savenode('$node')\">Werte speichern</button></center></div>";
 }
+*/
 #######################
 #
 # Nodes auflisten
@@ -66,9 +69,8 @@ foreach ($sensorhub_db->query(" select node_id, node_name, add_info from node wh
     print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
           "<li class='ui-li-divider ui-bar-inherit ui-first-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li>".
           "<li><a id='n".$row_node[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
-	  " href='#' onclick=editnode(".$mynode."); ".
-	  " data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></a>";	
-    node_details($sensorhub_db, $row_node[0]);
+        " href='#' onclick=editnode(".$mynode."); ".
+        " data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></a>";	
     foreach ($sensorhub_db->query("select Sensor_id, Sensor_name ".
 	                              " from sensor where node_id = '$row_node[0]' and html_show = 'y' order by html_order asc ") as $row_sensor) {   
         print "<a id='ss".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
