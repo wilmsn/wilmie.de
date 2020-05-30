@@ -3,55 +3,6 @@ $instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 $sensorhub_db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user, $db_sh_pass);
 
-/*
-function node_details($db,$node) {
-	print "<div ID=dn".$node." style='background: #AAAAAA; color: black; display: none;'>";
-	$sql = " select node_id, node_name, add_info, battery_id, heartbeat from node where node_id = '".$node."' ";
-	foreach ( $db->query($sql) as $row) { 
-		print "<center><table border=0>".
-			  "<tr><td width=150>Nodename:</td><td width=350 colspan=2><input type='hidden' id='in_nid_".$node."' value='".$node."'><input size=30 id='in_nn_".$node."' value='".$row[1]."'></td></tr>".
-			  "<tr><td width=200>Nodeinfo:</td><td width=350 colspan=2><textarea id='in_ni_".$node."' rows=4 cols=30>".$row[2]."</textarea></td></tr>".
-			  "<tr><td width=200>Battery:</td><td width=350 colspan=2><center>&nbsp;<select id='in_bid_".$node."'>";
-		foreach ($db->query(" select battery_id, battery_sel_txt from battery where battery_id = '".$row[3]."' ") as $bat_row) { 
-				print "<option value=".$bat_row[0]." selected>".$bat_row[1]."</option>";
-			} 				  
-		foreach ($db->query(" select battery_id, battery_sel_txt from battery where battery_id != '".$row[3]."' ") as $bat_row) { 
-				print "<option value=".$bat_row[0].">".$bat_row[1]."</option>";
-			} 				  
-		print "</select>&nbsp;</center></td></tr>".
-			  "<tr><td width=200>Heartbeat:</td><td width=350 colspan=2><center>&nbsp;<select id='in_hb_".$node."'>";
-        if ($row[4] == "y") {
-            print "<option value='y' selected>yes</option>".
-                  "<option value='n'>no</option>";
-        } else {
-            print "<option value='y'>yes</option>".
-                  "<option value='n' selected>no</option>";
-        }            
-        print "</select>&nbsp;</center></td></tr>";	  
-	}
-	$value111 = "";
-	$value114 = "";
-	$value116 = "";
-	$value117 = "";
-	$stmt = " select channel, value from node_config_v where node_id = '".$node."' ";
-	foreach ($db->query(" select channel, value from node_configdata where node_id = '".$node."' ") as $conf_row) { 
-		if ($conf_row[0] == "111") { $value111 = $conf_row[1]; }
-		if ($conf_row[0] == "114") { $value114 = $conf_row[1]; }
-		if ($conf_row[0] == "116") { $value116 = $conf_row[1]; }
-		if ($conf_row[0] == "117") { $value117 = $conf_row[1]; }
-	} 				  
-	print "<tr><td width=200>voltagefactor:</td><td width=100><input size=8 id='in_vf_".$node."' value='".$value116."'></td>".
-          "<td><button class='ui-btn' onclick=\"send_vf('$node')\">Wert setzen</button></td></tr>".
-	      "<tr><td width=200>voltageadded:</td><td width=100><input size=8 id='in_va_".$node."' value='".$value117."'></td>".
-          "<td><button class='ui-btn' onclick=\"send_va('$node')\">Wert setzen</button></td></tr>".
-	      "<tr><td width=200>sleeptime:</td><td width=100><input size=8 id='in_st_".$node."' value='".$value111."'></td>".
-          "<td><button class='ui-btn' onclick=\"send_st('$node')\">Wert setzen</button></td></tr>".
-	      "<tr><td width=200>emptyloopcount:</td><td width=100><input size=8 id='in_el_".$node."' value='".$value114."'></td>".
-          "<td><button class='ui-btn' onclick=\"send_el('$node')\">Wert setzen</button></td></tr>".
-	      "</table>" 
-    print "<button class='ui-btn' onclick=\"savenode('$node')\">Werte speichern</button></center></div>";
-}
-*/
 #######################
 #
 # Nodes auflisten
@@ -88,7 +39,7 @@ print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-in
       "<li class='ui-li-divider ui-bar-inherit ui-first-child' data-role='list-divider' role='heading' ".
       "style='background: #111111; color: white;'></li>".
 	  "<li><a id='n0' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
-	  " href='#' onclick=editnode(0); ".
+	  " href='#' onclick=newnode(); ".
 	  " data-rel='popup' style='background: #666666; color: black; ' ><center>Neuen Node anlegen</center></a>".
 	  "<div ID='dn0' style='background: #AAAAAA; color: black; display: none;'>".
 	  "<center><table>".
@@ -100,7 +51,7 @@ print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-in
 		print "<option value=".$bat_row[0]." selected>".$bat_row[1]."</option>";
 	} 				  
 print "</select></td></tr>".	  
-	  "</table><button class='ui-btn' onclick=\"savenode('0')\">Werte speichern</button></center></div>".
+	  "</table><button class='ui-btn' onclick=\"savenewnode('0')\">Werte speichern</button></center></div>".
       "<li class='ui-li-divider ui-bar-inherit ui-last-child' data-role='list-divider' role='heading'></li></ul>";	
 
 #######################
