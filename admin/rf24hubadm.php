@@ -43,8 +43,16 @@ function editnode(mynode){
     });
 }
 
-/*
-function savenode(mynodeid){
+function newnode(){
+	$('#dn0').toggle();
+	if ($('#dn0').is(":visible")) {
+		$('#n0').attr('class','ui-btn ui-btn-icon-right ui-icon-carat-d ui-shadow');
+	} else {
+		$('#n0').attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');
+	}
+}
+
+function savenewnode(mynodeid){
 	mynid=$('#in_nid_'+mynodeid).val();
 	mynn=$('#in_nn_'+mynodeid).val();
 	myni=$('#in_ni_'+mynodeid).val();
@@ -53,8 +61,9 @@ function savenode(mynodeid){
 	$.get(mydir+'/savenode.php',{nid: mynid, onid: mynodeid, nn: mynn, ni: myni, bid: mybid, hb: myhb }, function(data) { 
 		alert(data);
 	});
+	init_window();
 }
-*/
+
 function enablesensor(){
 	$('#sensoren').toggle();
 	if ($('#sensoren').is(":visible")) {
@@ -71,42 +80,6 @@ function editsensor(sensor){
 	} else {
 		$('#sa'+sensor).attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');
 	}
-}
-
-// Voltagefactor Ch: 116 mit 100 multipliziert
-function send_vf(mynode){
-    myst=$('#in_vf_'+mynode).val();
-    mytnin = 'push '+mynode+' 116 '+myst;
-	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
-        alert("Emptyloops set to: "+myst+'tn: '+mytnin);
-    });
-}
-
-// Voltageadded Ch: 117 mit 100 multipliziert
-function send_va(mynode){
-    myst=$('#in_va_'+mynode).val();
-    mytnin = 'push '+mynode+' 117 '+myst;
-	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
-        alert("Voltageadded set to: "+myst+'tn: '+mytnin);
-    });
-}
-
-// Sleeptime Ch: 111 in ms
-function send_st(mynode){
-    myst=$('#in_st_'+mynode).val();
-    mytnin = 'push '+mynode+' 111 '+myst;
-	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
-        alert("Sleeptime:"+myst+'tn: '+mytnin);
-    });
-}
-
-// Empty Loops Ch: 114 
-function send_el(mynode){
-    myst=$('#in_el_'+mynode).val();
-    mytnin = 'push '+mynode+' 114 '+myst;
-	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
-        alert("Emptyloops set to: "+myst+'tn: '+mytnin);
-    });
 }
 
 function savesensor(mysensorid){

@@ -20,6 +20,6 @@ socket_close($socket);
 $delme =array("rf24hub>", "Command received => OK");
 $out = str_replace($delme, "", $buf);
 
-echo $buf . "\n";
+echo $out . "\n";
 
 ?>

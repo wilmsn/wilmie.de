@@ -3,7 +3,7 @@ $instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot."/php_inc/check_mobile.php");
 $db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user, $db_sh_pass);
-
+$reg_array = "";
 
 
 if (isset($_GET["node"]))  {
@@ -26,7 +26,16 @@ if ( $node > 0 ) {
         foreach ($db->query("select battery_id, battery_sel_txt from battery where battery_id > 0 and battery_id != ".$row[3] ) as $brow) {
             print "<option value='".$brow[0]."'>".$brow[1]."</option>"; 
         }
-        print "</option></select></div>". 
+        print "</option></select></div>";
+        print "<div class='hb'>&nbsp;&nbsp;&nbsp;HTML Pos&nbsp;&nbsp;&nbsp;<select id='sort' name='sort'>";
+        foreach ($db->query("select html_sort from node where node_id = ". $node) as $srow) {
+            print "<option value='".$srow[0]."' selected>".$srow[0]."</option>"; 
+        }
+        foreach ($db->query("select number from numbers where number not in ( select html_sort from node where html_sort is not null)") as $srow) {
+            print "<option value='".$srow[0]."'>".$srow[0]."</option>"; 
+        }
+        
+        print "</select></div>".
             "</div>".
             "<textarea id='nodeinfo' class='textarea'>".$row[2]."</textarea>".
             "<input id='onid' type=hidden value=".$node.">".
@@ -89,6 +98,10 @@ $('#bat').on('input', function() {
     dirty=true;
 //    alert("bat dirty");
 });
+$('#sort').on('input', function() {
+    dirty=true;
+//    alert("bat dirty");
+});
 
 });
 
@@ -101,6 +114,7 @@ function savenode(mynodeid){
     var nodetyp;
     var nodeinfo;
     var batid;
+    var hsort;
     for ( var i = 0; i < reg_array.length; i++ ) {
         value = reg_array[i];
         if ($("#"+value).val() != $("#o"+value).val() ) {
@@ -116,9 +130,10 @@ function savenode(mynodeid){
     nodetyp=$("input[name='nodetyp']:checked").val();
     nodeinfo=$("#nodeinfo").val();
     batid=$("#bat").val();
+    hsort=$("#sort").val();
     if ( dirty ) {
        alert("saving Node: "+onid);
-        $.get(mydir+'/savenode.php',{onid: onid, nid: onid, nn: nodename, ni: nodeinfo, hb: nodetyp, bid: batid }, function(data) { 
+        $.get(mydir+'/savenode.php',{onid: onid, nid: onid, nn: nodename, ni: nodeinfo, hb: nodetyp, bid: batid, sort: hsort }, function(data) { 
     //$.get(mydir+'/savenode.php',{onid: onid }, function(data) { 
             alert(data);
         });
@@ -231,7 +246,7 @@ else:
 }
 .hb {
   float: left;
-  padding: 10px;
+  padding-top: 10px; 
 }
 
 
