@@ -45,7 +45,7 @@ if ( $node > 0 ) {
     $i = 0;
     $reg_array = "var reg_array = [";
     $reg_val=0;
-    $sql = "select a.channel, itemname, value, min, max, readonly from (select node_id, channel, itemname, min, max, readonly, html_order from node, node_configitem) a left join node_configdata b on ( a.node_id = b.node_id and a.channel = b.channel) where a.node_id = ".$node." order by html_order";
+    $sql = "select a.channel, itemname, value, min, max, readonly from (select node_id, channel, itemname, min, max, readonly, html_order from node, node_configitem) a left join node_configdata_im b on ( a.node_id = b.node_id and a.channel = b.channel) where a.node_id = ".$node." order by html_order";
 	foreach ($db->query($sql) as $crow) { 
         $i1 = $i + 1;
         $i2 = $i + 2;
