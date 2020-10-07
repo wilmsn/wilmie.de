@@ -9,7 +9,7 @@ $sensorhub_db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user
 #
 #######################
 foreach ($sensorhub_db->query(" select node_id, node_name, add_info from node where html_show = 'y' ".
-						   " order by html_sort ") as $row_node) { 
+						   " order by html_sort ") as $row_node) {
     $mynode="'".$row_node[0]."'";					   
     $myage = 100000;
     $bgcolor = "#119911"; 
@@ -23,7 +23,7 @@ foreach ($sensorhub_db->query(" select node_id, node_name, add_info from node wh
         " href='#' onclick=editnode(".$mynode."); ".
         " data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></a>";	
     foreach ($sensorhub_db->query("select Sensor_id, Sensor_name ".
-	                              " from sensor where node_id = '$row_node[0]' and html_show = 'y' order by html_order asc ") as $row_sensor) {   
+	                              " from sensor_im where node_id = '$row_node[0]' and html_show = 'y' order by html_order asc ") as $row_sensor) {
         print "<a id='ss".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
               " href='#' onclick='showsensor(".$row_sensor[0].");' ".
               " data-rel='popup' style='background: #AAAAAA; color: white;' >".$row_sensor[1]."(".$row_sensor[0].")</a>";
@@ -47,7 +47,7 @@ print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-in
 	  "<tr><td width=200>Nodename:</td><td width=300><input size=30 id='in_nn_0' ></td></tr>".
 	  "<tr><td width=200>Nodeinfo:</td><td width=300><textarea id='in_ni_0' rows=4 cols=30></textarea></td></tr>".
 	  "<tr><td width=200>Battery:</td><td width=300><select id='in_bid_0'>";
-	foreach ($sensorhub_db->query(" select battery_id, battery_sel_txt from battery ") as $bat_row) { 
+	foreach ($sensorhub_db->query(" select battery_id, battery_sel_txt from battery ") as $bat_row) {
 		print "<option value=".$bat_row[0]." selected>".$bat_row[1]."</option>";
 	} 				  
 print "</select></td></tr>".	  
@@ -65,7 +65,7 @@ print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-in
 	  "<li><a id='senshead' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 	  " href='#' onclick=\"enablesensor();\" ".
 	  " data-rel='popup' style='background: #666666; color: black; '><center>Sensoren editieren</center></a><div id='sensoren' style='display:none;'>";			  
-foreach ($sensorhub_db->query("select sensor_id, sensor_name, add_info, node_id, channel, html_show, store_days, fhem_dev, html_order from sensor where html_show = 'y' order by node_id, sensor_id") as $row_sensor) {   
+foreach ($sensorhub_db->query("select sensor_id, sensor_name, add_info, node_id, channel, html_show, store_days, fhem_dev, html_order from sensor_im order by node_id, sensor_id") as $row_sensor) {
 	print "<a id='sa".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
 	      " href='#' onclick=\"editsensor('".$row_sensor[0]."');\" ".
 	      " data-rel='popup' style='background: #AAAAAA; color: white;'> (".$row_sensor[0].") ".$row_sensor[1]." [".$row_sensor[3]."-".$row_sensor[4]."] </a>".
