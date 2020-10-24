@@ -28,10 +28,10 @@ if ( $node > 0 ) {
         }
         print "</option></select></div>";
         print "<div class='hb'>&nbsp;&nbsp;&nbsp;HTML Pos&nbsp;&nbsp;&nbsp;<select id='sort' name='sort'>";
-        foreach ($db->query("select html_sort from node where node_id = ". $node) as $srow) {
+        foreach ($db->query("select html_order from node where node_id = ". $node) as $srow) {
             print "<option value='".$srow[0]."' selected>".$srow[0]."</option>"; 
         }
-        foreach ($db->query("select number from numbers where number not in ( select html_sort from node where html_sort is not null)") as $srow) {
+        foreach ($db->query("select number from numbers where number not in ( select html_order from node where html_order is not null)") as $srow) {
             print "<option value='".$srow[0]."'>".$srow[0]."</option>"; 
         }
         
@@ -45,7 +45,7 @@ if ( $node > 0 ) {
     $i = 0;
     $reg_array = "var reg_array = [";
     $reg_val=0;
-    $sql = "select a.channel, itemname, value, min, max, readonly from (select node_id, channel, itemname, min, max, readonly, html_order from node, node_configitem) a left join node_configdata_im b on ( a.node_id = b.node_id and a.channel = b.channel) where a.node_id = ".$node." order by html_order";
+    $sql = "select a.channel, itemname, value, min, max, readonly from (select node_id, channel, itemname, min, max, readonly, x.html_order from node x, node_configitem y) a left join node_configdata_im b on ( a.node_id = b.node_id and a.channel = b.channel) where a.node_id = ".$node." order by html_order";
 	foreach ($db->query($sql) as $crow) { 
         $i1 = $i + 1;
         $i2 = $i + 2;
@@ -121,7 +121,7 @@ function savenode(mynodeid){
             tn_in = "push "+mynodeid+" "+value+" "+$("#"+value).val();
             alert(tn_in);
             $.get(mydir+'/rf24hubadm_tn.php',{tn_in: tn_in }, function(data) { 
-                alert(data);
+                // alert(data);
             });
         }
     }  
@@ -151,7 +151,7 @@ function savenode(mynodeid){
 }
 
 .reg {
-    border-radius: 0px 0.5em 0.5em;
+    border-radius: .5em;
 	border: 1px solid;
 	padding: .5em;
 	margin: .5em; 
@@ -224,7 +224,7 @@ else:
 <style type=text/css>
 
 .reg {
-    border-radius: 0px 0.5em 0.5em;
+    border-radius: .5em;
 	border: 1px solid;
 	padding: .5em;
 	margin: .5em; 

@@ -17,7 +17,7 @@ $sql ="insert into node (node_id, node_name, add_info, battery_id, heartbeat, ht
 	$sensorhub_db->query($sql);
 	print "Neuen Node angelegt, NodeID: ".$nid;
 } else {
-	$sql = " update node set node_name = '".$nn."', add_info = '".$ni."', battery_id = ".$bid.", heartbeat = '". $hb."', html_sort = '". $sort."'  where node_id = '".$onid."' ";
+	$sql = " update node set node_name = '".$nn."', add_info = '".$ni."', battery_id = ".$bid.", heartbeat = '". $hb."', html_order = '". $sort."'  where node_id = '".$onid."' ";
         $sensorhub_db->query($sql);
 	print "Update erfolgt für NodeID: ".$onid;
 }		

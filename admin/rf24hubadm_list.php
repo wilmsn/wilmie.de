@@ -9,7 +9,7 @@ $sensorhub_db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user
 #
 #######################
 foreach ($sensorhub_db->query(" select node_id, node_name, add_info from node where html_show = 'y' ".
-						   " order by html_sort ") as $row_node) {
+						   " order by html_order ") as $row_node) {
     $mynode="'".$row_node[0]."'";					   
     $myage = 100000;
     $bgcolor = "#119911"; 
@@ -107,9 +107,6 @@ foreach ($sensorhub_db->query("select node_id, node_name from node ") as $rn) {
 }		
 print "</select></td></tr>".
 	  "<tr><td width=200>Channel:</td><td width=300><input size=6 id='is_ch_0'></td></tr>".
-	  "<tr><td width=200>Typ:</td><td width=300><select id='is_ty_0' >".
-	  "<option value='s' selected>Sensor</option><option value='a'>Actor</option>".
-      "</select></td></tr>".
 	  "</table><button class='ui-btn' onclick='savesensor(0)'>Werte speichern</button></center></div>".
 	  "</div><li class='ui-li-divider ui-bar-inherit ui-last-child' data-role='list-divider' role='heading'></li></ul>";	
 	
