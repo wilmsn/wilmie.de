@@ -20,7 +20,7 @@ function listjobs(){
 	} else {
 		$('#jobshead').attr('class','ui-btn ui-btn-icon-right ui-icon-carat-d ui-shadow');
         mytnin = 'html order';
-		$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
+		$.get(mydir+'/rf24hubadm_tn.php',{tn_in: mytnin}, function(data) { 
 			$('#jobs').html(data); 
 			$('#jobs').show();
 		});
@@ -36,15 +36,23 @@ function shownodes() {
 }
 
 function editnode(mynode){
-	$('#dn'+mynode).toggle();
-	if ($('#dn'+mynode).is(":visible")) {
-		$('#n'+mynode).attr('class','ui-btn ui-btn-icon-right ui-icon-carat-d ui-shadow');
+	$('#liste').hide();	
+    $('#nodedetail').show();
+    $.get(mydir+'/rf24hubadm_nodedetail.php',{node: mynode }, function(data) {
+        $('#nodedetail').html(data); 
+    });
+}
+
+function newnode(){
+	$('#dn0').toggle();
+	if ($('#dn0').is(":visible")) {
+		$('#n0').attr('class','ui-btn ui-btn-icon-right ui-icon-carat-d ui-shadow');
 	} else {
-		$('#n'+mynode).attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');
+		$('#n0').attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');
 	}
 }
 
-function savenode(mynodeid){
+function savenewnode(mynodeid){
 	mynid=$('#in_nid_'+mynodeid).val();
 	mynn=$('#in_nn_'+mynodeid).val();
 	myni=$('#in_ni_'+mynodeid).val();
@@ -53,6 +61,7 @@ function savenode(mynodeid){
 	$.get(mydir+'/savenode.php',{nid: mynid, onid: mynodeid, nn: mynn, ni: myni, bid: mybid, hb: myhb }, function(data) { 
 		alert(data);
 	});
+	init_window();
 }
 
 function enablesensor(){
@@ -71,42 +80,6 @@ function editsensor(sensor){
 	} else {
 		$('#sa'+sensor).attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');
 	}
-}
-
-// Voltagefactor Ch: 116 mit 100 multipliziert
-function send_vf(mynode){
-    myst=$('#in_vf_'+mynode).val();
-    mytnin = 'push '+mynode+' 116 '+myst;
-	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
-        alert("Emptyloops set to: "+myst+'tn: '+mytnin);
-    });
-}
-
-// Voltageadded Ch: 117 mit 100 multipliziert
-function send_va(mynode){
-    myst=$('#in_va_'+mynode).val();
-    mytnin = 'push '+mynode+' 117 '+myst;
-	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
-        alert("Voltageadded set to: "+myst+'tn: '+mytnin);
-    });
-}
-
-// Sleeptime Ch: 111 in ms
-function send_st(mynode){
-    myst=$('#in_st_'+mynode).val();
-    mytnin = 'push '+mynode+' 111 '+myst;
-	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
-        alert("Sleeptime:"+myst+'tn: '+mytnin);
-    });
-}
-
-// Empty Loops Ch: 114 
-function send_el(mynode){
-    myst=$('#in_el_'+mynode).val();
-    mytnin = 'push '+mynode+' 114 '+myst;
-	$.get(mydir+'/rf24hubadm_jobs.php',{tn_in: mytnin}, function(data) { 
-        alert("Emptyloops set to: "+myst+'tn: '+mytnin);
-    });
 }
 
 function savesensor(mysensorid){
@@ -155,7 +128,7 @@ function showresult(mysensor, mypage) {
 		htmlrechts2="<a href='#' onclick='showresult("+mysensor+","+nextpage+");'><img src='/img/arrow_right.gif' height='100' width='40'></a>";
 	}	
 	htmlrechts3="</td></tr></table></center>";
-	$.get(mydir+'/rf24hubadm_detail.php',{sensor: mysensor, page: mypage, num_col: mynum_col }, function(data) { 
+	$.get(mydir+'/rf24hubadm_sensorvalue.php',{sensor: mysensor, page: mypage, num_col: mynum_col }, function(data) { 
 		$('#details').hide();
 		$('#details').html(htmllinks1+htmllinks2+htmllinks3+data+htmlrechts1+htmlrechts2+htmlrechts3); 
 		$('#details').show();
@@ -165,7 +138,7 @@ function showresult(mysensor, mypage) {
 function init_window() {
 	var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     $('#hideme').hide();
-	$('#node').hide();
+	$('#nodedetail').hide();
     $('#details_ctl').hide();
 	shownodes();
 	$('#zeigliste').click(function(){
@@ -244,6 +217,7 @@ $(document).ready(function(){
 	noborder {
 		border:0px solid black; 
 	}
+
 </style>
 
 	<div data-role="main" class="ui-content">
@@ -254,6 +228,9 @@ $(document).ready(function(){
         <div id="details_ctl">
 			<input type='range' id='myslider1' data-popup-enabled='true' value=0 min=0 max=10 step=1/>
 			<button id="zeigliste" class="ui-btn">Zurück zur Übersicht</button>
+		</div>
+		<div id="nodedetail" style="margin : 0 auto;">
+		Node Detail
 		</div>
 		<div id="hideme">	
 			<input id='mysensor'/>
