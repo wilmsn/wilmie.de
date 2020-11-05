@@ -14,7 +14,7 @@ if (isset($_GET["node"]))  {
 
 if ( $node > 0 ) { 
 	foreach ($db->query("select node_id, node_name, add_info, battery_id, heartbeat from node where node_id = '".$node."'") as $row) {
-        if ( $row[4] == 'y' ) { $nor=""; $hb="checked"; } else { $nor="checked"; $hb=""; }
+        if ( $row[4] == 'y' ) { $nor=""; $hb="checked"; $nodetype_sel="HB_use = 'y'"; } else { $nor="checked"; $hb=""; $nodetype_sel="AO_use = 'y' ";}
         print "<div class='node'><p>Node: ".$row[0]."&nbsp;&nbsp;<input id='nodename' value='".$row[1]."'></p></div>".
             "<div class='hb'>".
             "<div class='hb'>Heartbeat <input type='radio' name='nodetyp' value='y' ".$hb."></div>".
@@ -45,7 +45,7 @@ if ( $node > 0 ) {
     $i = 0;
     $reg_array = "var reg_array = [";
     $reg_val=0;
-    $sql = "select a.channel, itemname, value, min, max, readonly from (select node_id, channel, itemname, min, max, readonly, x.html_order from node x, node_configitem y) a left join node_configdata_im b on ( a.node_id = b.node_id and a.channel = b.channel) where a.node_id = ".$node." order by html_order";
+    $sql = "select a.channel, itemname, value, min, max, readonly from (select node_id, channel, itemname, min, max, readonly, x.html_order from node x, node_configitem y where ".$nodetype_sel.") a left join node_configdata_im b on ( a.node_id = b.node_id and a.channel = b.channel) where a.node_id = ".$node." order by html_order";
 	foreach ($db->query($sql) as $crow) { 
         $i1 = $i + 1;
         $i2 = $i + 2;
@@ -67,9 +67,15 @@ if ( $node > 0 ) {
 	} 				
     $reg_array = $reg_array."];";
     switch ( $i) {
-        case 2: print "<div></div><div></div>";
+        case 0: print "<div></div><div></div>";
         break;
-        case 4: print "<div></div>";
+        case 2: print "<div></div>";
+        break;
+        case 4: print "";
+    }
+    $sql = "select from_unixtime(min(utime)), from_unixtime(max(utime)) from node_configdata_im where node_id = ".$node;
+	foreach ($db->query($sql) as $drow) { 
+        print "<div class='reg'>Datenstand<br> min: ".$drow[0]."<br>max: ".$drow[1]."</div>";
     }
     print "<div><button class='ui-btn' onclick='init_window()'>abbrechen</button></div><div></div>".
           "<div><button class='ui-btn' onclick='savenode($node)'>Werte speichern</button></div><div></div>".

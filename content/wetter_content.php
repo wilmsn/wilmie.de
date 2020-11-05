@@ -309,7 +309,7 @@ function set_divs() {
 		mylegend='Temperatur';
 	} 
 //	alert(mycolor);
-	$('#wetter_dia').attr('src', '/content/wetter_diagramm.php?sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&offset='+$('#wetter_t4').html()+'&range='+$('#wetter_t1').html()+'&t='+n);
+	$('#wetter_dia').attr('src', '/content/diagramm.php?sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&offset='+$('#wetter_t4').html()+'&range='+$('#wetter_t1').html()+'&t='+n);
 } 
 $('#zeit').css('backgroundColor', but_color1);
 $('#wetter_t1').hide();  

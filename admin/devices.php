@@ -1,7 +1,7 @@
 
 <script> var basedir="/admin/"; </script>
 
-<script src="/js/sensorhub.js"></script> 
+<script src="/js/rf24hub.js"></script> 
 
 <script type="text/javascript">
 
@@ -36,7 +36,7 @@ $(document).ready(function(){
 });
 </script>
  
-<link rel="stylesheet" href="/css/sensorhub.css" /> 
+<link rel="stylesheet" href="/css/rf24hub.css" /> 
    
 <div id="haus" class="haus">
 </div>  

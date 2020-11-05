@@ -13,7 +13,7 @@ case "timestamp":
     $fhemcmd = "{ ReadingsTimestamp(\"".$geraet."\", \"state\",0);; }\r\nquit\r\n";
     break;
 default:
-    $fhemcmd = "{ ReadingsVal(\"".$geraet."\",\"".$eigenschaft."\",0);; }\r\nquit\r\n";
+    $fhemcmd = "{ ReadingsVal(\"".$geraet."\",\"".$eigenschaft."\",\"0\");; }\r\nquit\r\n";
 }
 
 //Socket öffnen
@@ -24,7 +24,7 @@ fwrite($fhemsock, $fhemcmd);
 #while(!feof($fhemsock)) {
 if(!feof($fhemsock)) {
     $ergebnis=fgets($fhemsock, 128);
-	if ( strlen($ergebnis) > 2 ) {
+	if ( strlen($ergebnis) > 0 ) {
 		$zustand=explode(" ",$ergebnis);
         print trim($zustand[0]);
 	}

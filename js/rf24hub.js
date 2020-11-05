@@ -21,13 +21,13 @@ function get_sw_data(dev_no, dev_disp_name, dev_disp_read, dev_fhem_name) {
 //	alert(dev_fhem_name + ": "+data);
     });
 	$.get(basedir+'getfhem.php',{geraet: dev_disp_name, eigenschaft: dev_disp_read }, function(data) {
-//	alert(dev_disp_read + ": " + data);
+//	alert(dev_disp_name + " " + dev_disp_read + ": " + data + "#");
 	    switch(data) {
-			case "1.000000":
+			case "1":
 				$("#dev"+dev_no+"lr").append("Ein");
 				$("#dev"+dev_no+"b0g").css("background-color", "yellow").css("color","white");
 			break;	
-			case "0.000000":
+			case "0":
 				$("#dev"+dev_no+"lr").append("Aus");
 				$("#dev"+dev_no+"b0g").css("background-color", "black").css("color","white");
 			break;	
@@ -70,6 +70,14 @@ function dev_status(dev_no, line_no, dev_label, dev_fhem_name, dev_fhem_read) {
 		$("#dev"+dev_no+"l"+line_no).html(dev_label+" = "+data);
 		//alert(dev_fhem_name + ": "+data);
     });	
+}
+
+function get_rgb_val(dev_no) {
+    val1 = $("#dev"+dev_no+"s1").val() * 1;
+    val2 = $("#dev"+dev_no+"s2").val() * 1;
+    val3 = $("#dev"+dev_no+"s3").val() * 1;
+    rgb_val=(32*32*val1)+(32*val2)+val3;
+    $("#dev"+dev_no+"s4").val(rgb_val);
 }
 
 function dev_init(dev_no, dev_typ, dev_label, dev_disp_name, dev_disp_read, dev_fhem_name) {

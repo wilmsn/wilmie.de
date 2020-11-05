@@ -103,6 +103,51 @@
         height: 50px;
 		width: 100%;
 	}
+	.device_neo {
+        position: relative; 
+		height: 100px;
+  		width: 100%;
+	}
+	.device_neo_box1 {
+		position: absolute; 
+		top: 0px;
+		left: 0px;
+ 		width: 25%; 
+		height: 50px;
+        padding: 5px;
+ 		text-align: center;
+		background-color: #aaaaaa; 
+	}
+	.device_neo_box2 {
+		position: absolute; 
+		top: 0px;
+		left: 25%;
+ 		width: 25%; 
+		height: 50px;
+        padding: 5px;
+ 		text-align: center;
+		background-color: #aaaaaa; 
+	}
+	.device_neo_box3 {
+		position: absolute; 
+		top: 0px;
+		left: 50%;
+ 		width: 25%; 
+		height: 50px;
+        padding: 5px;
+ 		text-align: center;
+		background-color: #aaaaaa; 
+	}
+	.device_neo_box4 {
+		position: absolute; 
+		top: 0px;
+		left: 75%;
+ 		width: 25%; 
+		height: 50px;
+        padding: 5px;
+ 		text-align: center;
+		background-color: #aaaaaa; 
+	}
 	.device_sw_box0 {
 		position: absolute; 
 		top: 0px;

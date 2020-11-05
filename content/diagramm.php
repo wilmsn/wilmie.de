@@ -5,6 +5,75 @@ require_once ('jpgraph/jpgraph.php');
 require_once ('jpgraph/jpgraph_line.php');
 require_once ('jpgraph/jpgraph_utils.inc.php');
 
+function mk_starttime($my_offset, $my_range) {
+    $akttime=time();
+    $year=intval(date("Y",$akttime));
+    $mon=intval(date("n",$akttime));
+    $day=intval(date("d",$akttime)); 
+    if ( $my_offset == 0 ) {
+        switch ($my_range) {
+		case '10y':
+            $retval = $akttime - (86400*3650);
+		break;
+        case '5y':
+            $retval = $akttime - (86400*1825);
+		break;
+		case '2y':
+            $retval = $akttime - (86400*730);
+		break;
+		case '1y':
+            $retval = $akttime - (86400*365);
+		break;
+		case '6m':
+            $retval = $akttime - (86400*180);
+        break;    
+		case '3m':
+            $retval = $akttime - (86400*90);
+        break;    
+		case '1m':
+            $retval = $akttime - (86400*30);
+		break;
+		default:
+            $retval = $akttime - (86400);
+        }
+    } else {
+        switch ($my_range) {
+		case '10y':
+            $year=$year-($my_offset*10);
+            $retval = mktime(0, 0, 0, 1, 1, $year);
+		break;
+        case '5y':
+            $year=$year-($my_offset*5);
+            $retval = mktime(0, 0, 0, 1, 1, $year);
+		break;
+		case '2y':
+            $year=$year-($my_offset*2);
+            $retval = mktime(0, 0, 0, 1, 1, $year);
+		break;
+		case '1y':
+            $year=$year-$my_offset;
+            $retval = mktime(0, 0, 0, 1, 1, $year);
+		break;
+		case '6m':
+		case '3m':
+		case '1m':
+            for($i=$my_offset;$i>0;$i--) {
+                if ($mon > 1) {
+                    $mon--;
+                } else {
+                    $year--;
+                    $mon=12;
+                }
+            }
+            $retval = mktime(0, 0, 0, $mon, 1, $year);
+		break;
+		default:
+            $retval = strtotime(gmdate("Y-m-d", strtotime("- ".$my_offset." days")));
+        }
+	}
+	return $retval;
+}	
+
 function  TimeCallbackY( $aVal) {
    return Date ('Y',$aVal);
 }
@@ -20,16 +89,7 @@ function  TimeCallbackD( $aVal) {
 function  TimeCallbackH( $aVal) {
    return Date ('H',$aVal);
 }
-if (isset($_GET["ymin"])) {
-	$ymin = $_GET["ymin"];
-} else {
-    $ymin='auto';
-}	
-if (isset($_GET["ymax"])) {
-	$ymax = $_GET["ymax"];
-} else {
-    $ymax='auto';
-}	
+
 if (isset($_GET["sizex"])) {
 	$sizex = $_GET["sizex"];
 } else {
@@ -73,68 +133,127 @@ if (isset($_GET["sensor1"])) {
 } else {
     $sensor1 = 1;
 }
-
-	$range = $_GET["range"];
-	$by_range = True;
-	switch ($range) {
+if (isset($_GET["offset"])) {
+    $offset = $_GET["offset"];
+} else {
+    $offset = 0;
+}
+if (isset($_GET["ymin"])) {
+    $ymin = $_GET["ymin"];
+    $ymin_set = true;
+} else {
+    $ymin_set = false;
+}
+if (isset($_GET["ymax"])) {
+    $ymax = $_GET["ymax"];
+    $ymax_set = true;
+} else {
+    $ymax_set = false;
+}
+$range = $_GET["range"];
+//$by_range = True;
+switch ($range) {
 		case '10y':
-			$label_1 = 'Verlauf der letzten 10 Jahre'; 
+			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalenderjahr ->';
-			$utime_back = "3600 * 24 *365 *10";
-			$table = " sensordata_d ";
+			$diagramtime = 315360000;
+			$table = 'sensordata_d';
 		break;
         case '5y':
-            $label_1 = 'Verlauf der letzten 5 Jahre';
+			$label_date_format = '%d.%m.%y'; 
             $label_2 = ' Kalenderjahr ->';
-            $utime_back = "3600 * 24 *365 *5";
-            $table = " sensordata_d ";
+            $diagramtime = 157680000;
+            $table = 'sensordata_d';
         break;
 		case '2y':
-			$label_1 = 'Verlauf der letzten 2 Jahre'; 
+			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
-			$utime_back = "3600 * 24 *365 *2";
-			$table = " sensordata_d ";
+			$diagramtime = 63072000;
+			$table = 'sensordata_d';
 		break;
 		case '1y':
-			$label_1 = 'Verlauf des letzten Jahres'; 
+			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
-			$utime_back = "3600 * 24 *365";
-			$table = " sensordata_d ";
+			$diagramtime = 31536000;
+			$table = 'sensordata_d';
 		break;
 		case '6m':
-			$label_1 = 'Verlauf der letzten 180 Tage'; 
-			$label_2 = ' Kalendertag ->';
-			$utime_back = "3600 * 24 *30 *6";
-			$table = " sensordata_d ";
+			$label_date_format = '%d.%m.%y'; 
+			$label_2 = ' Kalendermonat ->';
+			$diagramtime = 16070400;
+			$table = 'sensordata_d';
 		break;
 		case '3m':
-			$label_1 = 'Verlauf der letzten 90 Tage'; 
+			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
-			$utime_back = "3600 * 24 *30 *3";
-			$table = " sensordata_d ";
+			$diagramtime = 8035200;
+			$table = 'sensordata_d';
 		break;
 		case '1m':
-			$label_1 = 'Verlauf der letzten 30 Tage'; 
+			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
-			$utime_back = "3600 * 24 *30";
-			$table = " sensordata_d ";
+			$diagramtime = 2678400;
+			$table = 'sensordata_im';
 		break;
 		default:
-			$label_1 = "Verlauf der letzten 24 Stunden"; 
+			$label_date_format = '%d.%m.%y %H:%i'; 
 			$label_2 = " Uhrzeit ->"; 
-			$utime_back = " 3600 * 24";
-			$table = " sensordata_im ";
-	}
+			$diagramtime = 86400;
+            $table = 'sensordata_im';
+}
 
 $xdata = array();
-$xdataTick = array();
 $ydata = array();
+$monate = array(1=>"Januar", 2=>"Februar", 3=>"M&auml;rz", 4=>"April", 5=>"Mai", 6=>"Juni",7=>"Juli", 8=>"August", 9=>"September", 10=>"Oktober", 11=>"November", 12=>"Dezember");
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
-	$stmt = " select value, utime ". 
-		    " from ".$table.
-		    " where sensor_id = ".$sensor1. 
-		    " and utime > unix_timestamp() - ".$utime_back.
-		    " order by utime asc";
+$starttime = mk_starttime($offset, $range);
+#Starttag für Label ermitteln
+	switch ($range) {
+		case '10y':
+        case '5y':
+		case '2y':
+            $label_1 = 'Verlauf seit '.date("Y", $starttime); 
+		break;
+		case '1y':
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf des letzten Jahres'; 
+			} else {
+                $label_1 = 'Verlauf im Jahr '.date("Y", $starttime); 
+			}
+		break;
+		case '6m':
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf der letzten 180 Tage'; 
+			} else {
+            $monat = intval(date("m", $starttime));
+			$label_1 = 'Verlauf seit Monat '.$monate[$monat]." ".date("Y", $starttime); 
+			}
+		break;
+		case '3m':
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf der letzten 90 Tage'; 
+			} else {
+             $monat = intval(date("m", $starttime));
+			$label_1 = 'Verlauf seit Monat '.$monate[$monat]." ".date("Y", $starttime); 
+			}
+		break;
+		case '1m':
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf der letzten 30 Tage'; 
+			} else {
+            $monat = intval(date("m", $starttime));
+			$label_1 = 'Verlauf im Monat '.$monate[$monat]." ".date("Y", $starttime); 
+			}
+		break;
+		default:
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf der letzten 24 Stunden'; 
+			} else {
+                $label_1 = 'Verlauf am '.date("d.m.Y", $starttime); 
+			}
+	}
+
+$stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime." order by utime asc";
 $results = $db->query($stmt);
 $last_utime=0;
 $minTickPos=array();
@@ -153,111 +272,111 @@ while ($row = $results->fetch_assoc()) {
             }
         $last_utime=$row['utime'];
    }
-}		
-//if ( $firstOfHour == 1 ) { array_shift($tickPos); }
-if ( $ymin == 'auto' ) {
-    $ydataMin=min($ydata);
-} else {
-    $ydataMin=$ymin;
 }
-if ( $ymax == 'auto' ) {
-    $ydataMax=max($ydata);
-} else {
-    $ydataMax=$ymax;
-}
-if ( $ymin == 'auto' ) {
-    if ($ydataMax-$ydataMin > 2 ) { 
-        if ($ydataMin > 0) {
-            $yscaleMin=floor($ydataMin/10)*10;
-        } else {
-            $yscaleMin=floor($ydataMin/10)*10;
-        }
-    } else {
-        if ($ydataMin > 0) {
-            $yscaleMin=floor($ydataMin);
-        } else {
-            $yscaleMin=floor($ydataMin)-1;
-        }
-	}	
-} else {
-    $yscaleMin=$ydataMin;
-}
-if ( $ymax == 'auto' ) {
-    if ($ydataMax-$ydataMin > 2 ) { 
-        if ($ydataMax > 0) {
-            $yscaleMax=ceil($ydataMax/10)*10;
-        } else {
-            $yscaleMax=ceil($ydataMax/10)*10;
-        }	
-    } else {
-        if ($ydataMax > 0) {
-            $yscaleMax=floor($ydataMax)+1;
-        } else {
-            $yscaleMax=floor($ydataMax);
-        }
-    }
-} else {
-    $yscaleMax=$ydataMax;
-}
-array_pop($xdataTick);
-$dateUtils = new DateScaleUtils();
+$results->close();
+$db->close();
 $graph = new Graph($sizex, $sizey);
-$graph->title->Set($label_1);
-$graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
 $graph->SetMargin(70,20,0,0);
 $graph->title->Set($label_1);
-$graph->xaxis->SetColor('black','black');
-$graph->xgrid->Show();
 
-switch ($range) {
-    case '10y':
-    case '5y':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackY'); 
-        list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_YEAR1);
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-    break;
-    case '2y':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
-        list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH2);
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-    break;
-    case '1y':
-    case '6m':
-    case '3m':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
-        list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-    break;
-    case '1m':
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackD'); 
-        list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_DAY1);
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-    break;
-    default:
-        $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackH'); 
-        $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
-//        $graph->xaxis->SetTickPositions($xdataTick);
+if (count($ydata) < 20) {
+    $graph->SetScale('intlin',0,1,0,1);
+    $dummydata=array();
+    $dummydata[]=0;
+    $line = new LinePlot($dummydata,$dummydata);
+    $line->SetLegend("No valid Data");
+    $graph->Add($line);
+    $graph->legend->SetFrameWeight(2);
+    $graph->legend->SetShadow();
+    $graph->legend->SetColor('darkred');
+    $graph->legend->SetFillColor('lightyellow');
+} else {
+    if ( $ymin_set and $ymax_set ) {
+        $graph->SetScale('intlin',$ymin,$ymax,min($xdata),max($xdata));
+    } else {
+        $ydataMin=min($ydata);
+        $ydataMax=max($ydata);
+        if ($ydataMax-$ydataMin > 2 ) { 
+            if ($ydataMin > 0) {
+                $yscaleMin=floor($ydataMin/10)*10;
+            } else {
+                $yscaleMin=floor($ydataMin/10)*10;
+            }	
+            if ($ydataMax > 0) {
+                $yscaleMax=ceil($ydataMax/10)*10;
+            } else {
+                $yscaleMax=ceil($ydataMax/10)*10;
+            }	
+        } else {
+            if ($ydataMin > 0) {
+                $yscaleMin=floor($ydataMin);
+            } else {
+                $yscaleMin=floor($ydataMin)-1;
+            }	
+            if ($ydataMax > 0) {
+                $yscaleMax=floor($ydataMax)+1;
+            } else {
+                $yscaleMax=floor($ydataMax);
+            }	
+        }	
+        $graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
+    }
+    $dateUtils = new DateScaleUtils();
+    $graph->xaxis->SetColor('black','black');
+    $graph->xgrid->Show();
+    switch ($range) {
+        case '10y':
+        case '5y':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackY'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_YEAR1);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        case '2y':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackM'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH2);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        case '1y':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackM'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        case '6m':
+        case '3m':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackM'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        case '1m':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackD'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_DAY1);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        default:
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackH'); 
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+    }
+    if ($sizex < 500 ) {
+        $graph->xaxis->SetTextLabelInterval(2);
+    }
+    $graph->xaxis->SetLabelAlign(1);
+    $graph->xaxis->SetLabelSide(SIDE_BOTTOM);
+    $line = new LinePlot($ydata,$xdata);
+    $line->SetLegend($sensor1legend);
+    $graph->Add($line);
+    $line->SetColor($sensor1color);
+    $graph->yaxis->title->Set($einheit);
+    $graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
+    $graph->yaxis->SetTitleMargin(50);
+    $graph->xaxis->title->Set($label_2); 
+    $graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
+    $graph->xaxis->SetTitleMargin(10);
+    $graph->legend->SetAbsPos(10,30,'right','top');
+    $graph->legend->SetFrameWeight(2);
+    $graph->legend->SetShadow();
+    $graph->legend->SetColor('darkgreen');
+    $graph->legend->SetFillColor('lightyellow');
 }
-if ($sizex < 500 ) {
-    $graph->xaxis->SetTextLabelInterval(2);
-}
-$graph->xaxis->SetLabelAlign(1);
-$graph->xaxis->SetLabelSide(SIDE_BOTTOM);
-$line = new LinePlot($ydata,$xdata);
-$line->SetLegend($sensor1legend);
-$graph->Add($line);
-$line->SetColor($sensor1color); 
-$graph->yaxis->title->Set($einheit);
-$graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
-$graph->yaxis->SetTitleMargin(50);
-$graph->xaxis->title->Set($label_2); 
-$graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
-$graph->xaxis->SetTitleMargin(10);
-$graph->legend->SetAbsPos(10,30,'right','top');
-$graph->legend->SetFrameWeight(2);
-$graph->legend->SetShadow();
-$graph->legend->SetColor('darkgreen');
-$graph->legend->SetFillColor('lightyellow');
 $graph->xaxis->SetPos('min');
 # Achtung: Folgende Zeile verhindert Abstand unter Grafik !!!
 $graph->graph_theme=null;
