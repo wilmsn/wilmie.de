@@ -24,6 +24,12 @@ function mk_starttime($my_offset, $my_range) {
 		case '1y':
             $retval = $akttime - (86400*365);
 		break;
+		case '6m':
+            $retval = $akttime - (86400*180);
+        break;    
+		case '3m':
+            $retval = $akttime - (86400*90);
+        break;    
 		case '1m':
             $retval = $akttime - (86400*30);
 		break;
@@ -48,6 +54,8 @@ function mk_starttime($my_offset, $my_range) {
             $year=$year-$my_offset;
             $retval = mktime(0, 0, 0, 1, 1, $year);
 		break;
+		case '6m':
+		case '3m':
 		case '1m':
             for($i=$my_offset;$i>0;$i--) {
                 if ($mon > 1) {
@@ -87,7 +95,7 @@ if (isset($_GET["sizex"])) {
 } else {
     $sizex=650;
 }	
-if ($sizex > 1000) { $sizex = 1000; }
+if ($sizex > 1200) { $sizex = 1200; }
 if (isset($_GET["sizey"])) {
 	$sizey = $_GET["sizey"];
 } else {
@@ -130,6 +138,18 @@ if (isset($_GET["offset"])) {
 } else {
     $offset = 0;
 }
+if (isset($_GET["ymin"])) {
+    $ymin = $_GET["ymin"];
+    $ymin_set = true;
+} else {
+    $ymin_set = false;
+}
+if (isset($_GET["ymax"])) {
+    $ymax = $_GET["ymax"];
+    $ymax_set = true;
+} else {
+    $ymax_set = false;
+}
 $range = $_GET["range"];
 //$by_range = True;
 switch ($range) {
@@ -138,40 +158,61 @@ switch ($range) {
 			$label_2 = ' Kalenderjahr ->';
 			$diagramtime = 315360000;
 			$table = 'sensordata_d';
+            $minData = 100;
 		break;
         case '5y':
 			$label_date_format = '%d.%m.%y'; 
             $label_2 = ' Kalenderjahr ->';
             $diagramtime = 157680000;
             $table = 'sensordata_d';
+            $minData = 100;
         break;
 		case '2y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = 63072000;
 			$table = 'sensordata_d';
+            $minData = 100;
 		break;
 		case '1y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = 31536000;
 			$table = 'sensordata_d';
+            $minData = 100;
+		break;
+		case '6m':
+			$label_date_format = '%d.%m.%y'; 
+			$label_2 = ' Kalendermonat ->';
+			$diagramtime = 16070400;
+			$table = 'sensordata_d';
+            $minData = 100;
+		break;
+		case '3m':
+			$label_date_format = '%d.%m.%y'; 
+			$label_2 = ' Kalendertag ->';
+			$diagramtime = 8035200;
+			$table = 'sensordata_d';
+            $minData = 60;
 		break;
 		case '1m':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
 			$diagramtime = 2678400;
 			$table = 'sensordata_im';
+            $minData = 20;
 		break;
 		default:
 			$label_date_format = '%d.%m.%y %H:%i'; 
 			$label_2 = " Uhrzeit ->"; 
 			$diagramtime = 86400;
             $table = 'sensordata_im';
+            $minData = 20;
 }
 
 $xdata = array();
 $ydata = array();
+$monate = array(1=>"Januar", 2=>"Februar", 3=>"M&auml;rz", 4=>"April", 5=>"Mai", 6=>"Juni",7=>"Juli", 8=>"August", 9=>"September", 10=>"Oktober", 11=>"November", 12=>"Dezember");
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
 $starttime = mk_starttime($offset, $range);
 #Starttag für Label ermitteln
@@ -188,12 +229,26 @@ $starttime = mk_starttime($offset, $range);
                 $label_1 = 'Verlauf im Jahr '.date("Y", $starttime); 
 			}
 		break;
+		case '6m':
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf der letzten 180 Tage'; 
+			} else {
+            $monat = intval(date("m", $starttime));
+			$label_1 = 'Verlauf seit Monat '.$monate[$monat]." ".date("Y", $starttime); 
+			}
+		break;
+		case '3m':
+		    if ( $offset == 0 ) {
+                $label_1 = 'Verlauf der letzten 90 Tage'; 
+			} else {
+             $monat = intval(date("m", $starttime));
+			$label_1 = 'Verlauf seit Monat '.$monate[$monat]." ".date("Y", $starttime); 
+			}
+		break;
 		case '1m':
 		    if ( $offset == 0 ) {
                 $label_1 = 'Verlauf der letzten 30 Tage'; 
 			} else {
-            $monate = array(1=>"Januar", 2=>"Februar", 3=>"M&auml;rz", 4=>"April", 5=>"Mai", 6=>"Juni",
-                            7=>"Juli", 8=>"August", 9=>"September", 10=>"Oktober", 11=>"November", 12=>"Dezember");
             $monat = intval(date("m", $starttime));
 			$label_1 = 'Verlauf im Monat '.$monate[$monat]." ".date("Y", $starttime); 
 			}
@@ -206,11 +261,7 @@ $starttime = mk_starttime($offset, $range);
 			}
 	}
 
-$stmt = " select value, utime ". 
-	    " from ".$table.
-	    " where sensor_id = ".$sensor1. 
-	    " and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime.
-	    " order by utime asc";
+$stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime." order by utime asc";
 $results = $db->query($stmt);
 $last_utime=0;
 $minTickPos=array();
@@ -236,7 +287,7 @@ $graph = new Graph($sizex, $sizey);
 $graph->SetMargin(70,20,0,0);
 $graph->title->Set($label_1);
 
-if (count($ydata) < 20) {
+if (count($ydata) < $minData) {
     $graph->SetScale('intlin',0,1,0,1);
     $dummydata=array();
     $dummydata[]=0;
@@ -248,32 +299,36 @@ if (count($ydata) < 20) {
     $graph->legend->SetColor('darkred');
     $graph->legend->SetFillColor('lightyellow');
 } else {
-    $ydataMin=min($ydata);
-    $ydataMax=max($ydata);
-    if ($ydataMax-$ydataMin > 2 ) { 
-        if ($ydataMin > 0) {
-            $yscaleMin=floor($ydataMin/10)*10;
-        } else {
-            $yscaleMin=floor($ydataMin/10)*10;
-        }	
-        if ($ydataMax > 0) {
-            $yscaleMax=ceil($ydataMax/10)*10;
-        } else {
-            $yscaleMax=ceil($ydataMax/10)*10;
-        }	
+    if ( $ymin_set and $ymax_set ) {
+        $graph->SetScale('intlin',$ymin,$ymax,min($xdata),max($xdata));
     } else {
-        if ($ydataMin > 0) {
-            $yscaleMin=floor($ydataMin);
+        $ydataMin=min($ydata);
+        $ydataMax=max($ydata);
+        if ($ydataMax-$ydataMin > 2 ) { 
+            if ($ydataMin > 0) {
+                $yscaleMin=floor($ydataMin/10)*10;
+            } else {
+                $yscaleMin=floor($ydataMin/10)*10;
+            }	
+            if ($ydataMax > 0) {
+                $yscaleMax=ceil($ydataMax/10)*10;
+            } else {
+                $yscaleMax=ceil($ydataMax/10)*10;
+            }	
         } else {
-            $yscaleMin=floor($ydataMin)-1;
+            if ($ydataMin > 0) {
+                $yscaleMin=floor($ydataMin);
+            } else {
+                $yscaleMin=floor($ydataMin)-1;
+            }	
+            if ($ydataMax > 0) {
+                $yscaleMax=floor($ydataMax)+1;
+            } else {
+                $yscaleMax=floor($ydataMax);
+            }	
         }	
-        if ($ydataMax > 0) {
-            $yscaleMax=floor($ydataMax)+1;
-        } else {
-            $yscaleMax=floor($ydataMax);
-        }	
-    }	
-    $graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
+        $graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
+    }
     $dateUtils = new DateScaleUtils();
     $graph->xaxis->SetColor('black','black');
     $graph->xgrid->Show();
@@ -285,12 +340,18 @@ if (count($ydata) < 20) {
             $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
         break;
         case '2y':
-            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackM'); 
             list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH2);
             $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
         break;
         case '1y':
-            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackYM'); 
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackM'); 
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
+            $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
+        break;
+        case '6m':
+        case '3m':
+            $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackM'); 
             list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
             $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
         break;

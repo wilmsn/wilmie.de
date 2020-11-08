@@ -1,5 +1,5 @@
 <?php
-$instance="intern";
+$instance="prod";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
@@ -309,7 +309,7 @@ function set_divs() {
 		mylegend='Temperatur';
 	} 
 //	alert(mycolor);
-	$('#wetter_dia').attr('src', '/content/wetter_diagramm.php?sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&offset='+$('#wetter_t4').html()+'&range='+$('#wetter_t1').html()+'&t='+n);
+	$('#wetter_dia').attr('src', '/content/diagramm.php?sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&offset='+$('#wetter_t4').html()+'&range='+$('#wetter_t1').html()+'&t='+n);
 } 
 $('#zeit').css('backgroundColor', but_color1);
 $('#wetter_t1').hide();  
