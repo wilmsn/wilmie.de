@@ -14,13 +14,12 @@ $(document).ready(function(){
   dev_init(1,"sw", "Steckdose Balkon",  "Balkon_Steckdose",     "state",       "HS_Balkon_Steckdose");
   dev_init(2,"sw", "Steckdose Terasse", "Terasse_Steckdose",    "state",       "HS_Terasse_Steckdose");
   dev_init(3,"sw", "Licht Flur", 	"Flur_Licht_", 	    "state",       "HS_Flur_Licht");
-  dev_init(4,"sw", "Wlan Steckdose 1", 	"Steckdose1",   		"Relais",       "HS_Steckdose1");
-  dev_init(5,"sw", "Wlan Steckdose 2", 	"Steckdose2",   		"Relais",       "HS_Steckdose2");
+  dev_init(4,"sw", "Licht Wohnzimmer", 	"MQTT2_DVES_0785A4",   		"state",       "HS_WohnzimmerLicht");
+//  dev_init(5,"sw", "Wlan Steckdose 2", 	"Steckdose2",   		"Relais",       "HS_Steckdose2");
   dev_init(6,"ht", "Wohnzimmer",        "Wohnzimmer_Temp",       "state", "HT_Wohnzimmer1");
   dev_init(7,"ht", "K&uuml;che",        "Kueche_Temp",          "state",       "HT_Kueche1");
   dev_init(8,"ht", "Bastelzimmer",      "Bastelzimmer_Temp",      "state", "HT_Bastelzimmer");
   dev_init(9,"di","Schlafzimmer",  "Schlafzimmer_Temp", "state","cccc");
-  dev_init(10,"neo","Flur",  "Flur_Temp", "state","cccc");
 });
 </script>
  

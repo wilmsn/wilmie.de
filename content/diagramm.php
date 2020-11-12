@@ -158,48 +158,56 @@ switch ($range) {
 			$label_2 = ' Kalenderjahr ->';
 			$diagramtime = 315360000;
 			$table = 'sensordata_d';
+            $minData = 100;
 		break;
         case '5y':
 			$label_date_format = '%d.%m.%y'; 
             $label_2 = ' Kalenderjahr ->';
             $diagramtime = 157680000;
             $table = 'sensordata_d';
+            $minData = 100;
         break;
 		case '2y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = 63072000;
 			$table = 'sensordata_d';
+            $minData = 100;
 		break;
 		case '1y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = 31536000;
 			$table = 'sensordata_d';
+            $minData = 100;
 		break;
 		case '6m':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = 16070400;
 			$table = 'sensordata_d';
+            $minData = 100;
 		break;
 		case '3m':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
 			$diagramtime = 8035200;
 			$table = 'sensordata_d';
+            $minData = 60;
 		break;
 		case '1m':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
 			$diagramtime = 2678400;
 			$table = 'sensordata_im';
+            $minData = 20;
 		break;
 		default:
 			$label_date_format = '%d.%m.%y %H:%i'; 
 			$label_2 = " Uhrzeit ->"; 
 			$diagramtime = 86400;
             $table = 'sensordata_im';
+            $minData = 20;
 }
 
 $xdata = array();
@@ -279,7 +287,7 @@ $graph = new Graph($sizex, $sizey);
 $graph->SetMargin(70,20,0,0);
 $graph->title->Set($label_1);
 
-if (count($ydata) < 20) {
+if (count($ydata) < $minData) {
     $graph->SetScale('intlin',0,1,0,1);
     $dummydata=array();
     $dummydata[]=0;
