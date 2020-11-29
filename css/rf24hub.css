@@ -1,213 +1,208 @@
-    .haus {
-		margin:3px auto;
-		position: relative; 
-		width: calc(100% - 6px);
-		border: 2px solid #444444; 
-		align: center;
-    }	
-    .content_header {
-        position: relative; 
-		color: white;
-		align: center;
-		border: 2px solid #444444; 
-    }	
-    .content_header_head {
-        position: relative; 
-		color: white;
-		text-align: center;
-		border: 1px solid #000000; 
-    }	
-    .content_header_line {
-        position: relative; 
-		color: white;
-		align: left;
- 		width: 100%; 
-		height: 22px;
-   }	
-    .content_header_line_l {
-        position: absolute; 
-		top: 0px;
-		left: 5px;
- 		height: 22px;
-    }	
-    .content_header_line_r {
-        position: absolute; 
-		top: 0px;
-		right: 5px;
- 		width: 310px; 
-		height: 22px;
-		text-align: right;
-    }	
-	.device {
-        position: relative; 
-		width: 100%; 
+.haus {
+    position: relative; 
+    width: calc(100% - 6px);
+    border: 3px solid #a80329; 
+    text-align: center;
+}	
+.content_header {
+    position: relative; 
+/*    color: white;  */
+    align: center;
+/*    border: 2px solid #444444; */ 
+}	
+.content_header_head {
+    position: relative; 
+/*    color: white; */
+    text-align: center;
+/*    border: 1px solid #000000; */
+}	
+.content_header_line {
+    position: relative; 
+/*    color: white; */
+    align: left;
+    width: 100%; 
+    height: 22px;
+    border-top: 1px solid #000000;
+}	
+.content_header_line_l {
+    position: absolute; 
+    top: 0px;
+    left: 5px;
+    height: 22px;
+}	
+.content_header_line_r {
+    position: absolute; 
+    top: 0px;
+    right: 5px;
+    width: 310px; 
+    height: 22px;
+    text-align: right;
+}	
+.room {
+    position: relative; 
+    width: 100%;
+    border-top: 3px solid #a80329;
+/*    border-bottom: 3px solid #a80329; */
+    text-align: left;
+}
+.room_status {
+    position: relative; 
+    height: 20px;
+    width: calc(100% - 53px);
+/*    border: 3px solid #a80329; */
+    text-align: left;
+    background-color: #666666;
+    color: white;
+}
+.room_switch {
+    position: absolute; 
+    height: 20px;
+    right: 0px;
+    top: 0px;
+    width: 50px;
+    border-left: 3px solid #a80329;
+}
+.room_dev {
+    position: relative; 
+    width: 100%;
+    Display: none; 
+    border-top: 3px solid #a80329;
+}
+.room_label {
+    position: relative; 
+    height: 20px;
+    width: 60%;
+    text-align: left;
+    padding-left: 10px;
+}
+.room_value {
+    position: absolute; 
+    height: 20px;
+    right: 55px;
+    top: 0px;
+    width: 100px;
+    text-align: right;
+    color: white;
+}
+.dev {
+    position: relative; 
+    width: 100%;
+    border: 1px solid #a80329;
+    text-align: left;
+}
+.dev_label {
+    position: relative; 
+    width: 100%;
+    text-align: left;
+    padding-left: 10px;
+}
+.dev_status {
+    position: absolute;
+    top: 20px; 
+    width: 12.5%;
+    height: 40px;
+    text-align: center;  
+    border-top: 1px solid #a80329;
+    border-left: 1px solid #a80329;
+    Display: none; 
+}
+.dev_statuslabel {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid #a80329;
+    border-left: 1px solid #a80329;
+}
+.dev_statusvalue {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid #a80329;
+    border-left: 1px solid #a80329;
+}
+.dev_status1 {
+    left: 87.5%;
+}
+.dev_status2 {
+    left: 75%;
+}
+.dev_status3 {
+    left: 62.5%;
+}
+.dev_status4 {
+    left: 50%;
+}
+.dev_status5 {
+    left: 37.5%;
+}
+.dev_status6 {
+    left: 25%;
+}
+.dev_status7 {
+    left: 12.5%;
+}
+.dev_status8 {
+    left: 0%;
+}
+.dev_sw {
+    position: relative; 
+    width: 100%;
+    height: 60px;
+    text-align: left;
+}
+.dev_sw_box0, .dev_sw_box1, .dev_sw_box2, .dev_sw_box3 {
+    position: absolute; 
+    top: 5px;
+    height: 60px;
+    text-align: center;
+}
+.dev_sw_box0 {
+    left: 0px;
+    width: 10%; 
+}
+.dev_sw_box1 {
+    left: 10%;
+    width: 30%; 
+}
+.dev_sw_box2 {
+    left: 40%;
+    width: 30%; 
+}
+.dev_sw_box3 {
+    left: 70%;
+    width: 30%; 
+}
+
+.dev_ht {
+    position: relative; 
+    height: 50px;
+    width: 100%;
 	}
-	.device_status {
-        position: relative; 
-		width: 100%;
-		background-color: #666666; 
-		border: 3px solid #a80329;
-		text-align: left;
-	}
-	.device_status_head {
-        position: relative; 
-		height: 20px;
-		width: 100%; 
-		text-align: center;
-		color: white;
-		background-color: #111111; 
-	}
-	.device_status_line {
-        position: relative; 
-		height: 20px;
-		right: 2%;
-		top: 0px;
-		text-align: center;
-		color: black;
-	}
-	.device_label {
-        position: relative; 
-		height: 40px;
-		width: calc(100% - 55px);
-		background-color: #666666; 
-		border: 3px solid #a80329;
-		text-align: left;
-	}
-	.device_label_l {
-        position: absolute; 
-		height: 20px;
-		width: 264px; 
-		left: 5px;
-		top: 2px;
-		text-align: left;
-		color: white;
-	}
-	.device_label_r {
-        position: absolute; 
-		height: 20px;
-		width: 240px; 
-		right: 10px;
-		top: 20px;
-		text-align: right;
-		color: white;
-	}
-	.device_open {
-        position: absolute; 
-		height: 40px;
-		right: 0px;
-		top: 0px;
-		width: 50px;
-	}
-	.device_sw {
-        position: relative; 
-        height: 50px;
-		width: 100%;
-	}
-	.device_neo {
-        position: relative; 
-		height: 100px;
-  		width: 100%;
-	}
-	.device_neo_box1 {
-		position: absolute; 
-		top: 0px;
-		left: 0px;
- 		width: 25%; 
-		height: 50px;
-        padding: 5px;
- 		text-align: center;
-		background-color: #aaaaaa; 
-	}
-	.device_neo_box2 {
-		position: absolute; 
-		top: 0px;
-		left: 25%;
- 		width: 25%; 
-		height: 50px;
-        padding: 5px;
- 		text-align: center;
-		background-color: #aaaaaa; 
-	}
-	.device_neo_box3 {
-		position: absolute; 
-		top: 0px;
-		left: 50%;
- 		width: 25%; 
-		height: 50px;
-        padding: 5px;
- 		text-align: center;
-		background-color: #aaaaaa; 
-	}
-	.device_neo_box4 {
-		position: absolute; 
-		top: 0px;
-		left: 75%;
- 		width: 25%; 
-		height: 50px;
-        padding: 5px;
- 		text-align: center;
-		background-color: #aaaaaa; 
-	}
-	.device_sw_box0 {
-		position: absolute; 
-		top: 0px;
-		left: 0px;
- 		width: 51px; 
-		height: 50px;
-        padding: 5px;
- 		text-align: center;
-		background-color: #aaaaaa; 
-	}
-	.device_sw_box1 {
-		position: absolute; 
-		top: 0px;
-		left: 51px;
- 		width: calc(30% - 17px); 
-		height: 50px;
-        padding: 5px;
- 		text-align: center;
-		background-color: #aaaaaa; 
-	}
-	.device_sw_box2 {
-		position: absolute; 
-		top: 0px;
-		left: calc(30% + 34px);
- 		width: calc(30% - 17px); 
-		height: 50px;
-        padding: 5px;
-		text-align: center;
-		background-color: #aaaaaa; 
-	}
-	.device_sw_box3 {
-		position: absolute; 
-		top: 0px;
-		left: calc(60% + 17px);
- 		width: calc(30% - 17px); 
-		height: 50px;
-        padding: 5px;
-		text-align: center;
-		background-color: #aaaaaa; 
-	}
-	.device_ht {
-        position: relative; 
-		height: 100px;
-  		width: 100%;
-	}
-	.device_ht_temp {
-		position: relative; 
-		background-color: #cccccc;
-	}
-    .device_ht_ok {
-		position: absolute; 
-		top: 35px;
-		left: 165px;
-    }	
-    .device_ht_am {
-		position: absolute; 
-		top: 40px;
-		left: 25px;
-    }	
-	
+.dev_ht_temp {
+    position: absolute; 
+    background-color: #cccccc;
+    top: 0px;
+    left: 0%;
+    width: 60%;
+}
+.dev_ht_ok {
+    position: absolute; 
+    top: -5px;
+    left: 85%;
+    width: 15%;
+}	
+.dev_ht_am {
+    position: absolute; 
+    top: 0px;
+    left: 70%;
+    width: 10%;
+}	
+
+
+
+
 .button_akt {
    -webkit-border-radius: 10px;
    -moz-border-radius: 10px;
@@ -215,7 +210,7 @@
    color: #000000;
    font-size: 20px;
    font-weight: 500;
-   padding: 5px;
+   padding: 2px;
    box-shadow: 1px 1px 20px 0px #000000;
    -webkit-box-shadow: 1px 1px 20px 0px #000000;
    -moz-box-shadow: 1px 1px 20px 0px #000000;
@@ -240,5 +235,3 @@
 	text-decoration:none;
 	cursor: default; 
 }
-
-

@@ -345,14 +345,14 @@ if (count($ydata) < $minData) {
             $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
         break;
         case '1y':
+        case '6m':
             $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackM'); 
             list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
             $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
         break;
-        case '6m':
         case '3m':
             $graph->xaxis->SetLabelFormatCallback( 'TimeCallbackM'); 
-            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_MONTH1);
+            list($tickPos,$minTickPos) = $dateUtils->getTicks($xdata,DSUTILS_WEEK1);
             $graph->xaxis->SetTickPositions($tickPos,$minTickPos);
         break;
         case '1m':

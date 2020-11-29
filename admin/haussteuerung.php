@@ -5,24 +5,35 @@
 
 <script type="text/javascript">
 
-$(document).ready(function(){
+$(document).ready(function() {
   header_init("Haussteuerung");
   $.get(basedir+'getfhem.php',{geraet: "Aussen_Temp", eigenschaft: "state" }, function(data) {
-	header_addLine(1, "Aussentemperatur", parseInt(data*10)/10 +" &deg;C");
+    header_addLine(1,"Aussentemperatur", parseInt(data*10)/10 + "°C");
   });
-// dev_init(dev#, dev Typ, dev Label, FHEM Wertequelle Objekt; FHEM Wertequelle Reading, FHEM Regler);  
-  dev_init(1,"sw", "Steckdose Balkon",  "Balkon_Steckdose",     "state",       "HS_Balkon_Steckdose");
-  dev_init(2,"sw", "Steckdose Terasse", "Terasse_Steckdose",    "state",       "HS_Terasse_Steckdose");
-  dev_init(3,"sw", "Licht Flur", 	"Flur_Licht_", 	    "state",       "HS_Flur_Licht");
-  dev_init(4,"sw", "Licht Wohnzimmer", 	"MQTT2_DVES_0785A4",   		"state",       "HS_WohnzimmerLicht");
-//  dev_init(5,"sw", "Wlan Steckdose 2", 	"Steckdose2",   		"Relais",       "HS_Steckdose2");
-  dev_init(6,"ht", "Wohnzimmer",        "Wohnzimmer_Temp",       "state", "HT_Wohnzimmer1");
-  dev_init(7,"ht", "K&uuml;che",        "Kueche_Temp",          "state",       "HT_Kueche1");
-  dev_init(8,"ht", "Bastelzimmer",      "Bastelzimmer_Temp",      "state", "HT_Bastelzimmer");
-  dev_init(9,"di","Schlafzimmer",  "Schlafzimmer_Temp", "state","cccc");
+  add_room(1, "Wohnzimmer", "Wohnzimmer_Temp");
+  add_device_ht(1, 1, "Thermostat", "HT_Wohnzimmer1");
+  add_device_switch(1, 2, "Licht", "HS_WohnzimmerLicht", "MQTT2_DVES_0785A4");
+  add_device_switch(1, 3, "Fenstertanne", "HS_Steckdose5", "MQTT2_DVES_F97216");
+  add_device_switch(1, 4, "Schranklicht", "HS_Steckdose2", "MQTT2_DVES_C50654");
+  add_room(2, "Küche", "Kueche_Temp");
+  add_device_ht(2, 1, "Thermostat", "HT_Kueche1");
+  add_room(3, "Bastelzimmer", "Bastelzimmer_Temp");
+  add_device_ht(3, 1, "Thermostat", "HT_Bastelzimmer");
+  add_room(4, "Flur", "Flur_Temp");
+  add_device_switch(4, 1, "Treppenhaus", "HS_TreppenhausLicht", "MQTT2_DVES_1DD8B7");
+  add_device_switch(4, 2, "Flurlicht", "HS_Flur_Licht", "Flur_Licht_");
+  add_room(5, "Schlafzimmer", "Schlafzimmer_Temp");
+  add_room(6, "Ankleidezimmer", "Ankleidezimmer_Temp");
+  add_room(7, "Gästezimmer", "Gaestezimmer_Temp");
+  add_room(8, "Draussen", " ");
+  add_device_switch(8, 1, "Balkon", "HS_Balkon_Steckdose", "Balkon_Steckdose");
+  add_device_switch(8, 2, "Terasse", "HS_Terasse_Steckdose", "Terasse_Steckdose");
+  add_device_switch(8, 3, "Girlande", "HS_Steckdose1", "MQTT2_DVES_1DD752");
+  add_device_switch(8, 4, "Teich", "HS_Teichpumpe", "MQTT2_DVES_F977E8");  
 });
+
 </script>
- 
+
 <link rel="stylesheet" href="/css/rf24hub.css" /> 
    
 <div id="haus" class="haus">
