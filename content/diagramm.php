@@ -193,7 +193,7 @@ switch ($range) {
 			$label_2 = ' Kalendertag ->';
 			$diagramtime = 8035200;
 			$table = 'sensordata_d';
-            $minData = 60;
+            $minData = 50;
 		break;
 		case '1m':
 			$label_date_format = '%d.%m.%y'; 
@@ -304,28 +304,33 @@ if (count($ydata) < $minData) {
     } else {
         $ydataMin=min($ydata);
         $ydataMax=max($ydata);
-        if ($ydataMax-$ydataMin > 2 ) { 
-            if ($ydataMin > 0) {
-                $yscaleMin=floor($ydataMin/10)*10;
+        if ($ydataMax > 0) {
+            if ($ydataMax-$ydataMin > 2 ) {
+                if ($ydataMin > 0) {
+                    $yscaleMin=floor($ydataMin/10)*10;
+                } else {
+                    $yscaleMin=floor($ydataMin/10)*10;
+                }
+                if ($ydataMax > 0) {
+                    $yscaleMax=ceil($ydataMax/10)*10;
+                } else {
+                    $yscaleMax=ceil($ydataMax/10)*10;
+                }
             } else {
-                $yscaleMin=floor($ydataMin/10)*10;
-            }	
-            if ($ydataMax > 0) {
-                $yscaleMax=ceil($ydataMax/10)*10;
-            } else {
-                $yscaleMax=ceil($ydataMax/10)*10;
+                if ($ydataMin > 0) {
+                    $yscaleMin=floor($ydataMin);
+                } else {
+                    $yscaleMin=floor($ydataMin)-1;
+                }
+                if ($ydataMax > 0) {
+                    $yscaleMax=floor($ydataMax)+1;
+                } else {
+                    $yscaleMax=floor($ydataMax);
+                }
             }	
         } else {
-            if ($ydataMin > 0) {
-                $yscaleMin=floor($ydataMin);
-            } else {
-                $yscaleMin=floor($ydataMin)-1;
-            }	
-            if ($ydataMax > 0) {
-                $yscaleMax=floor($ydataMax)+1;
-            } else {
-                $yscaleMax=floor($ydataMax);
-            }	
+            $yscaleMin=floor($ydataMin/10)*10;
+            $yscaleMax=ceil($ydataMax/10)*10;
         }	
         $graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
     }
