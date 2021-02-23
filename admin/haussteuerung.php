@@ -13,8 +13,8 @@ $(document).ready(function() {
   add_room(1, "Wohnzimmer", "Wohnzimmer_Temp");
   add_device_ht(1, 1, "Thermostat", "HT_Wohnzimmer1");
   add_device_switch(1, 2, "Licht", "HS_WohnzimmerLicht", "MQTT2_DVES_0785A4");
-  add_device_switch(1, 3, "Fenstertanne", "HS_Steckdose5", "MQTT2_DVES_F97216");
-  add_device_switch(1, 4, "Schranklicht", "HS_Steckdose2", "MQTT2_DVES_C50654");
+//  add_device_switch(1, 3, "Fenstertanne", "HS_Steckdose5", "MQTT2_DVES_F97216");
+  add_device_switch(1, 3, "Schranklicht", "HS_Steckdose2", "MQTT2_DVES_C50654");
   add_room(2, "Küche", "Kueche_Temp");
   add_device_ht(2, 1, "Thermostat", "HT_Kueche1");
   add_room(3, "Bastelzimmer", "Bastelzimmer_Temp");
@@ -28,8 +28,8 @@ $(document).ready(function() {
   add_room(8, "Draussen", " ");
   add_device_switch(8, 1, "Balkon", "HS_Balkon_Steckdose", "Balkon_Steckdose");
   add_device_switch(8, 2, "Terasse", "HS_Terasse_Steckdose", "Terasse_Steckdose");
-  add_device_switch(8, 3, "Girlande", "HS_Steckdose1", "MQTT2_DVES_1DD752");
-  add_device_switch(8, 4, "Teich", "HS_Teichpumpe", "MQTT2_DVES_F977E8");  
+//  add_device_switch(8, 3, "Girlande", "HS_Steckdose1", "MQTT2_DVES_1DD752");
+  add_device_switch(8, 3, "Teich", "HS_Teichpumpe", "MQTT2_DVES_F977E8");  
 });
 
 </script>
