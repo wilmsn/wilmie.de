@@ -1,6 +1,7 @@
 var arrow_up = "/img/arrow_up.gif";
 var arrow_down = "/img/arrow_down.gif";
 var getfhem = "/admin/getfhem.php";
+var needhelp = "/img/gefahrenstelle_20x20.jpg"
 //var getfhem = "https://rpi2.fritz.box/demo/getfhem.php";
 //var getfhem = "https://www.wilmie.myhome-server.de/demo/getfhem.php";
 
@@ -21,9 +22,11 @@ function header_addLine(line_no, text_l, text_r) {
   $("#content_header_line" + line_no).append("<div class='content_header_line_r' id='content_header_line_r" + line_no + "'>" + text_r + "</div>");
 }
 
-function add_room( room_no, room_name, fhem_dev ) {
+function add_room( room_no, room_name, fhem_dev, fhem_reading ) {
     $("#haus").append("<div class='room' id='r" + room_no + "'></div>");
     $("#r" + room_no).append("<div class='room_status' id='r" + room_no + "h'></div>");
+    $("#r" + room_no).append("<div class='room_addinfo' id='r" + room_no + "m'></div>");
+    $("#r" + room_no + "m").append("<img id='r" + room_no + "m_i1' src=" + needhelp + " width='20' height='20' />");
     $("#r" + room_no).append("<div class='room_value' id='r" + room_no + "v'></div>");
     $("#r" + room_no).append("<div class='room_switch' id='r" + room_no + "s'></div>");
     $("#r" + room_no).append("<div class='room_dev' id='r" + room_no + "d'></div>");
@@ -56,13 +59,23 @@ function add_room( room_no, room_name, fhem_dev ) {
     $("#r" + room_no + "hd8").append("<div class='dev_statusvalue dev_status8value' id='r" + room_no + "hd8v'></div>");
     
     $("#r" + room_no + "hl").html(room_name);
+
+    $.get(basedir+'getfhem.php',{geraet: room_name+"_Status", eigenschaft: "state" }, function(data) {
+        if ( data == 0 ) {
+            $("#r" + room_no + "m_i1").hide();
+        } else {
+            $("#r" + room_no + "m_i1").show();
+        }
+    });
+    
     var str1 = " ";
     var str2 = str1.concat(fhem_dev);
     if ( str2.length > 3 ) {
-        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
             $("#r" + room_no + "v").html(parseInt(data*10)/10+" &deg;C");
         });
     }
+    
     $("#r" + room_no + "s").click(function() {
         if ($("#r" + room_no + "d").is(':hidden')) {
             $("#r" + room_no + "d").show();
@@ -205,10 +218,12 @@ function add_device_ht(room_no, dev_no, dev_name, fhem_dev) {
     $("#r"+room_no+"d"+dev_no).append("<div class='dev_label' id='r" + room_no + "d" + dev_no + "l'></div>");
     $("#r"+room_no+"hd"+dev_no).css("display","inline");
     $("#r"+room_no+"d"+dev_no + "l").html(dev_name);
+    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","70%");
     $("#r"+room_no+"d"+dev_no + "a").html("action");
     $("#r"+room_no+"hd" + dev_no + "l").html(dev_name);
     $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "mode" }, function(data) {
         $("#r"+room_no+"hd"+dev_no+"v").append("("+data+") ");
+        $("#r"+room_no+"hd"+dev_no+"v").css("font-size","xx-small");
         $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature" }, function(data) {
             $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" &deg;C");
         });
@@ -259,12 +274,21 @@ function add_device_ht(room_no, dev_no, dev_name, fhem_dev) {
     
 }
 
-function add_device_temperature(room_no, dev_no, dev_name, fhem_dev) {
+function add_device_temperature(room_no, dev_no, dev_name, fhem_dev, fhem_reading) {
     $("#r" + room_no + "hd" + dev_no).css("display","inline");
     $("#r" + room_no + "hd" + dev_no + "l").html(dev_name);
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
+    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
         $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" &deg;C");
     });
+    if ( window.innerWidth < 600 ) {
+        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
+        if ( dev_no > 4 ) {
+            $("#r" + room_no + "s").css("height","100px");
+            $("#r" + room_no + "h").css("height","100px");
+            $("#r" + room_no + "hd" + dev_no).css("top","60px");
+        }
+    }
 }
 
 
