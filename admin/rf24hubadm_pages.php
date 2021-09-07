@@ -14,9 +14,8 @@ if (isset($_GET["num_col"]))  {
 } else { 
   $num_col=1; 
 }
-
-foreach ($rf24hub_db->query("select count / 10 / ".$num_col." + 0 from ".$sensordata_tab." where sensor_id = ".$sensor) as $row) {
-	print floor($row[0]); 
-	}
-
+//foreach ($rf24hub_db->query("select count / 10 / ".$num_col." + 0 from ".$sensordata_tab." where sensor_id = ".$sensor) as $row) {
+//	print floor($row[0]); 
+//	}
+  print floor(10000/$num_col);
 ?>

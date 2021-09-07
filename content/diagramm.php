@@ -157,56 +157,56 @@ switch ($range) {
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalenderjahr ->';
 			$diagramtime = 315360000;
-			$table = 'sensordata_d';
+			$table = $sensordata_agg_tab;
             $minData = 100;
 		break;
         case '5y':
 			$label_date_format = '%d.%m.%y'; 
             $label_2 = ' Kalenderjahr ->';
             $diagramtime = 157680000;
-            $table = 'sensordata_d';
+            $table = $sensordata_agg_tab;
             $minData = 100;
         break;
 		case '2y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = 63072000;
-			$table = 'sensordata_d';
+			$table = $sensordata_agg_tab;
             $minData = 100;
 		break;
 		case '1y':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = 31536000;
-			$table = 'sensordata_d';
+			$table = $sensordata_agg_tab;
             $minData = 100;
 		break;
 		case '6m':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendermonat ->';
 			$diagramtime = 16070400;
-			$table = 'sensordata_d';
+			$table = $sensordata_agg_tab;
             $minData = 100;
 		break;
 		case '3m':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
 			$diagramtime = 8035200;
-			$table = 'sensordata_d';
+			$table = $sensordata_agg_tab;
             $minData = 50;
 		break;
 		case '1m':
 			$label_date_format = '%d.%m.%y'; 
 			$label_2 = ' Kalendertag ->';
 			$diagramtime = 2678400;
-			$table = 'sensordata_im';
+			$table = $sensordata_tab;
             $minData = 20;
 		break;
 		default:
 			$label_date_format = '%d.%m.%y %H:%i'; 
 			$label_2 = " Uhrzeit ->"; 
 			$diagramtime = 86400;
-            $table = 'sensordata_im';
+            $table = $sensordata_tab;
             $minData = 20;
 }
 
