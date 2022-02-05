@@ -83,6 +83,11 @@ if (isset($_GET["eigenschaft"])) {  $eigenschaft=$_GET["eigenschaft"]; }
 			print "off";
 		}
 	}
+	If (  $geraet == "Flur_Temp") {
+		if (  $eigenschaft == "state") {
+			print "18.6";
+		}
+	}
 	If (  $geraet == "HS_Flur_Steckdose") {
 		if (  $eigenschaft == "state") {
 			print "auto";

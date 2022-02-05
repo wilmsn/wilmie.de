@@ -1,5 +1,5 @@
 <?php
-$instance="prod";
+$instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
@@ -18,21 +18,21 @@ if($mobile_browser) {
   width: 100%;
   font-weight: bold;
   text-align: center;
-  border: 1px solid #000; 
-  background: #ddd; 
+  border: 1px solid #000;
+  background: #ddd;
   position: absolute;
-  padding: 10px;   
+  padding: 10px;
   }
   #wetter1a, #wetter1b, #wetter1c{
   height: 40px;
-  width: 33%;	  
-  background: #ddd; 
+  width: 30%;
+  background: #ddd;
   position: absolute;
   text-align: center;
-  border: 1px solid #000; 
-  padding: 10px;   
-  }	  
-  #wetter1a { 
+  border: 1px solid #000;
+  padding: 5px;
+  }
+  #wetter1a {
   left: 0%;
   top: 90px;
   }
@@ -40,28 +40,28 @@ if($mobile_browser) {
   left: 33%;
   top: 90px;
   }
-  #wetter1c { 
+  #wetter1c {
   left: 66%;
   top: 90px;
   }
-  #wetter4 { 
-  border: 1px solid #000; 
-  background: #ddd; 
+  #wetter4 {
+  border: 1px solid #000;
+  background: #ddd;
   position: absolute;
-  width: 100%;	  
+  width: 100%;
   left: 0px;
   top: 150px;
   }
   #wetter_s1, #wetter_s2, #wetter_s3 {
   height: 50px;
-  width: 33%;	  
-  background: #dddddd; 
+  width: 33%;
+  background: #dddddd;
   position: absolute;
   text-align: center;
-  border: 1px solid #000; 
-  padding: 3px;   
+  border: 1px solid #000;
+  padding: 3px;
   top: 525px;
-  }	  
+  }
   #wetter_s1 {
   left: 0%;
   }
@@ -74,63 +74,68 @@ if($mobile_browser) {
   #wetter_s5, #wetter_s6, #wetter_s7, #wetter_s8 {
   visibility: hidden;
   }
-
+  .label {
+  font-size: 10px;
+  }
+  .wert {
+  font-size: 15px;
+  }
   \n";
-} else { 
+} else {
   echo "
-  #zeit { 
+  #zeit {
   left: 10px;
   top: 30px;
   height: 80px;
   width: 300px;
   font-weight: bold;
   text-align: center;
-  border: 1px solid #000; 
+  border: 1px solid #000;
   position: absolute;
-  padding: 10px;   
+  padding: 10px;
   }
   #wetter1a, #wetter1b, #wetter1c, #wetter3 {
   height: 50px;
-  width: 130px;	  
-  background: #ddd; 
+  width: 130px;
+  background: #ddd;
   position: absolute;
   text-align: center;
-  border: 1px solid #000; 
-  padding: 10px;   
-  }	  
-  #wetter1a { 
+  border: 1px solid #000;
+  padding: 10px;
+  }
+  #wetter1a {
   left: 10px;
   top: 150px;
   }
-  #wetter1b { 
+  #wetter1b {
   left: 180px;
   top: 150px;
   }
-  #wetter1c { 
+  #wetter1c {
   left: 10px;
   top: 250px;
   }
-  #wetter3 { 
+  #wetter3 {
   left: 10px;
   top: 350px;
   }
-  #wetter4 { 
-  border: 1px solid #000; 
-  background: #ddd; 
+  #wetter4 {
+  border: 1px solid #000;
+  background: #ddd;
   position: absolute;
   left: 350px;
   top: 30px;
   }
   #wetter_s1, #wetter_s2, #wetter_s3, #wetter_s4, #wetter_s5, #wetter_s6, #wetter_s7, #wetter_s8{
   height: 50px;
-  width: 100px;	  
-  background: #dddddd; 
+  width: 100px;
+  background: #dddddd;
   position: absolute;
   text-align: center;
-  border: 1px solid #000; 
-  padding: 3px;   
+  border: 1px solid #000;
+  padding: 3px;
   top: 430px;
-  }	  
+  }
   #wetter_s1 {
   left: 350px;
   }
@@ -151,19 +156,23 @@ if($mobile_browser) {
   }
   #wetter_s7 {
   left: 1080px;
-  width: 50px;	 
+  width: 50px;
   font-size: 28px;
   background: #AAAAAA;
   }
   #wetter_s8 {
   left: 1140px;
-  width: 50px;	  
+  width: 50px;
   font-size: 28px;
   background: #AAAAAA;
   }
-
+  .label {
+  font-size: 15px;
+  }
+  .wert {
+  font-size: 20px;
+  }
   \n";
-
 }
 
 ?>
@@ -411,28 +420,28 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 })();
 </script>
 </div>
-<div id='wetter1a'<center>Temperatur:<br><b>
+<div id='wetter1a'><center><div class='label'>Temperatur:</div><div class='wert'>
 <?php
   $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_temp_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
  C</b></center></div>
-<div id='wetter1b'><center>Luftdruck:<br><b>
+<div id='wetter1b'><center><div class='label'>Luftdruck:</div><div class='wert'>
 <?php
   $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_pres_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],0, ",", ".");
 ?>
  hPa</b></center></div>
-<div id='wetter1c'><center>rel. Luftfeuchte:<br><b>
+<div id='wetter1c'><center><div class='label'>rel. Luftfeuchte:</div><div class='wert'>
 <?php
   $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_humi_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
- &#37;</b></center></div>
-<div id='wetter3'><center>Batterie:<br><b>
+ &#37;</div></center></div>
+<div id='wetter3'><center><div class='label'>Batterie:</div><div class='wert'>
 <?php
   $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_ubat_sensor." LIMIT 1");
   $row = $results->fetch_assoc();

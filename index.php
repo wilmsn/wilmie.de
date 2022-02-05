@@ -7,6 +7,9 @@ $instance="prod";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot."/php_inc/check_mobile.php");
 
+$test="Server:".$db_www_server." DB:".$db_www_db." User:".$db_www_user." Pass:".$db_www_pass."\n";
+error_log($test, 3, "/tmp/php-errors.log");
+
 $www_db = new PDO("mysql:host=$db_www_server;dbname=$db_www_db", $db_www_user, $db_www_pass);
 
 $login_msg = "";
