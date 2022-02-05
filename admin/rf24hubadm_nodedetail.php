@@ -13,13 +13,12 @@ if (isset($_GET["node"]))  {
 }
 
 if ( $node > 0 ) { 
-	foreach ($db->query("select node_id, node_name, add_info, battery_id, heartbeat from node where node_id = '".$node."'") as $row) {
-        if ( $row[4] == 'y' ) { $nor=""; $hb="checked"; $nodetype_sel="HB_use = 'y'"; } else { $nor="checked"; $hb=""; $nodetype_sel="AO_use = 'y' ";}
+	foreach ($db->query("select node_id, node_name, add_info, battery_id, mastered from node where node_id = '".$node."'") as $row) {
         print "<div class='node'><p>Node: ".$row[0]."&nbsp;&nbsp;<input id='nodename' value='".$row[1]."'></p></div>".
-            "<div class='hb'>".
-            "<div class='hb'>Heartbeat <input type='radio' name='nodetyp' value='y' ".$hb."></div>".
-            "<div class='hb'>Normal <input type='radio' name='nodetyp' value='n' ".$nor."></div>".
-            "<div class='hb'>Batterie <select id='bat' name='bat'>";
+              "<div class='hb'><div class='hb'> <input type='checkbox' name='mastered' value='y'";
+        if ( $row[4] == 'y' ) { print " checked "; } 
+        print "><label for='mastered'> mastered by rpi1 </label></div>".
+              "<div class='hb'>Batterie <select id='bat' name='bat'>";
         foreach ($db->query("select battery_id, battery_sel_txt from battery where battery_id = ".$row[3] ) as $brow) {
             print "<option value='".$brow[0]."' selected>".$brow[1]."</option>"; 
         }
@@ -45,7 +44,7 @@ if ( $node > 0 ) {
     $i = 0;
     $reg_array = "var reg_array = [";
     $reg_val=0;
-    $sql = "select a.channel, itemname, value, min, max, readonly from (select node_id, channel, itemname, min, max, readonly, x.html_order from node x, node_configitem y where ".$nodetype_sel.") a left join node_configdata_im b on ( a.node_id = b.node_id and a.channel = b.channel) where a.node_id = ".$node." order by html_order";
+    $sql = "select a.channel, itemname, value, min, max, readonly from (select node_id, channel, itemname, min, max, readonly, x.html_order from node x, node_configitem y ) a left join node_configdata_im b on ( a.node_id = b.node_id and a.channel = b.channel) where a.node_id = ".$node." order by html_order";
 	foreach ($db->query($sql) as $crow) { 
         $i1 = $i + 1;
         $i2 = $i + 2;
@@ -133,13 +132,13 @@ function savenode(mynodeid){
     }  
     onid=$("#onid").val();
     nodename=$("#nodename").val();
-    nodetyp=$("input[name='nodetyp']:checked").val();
+    nodetyp=$("input[name='mastered']:checked").val();
     nodeinfo=$("#nodeinfo").val();
     batid=$("#bat").val();
     hsort=$("#sort").val();
     if ( dirty ) {
        alert("saving Node: "+onid);
-        $.get(mydir+'/savenode.php',{onid: onid, nid: onid, nn: nodename, ni: nodeinfo, hb: nodetyp, bid: batid, sort: hsort }, function(data) { 
+        $.get(mydir+'/savenode.php',{onid: onid, nid: onid, nn: nodename, ni: nodeinfo, ms: nodetyp, bid: batid, sort: hsort }, function(data) { 
     //$.get(mydir+'/savenode.php',{onid: onid }, function(data) { 
             alert(data);
         });

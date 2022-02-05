@@ -57,8 +57,7 @@ function savenewnode(mynodeid){
 	mynn=$('#in_nn_'+mynodeid).val();
 	myni=$('#in_ni_'+mynodeid).val();
 	mybid=$('#in_bid_'+mynodeid).val();
-	myhb=$('#in_hb_'+mynodeid).val();
-	$.get(mydir+'/savenode.php',{nid: mynid, onid: mynodeid, nn: mynn, ni: myni, bid: mybid, hb: myhb }, function(data) { 
+	$.get(mydir+'/savenode.php',{nid: mynid, onid: mynodeid, nn: mynn, ni: myni, bid: mybid }, function(data) { 
 		alert(data);
 	});
 	init_window();

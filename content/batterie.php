@@ -84,6 +84,22 @@ if ( isset( $batt10_name ) ) {
 } else {
     $bat10=0;
 }
+if ( isset( $batt11_name ) ) {
+    $stmt = "select value from sensor_im where sensor_id = ".$batt11_sensor;
+    $results = $db->query($stmt);
+    $row = $results->fetch_assoc();
+    $bat11=$row['value'];
+} else {
+    $bat11=0;
+}
+if ( isset( $batt12_name ) ) {
+    $stmt = "select value from sensor_im where sensor_id = ".$batt12_sensor;
+    $results = $db->query($stmt);
+    $row = $results->fetch_assoc();
+    $bat12=$row['value'];
+} else {
+    $bat12=0;
+}
 ?>
 <html>
   <head>
@@ -115,7 +131,7 @@ if($mobile_browser) {
   background: #ddd; 
   position: absolute;
   left: 0px;
-  top: 450px;
+  top: 500px;
   height: 390px;
   width: 100%;	  
   }
@@ -128,7 +144,7 @@ if($mobile_browser) {
   border: 1px solid #000; 
 }	  
     
-#batt1, #batt2, #batt3, #batt4, #batt5, #batt6, #batt7, #batt8, #batt9, #batt10 {
+#batt1, #batt2, #batt3, #batt4, #batt5, #batt6, #batt7, #batt8, #batt9, #batt10, #batt11, #batt12 {
   height: 70px;
   width: 40%;	  
   position: absolute;
@@ -176,35 +192,43 @@ if($mobile_browser) {
   left: 55%;
   top:  330px;
 }
+#batt11 {
+  left: 5%;
+  top:  410px;
+}
+#batt12 {
+  left: 55%;
+  top:  410px;
+}
 
 #range_1d {
   left: 0px;
-  top:  850px;
+  top:  900px;
 }
 
 #range_1m {
   left: 35%;
-  top:  850px;
+  top:  900px;
 }
 
 #range_3m {
   left: 70%;
-  top:  850px;
+  top:  900px;
 }
 
 #range_6m {
   left: 0%;
-  top:  900px;
+  top:  950px;
 }
 
 #range_1y {
   left: 35%;
-  top:  900px;
+  top:  950px;
 }
 
 #range_2y {
   left: 70%;
-  top:  900px;
+  top:  950px;
 }
 
 <?php
@@ -219,7 +243,7 @@ if($mobile_browser) {
   border: 1px solid #000; 
   }	  
     
-#batt1, #batt2, #batt3, #batt4, #batt5, #batt6, #batt7, #batt8, #batt9, #batt10 {
+#batt1, #batt2, #batt3, #batt4, #batt5, #batt6, #batt7, #batt8, #batt9, #batt10, #batt11, #batt12 {
   height: 70px;
   width: 150px;	  
   position: absolute;
@@ -308,6 +332,14 @@ if($mobile_browser) {
   left: 160px;
   top:  330px;
 }
+#batt11 {
+  left: 0px;
+  top:  410px;
+}
+#batt12 {
+  left: 160px;
+  top:  410px;
+}
 
 <?php
 }
@@ -323,7 +355,7 @@ var n = d.getTime();
 var but_color2 = '#DDDDDD';
 var but_color1 = '#AAAAAA';
 
-for ( let i=0; i<=10; i++ ) {
+for ( let i=0; i<=12; i++ ) {
   display.push( new SegmentDisplay("display"+i) );
   display[i].pattern         = "#.##";
   display[i].colorOn         = "#a90329";
@@ -340,6 +372,9 @@ for ( let i=0; i<=10; i++ ) {
   display[7].setValue('<?php print $bat8; ?>');
   display[8].setValue('<?php print $bat9; ?>');
   display[9].setValue('<?php print $bat10; ?>');
+  display[10].setValue('<?php print $bat11; ?>');
+  display[11].setValue('<?php print $bat12; ?>');
+
   
 function reset_batt() {
     $('#batt1').css('backgroundColor', but_color1);
@@ -352,7 +387,9 @@ function reset_batt() {
     $('#batt8').css('backgroundColor', but_color1);
     $('#batt9').css('backgroundColor', but_color1);
     $('#batt10').css('backgroundColor', but_color1);
-    for ( let i=0; i<=10; i++ ) {
+    $('#batt11').css('backgroundColor', but_color1);
+    $('#batt12').css('backgroundColor', but_color1);
+    for ( let i=0; i<=12; i++ ) {
         display[i].colorOff = but_color1;
         display[i].draw();
     }
@@ -381,13 +418,14 @@ if($mobile_browser) {
         $('#batt2').css('left', '35%');
         $('#batt2').css('top', '5px');
         $('#batt2').css('width', '30%');
+
         $('#batt3').css('left', '69%');
         $('#batt3').css('top', '5px');
         $('#batt3').css('width', '30%');
-
         $('#batt4').css('left', '1%');
         $('#batt4').css('top', '80px');
         $('#batt4').css('width', '30%');
+
         $('#batt5').css('left', '35%');
         $('#batt5').css('top', '80px');
         $('#batt5').css('width', '30%');
@@ -401,13 +439,21 @@ if($mobile_browser) {
         $('#batt8').css('left', '35%');
         $('#batt8').css('top', '155px');
         $('#batt8').css('width', '30%');
+
         $('#batt9').css('left', '69%');
         $('#batt9').css('top', '155px');
         $('#batt9').css('width', '30%');
-        
         $('#batt10').css('left', '1%');
         $('#batt10').css('top', '230px');
         $('#batt10').css('width', '30%');
+
+        $('#batt11').css('left', '69%');
+        $('#batt11').css('top', '155px');
+        $('#batt11').css('width', '30%');
+        $('#batt12').css('left', '1%');
+        $('#batt12').css('top', '230px');
+        $('#batt12').css('width', '30%');
+
     
         $('#batt_dia_div').css('top', '305px');
     
@@ -552,6 +598,30 @@ $("#batt10").click(function(){
     set_divs();
 });
 
+$("#batt11").click(function(){
+    $('#batt_sensor').html('<?php print $batt11_sensor; ?>');
+    $('#batt_name').html('<?php print $batt11_name; ?>');
+    reset_batt();
+    $('#batt11').css('backgroundColor', but_color2);
+    display[10].colorOff = but_color2;
+    display[10].draw();
+    $('#batt_umin').html('<?php print $batt11_umin; ?>');
+    $('#batt_umax').html('<?php print $batt11_umax; ?>');
+    set_divs();
+});
+
+$("#batt12").click(function(){
+    $('#batt_sensor').html('<?php print $batt12_sensor; ?>');
+    $('#batt_name').html('<?php print $batt12_name; ?>');
+    reset_batt();
+    $('#batt12').css('backgroundColor', but_color2);
+    display[11].colorOff = but_color2;
+    display[11].draw();
+    $('#batt_umin').html('<?php print $batt12_umin; ?>');
+    $('#batt_umax').html('<?php print $batt12_umax; ?>');
+    set_divs();
+});
+
 $("#range_1d").click(function(){
     reset_range();
     $('#batt_range').html('1d');  
@@ -615,6 +685,8 @@ $('#batt_umax').hide();
 <?php if ( ! isset( $batt8_name ) ) print "$('#batt8').hide();"; ?>
 <?php if ( ! isset( $batt9_name ) ) print "$('#batt9').hide();"; ?>
 <?php if ( ! isset( $batt10_name ) ) print "$('#batt10').hide();"; ?>
+<?php if ( ! isset( $batt11_name ) ) print "$('#batt11').hide();"; ?>
+<?php if ( ! isset( $batt12_name ) ) print "$('#batt12').hide();"; ?>
 
 
 reset_batt();
@@ -712,6 +784,23 @@ set_divs();
 <canvas id="display9" width="90" height="45"></canvas>
 </div>
 </div>
+<div id='batt11'>
+<div class='batt_text'>
+<?php if(isset($batt11_name)) print $batt11_name; ?>
+</div>
+<div class='div_canvas'>
+<canvas id="display10" width="90" height="45"></canvas>
+</div>
+</div>
+<div id='batt12'>
+<div class='batt_text'>
+<?php if(isset($batt12_name)) print $batt12_name; ?>
+</div>
+<div class='div_canvas'>
+<canvas id="display11" width="90" height="45"></canvas>
+</div>
+</div>
+
 <div id='batt_dia_div'> 
 <img id='batt_dia' />
 </div>
