@@ -2,7 +2,8 @@
 $instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
-$db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
+$db_dh = new mysqli($db_dh_server, $db_dh_user, $db_dh_pass, $db_dh_db);
+$db_sh = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
 $mobile_browser = is_mobile_browser(); 
 ?>
 <html>
@@ -23,7 +24,7 @@ if($mobile_browser) {
   position: absolute;
   padding: 10px;
   }
-  #wetter1a, #wetter1b, #wetter1c{
+  #wetter1a, #wetter1b, #wetter1c, #wetter1d {
   height: 40px;
   width: 30%;
   background: #ddd;
@@ -44,13 +45,17 @@ if($mobile_browser) {
   left: 66%;
   top: 90px;
   }
+  #wetter1d {
+  left: 0%;
+  top: 140px;
+  }
   #wetter4 {
   border: 1px solid #000;
   background: #ddd;
   position: absolute;
   width: 100%;
   left: 0px;
-  top: 150px;
+  top: 190px;
   }
   #wetter_s1, #wetter_s2, #wetter_s3 {
   height: 50px;
@@ -60,7 +65,7 @@ if($mobile_browser) {
   text-align: center;
   border: 1px solid #000;
   padding: 3px;
-  top: 525px;
+  top: 570px;
   }
   #wetter_s1 {
   left: 0%;
@@ -94,7 +99,7 @@ if($mobile_browser) {
   position: absolute;
   padding: 10px;
   }
-  #wetter1a, #wetter1b, #wetter1c, #wetter3 {
+  #wetter1a, #wetter1b, #wetter1c, #wetter1d, #wetter3 {
   height: 50px;
   width: 130px;
   background: #ddd;
@@ -113,6 +118,10 @@ if($mobile_browser) {
   }
   #wetter1c {
   left: 10px;
+  top: 250px;
+  }
+  #wetter1d {
+  left: 180px;
   top: 250px;
   }
   #wetter3 {
@@ -234,6 +243,7 @@ function set_divs() {
 	var d = new Date();
 	var n = d.getTime();
 	var w = screen.width;
+	var add_param = "";
 	if ( w > 846 ) { w = 846; } else { if ( w > 500 ) { w = w-50; } }
     switch($('#wetter_t1').html()) {
     case "1m":
@@ -284,22 +294,38 @@ function set_divs() {
         $('#wetter_s5').css('backgroundColor', but_color1);
         $('#wetter_s6').css('backgroundColor', but_color1);
 	} 
+
     switch($('#wetter_t2').html()) {
     case "1b":
 		$('#wetter1a').css('backgroundColor', but_color1);
 		$('#wetter1b').css('backgroundColor', but_color2);
 		$('#wetter1c').css('backgroundColor', but_color1);
+		$('#wetter1d').css('backgroundColor', but_color1);
 		$('#wetter3').css('backgroundColor', but_color1);
 		mycolor='0000FF';
 		mylegend='Luftdruck';
+		mydatabase='datahub';
         break;
     case "1c":
 		$('#wetter1a').css('backgroundColor', but_color1);
 		$('#wetter1b').css('backgroundColor', but_color1);
 		$('#wetter1c').css('backgroundColor', but_color2);
+		$('#wetter1d').css('backgroundColor', but_color1);
 		$('#wetter3').css('backgroundColor', but_color1);
 		mycolor='00FFFF';
 		mylegend='rel. Luftfeuchte';
+		mydatabase='datahub';
+        break;
+    case "1d":
+		$('#wetter1a').css('backgroundColor', but_color1);
+		$('#wetter1b').css('backgroundColor', but_color1);
+		$('#wetter1c').css('backgroundColor', but_color1);
+		$('#wetter1d').css('backgroundColor', but_color2);
+		$('#wetter3').css('backgroundColor', but_color1);
+		mycolor='FFFF00';
+		mylegend='Solarzelle';
+		mydatabase='rf24hub';
+		add_param ='&ymin=0&ymax=2.5';
         break;
     case "3":
 		$('#wetter1a').css('backgroundColor', but_color1);
@@ -308,17 +334,20 @@ function set_divs() {
 		$('#wetter3').css('backgroundColor', but_color2);
 		mycolor='00FF00';
 		mylegend='Batterie';
+		mydatabase='datahub';
         break;
     default:
 		$('#wetter1a').css('backgroundColor', but_color2);
 		$('#wetter1b').css('backgroundColor', but_color1);
 		$('#wetter1c').css('backgroundColor', but_color1);
+		$('#wetter1d').css('backgroundColor', but_color1);
 		$('#wetter3').css('backgroundColor', but_color1);
 		mycolor='FF0000';
 		mylegend='Temperatur';
+		mydatabase='datahub';
 	} 
 //	alert(mycolor);
-	$('#wetter_dia').attr('src', '/content/diagramm.php?sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&offset='+$('#wetter_t4').html()+'&range='+$('#wetter_t1').html()+'&t='+n);
+	$('#wetter_dia').attr('src', '/content/diagramm.php?database='+mydatabase+'&sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&offset='+$('#wetter_t4').html()+'&range='+$('#wetter_t1').html()+add_param+'&t='+n);
 } 
 $('#zeit').css('backgroundColor', but_color1);
 $('#wetter_t1').hide();  
@@ -386,6 +415,12 @@ $("#wetter1c").click(function(){
   $('#wetter_t4').html('0')
   set_divs();
 });  
+$("#wetter1d").click(function(){
+  $('#wetter_t2').html('1d')
+  $('#wetter_t3').html('<?php echo $wetter_sol_sensor; ?>')
+  $('#wetter_t4').html('0')
+  set_divs();
+});  
 $("#wetter3").click(function(){
   $('#wetter_t2').html('3')
   $('#wetter_t3').html('<?php echo $wetter_ubat_sensor; ?>')
@@ -422,63 +457,52 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </div>
 <div id='wetter1a'><center><div class='label'>Temperatur:</div><div class='wert'>
 <?php
-  $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_temp_sensor." LIMIT 1");
+  $results = $db_dh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_temp_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
  C</b></center></div>
 <div id='wetter1b'><center><div class='label'>Luftdruck:</div><div class='wert'>
 <?php
-  $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_pres_sensor." LIMIT 1");
+  $results = $db_dh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_pres_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],0, ",", ".");
 ?>
  hPa</b></center></div>
 <div id='wetter1c'><center><div class='label'>rel. Luftfeuchte:</div><div class='wert'>
 <?php
-  $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_humi_sensor." LIMIT 1");
+  $results = $db_dh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_humi_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
  &#37;</div></center></div>
-<div id='wetter3'><center><div class='label'>Batterie:</div><div class='wert'>
+<div id='wetter1d'><center><div class='label'>Solarzelle:</div><div class='wert'>
 <?php
-  $results = $db->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_ubat_sensor." LIMIT 1");
+  $results = $db_sh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_sol_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
-  echo number_format($row['value'],2, ",", ".");
+  echo number_format($row['value'],1, ",", ".");
 ?>
- V</b></center></div>
-<div id='wetter4'> 
-<img id='wetter_dia' />
-</div>
-<div id='wetter_s1'>Diagramm<br>1 Tag
-</div>
-<div id='wetter_s2'>Diagramm<br>1 Monat
-</div>
-<div id='wetter_s3'>Diagramm<br>1 Jahr
-</div>
-<div id='wetter_s4'>Diagramm<br>2 Jahre
-</div>
-<div id='wetter_s5'>Diagramm<br>5 Jahre
-</div>
-<div id='wetter_s6'>Diagramm<br>10 Jahre
-</div>
+ V</div></center></div>
+<div id='wetter4'><img id='wetter_dia' /></div>
+<div id='wetter_s1'>Diagramm<br>1 Tag</div>
+<div id='wetter_s2'>Diagramm<br>1 Monat</div>
+<div id='wetter_s3'>Diagramm<br>1 Jahr</div>
+<div id='wetter_s4'>Diagramm<br>2 Jahre</div>
+<div id='wetter_s5'>Diagramm<br>5 Jahre</div>
+<div id='wetter_s6'>Diagramm<br>10 Jahre</div>
 <div id='wetter_s7' onmousedown="md_wetter_s7()" onmouseup="mu_wetter_s7()" ><img src="/img/arrow_left.gif" height="50" width="50">
 </div>
 <div id='wetter_s8' onmousedown="md_wetter_s8()" onmouseup="mu_wetter_s8()" ><img src="/img/arrow_right.gif" height="50" width="50">
 </div>
-<div id='wetter_t1'>1d
-</div>
-<div id='wetter_t2'>1a
-</div>
-<div id='wetter_t3'><?php echo $wetter_temp_sensor; ?>
-</div>
-<div id='wetter_t4'>0
-</div>
+<div id='wetter_t1'>1d</div>
+<div id='wetter_t2'>1a</div>
+<div id='wetter_t3'><?php echo $wetter_temp_sensor; ?></div>
+<div id='wetter_t4'>0</div>
 
 </center>
 </div>
 <?php
-$db->close(); 
+$db_dh->close(); 
+$db_sh->close(); 
 ?>
 
