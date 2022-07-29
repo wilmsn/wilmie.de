@@ -11,6 +11,7 @@ $rf24hub_db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user, 
 foreach ($rf24hub_db->query(" select node_id, node_name, add_info from node where html_show = 'y' ".
 						   " order by html_order ") as $row_node) {
     $mynode="'".$row_node[0]."'";					   
+    $mynodeid=$row_node[0];
     $myage = 100000;
     $bgcolor = "#119911"; 
     foreach ($rf24hub_db->query("select ifnull(unix_timestamp() - max(a.last_utime), 100000) from sensor_im a, sensor b where a.sensor_id = b.sensor_id and b.node_id = ".$mynode." group by b.node_id ") as $node_age ) {
@@ -21,11 +22,19 @@ foreach ($rf24hub_db->query(" select node_id, node_name, add_info from node wher
     }
     if ( $myage > 70000 ) { $bgcolor = "#991111";  } 
     if ( $mylv == "y" ) { $bgcolor = "#fefe04";  } 
-    print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
-          "<li class='ui-li-divider ui-bar-inherit ui-first-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li>".
-          "<li><a id='n".$row_node[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
-        " href='#' onclick=editnode(".$mynode."); ".
-        " data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></a>";	
+    if ( $mynodeid < 10 ) {
+	print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
+		"<li class='ui-li-divider ui-first-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li>".
+		"<li><a id='n".$row_node[0]."' class='ui-btn' data-theme='a' ".
+		" href='#' onclick=nothing(); ".
+		" data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></li>";	
+    } else {
+	print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
+		"<li class='ui-li-divider ui-bar-inherit ui-first-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li>".
+		"<li><a id='n".$row_node[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
+		" href='#' onclick=editnode(".$mynode."); ".
+		" data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></a></li>";	
+    }    
     foreach ($rf24hub_db->query("select Sensor_id, Sensor_name ".
 	                              " from sensor where node_id = '$row_node[0]' and html_show = 'y' order by html_order asc ") as $row_sensor) {
         print "<a id='ss".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".

@@ -354,6 +354,8 @@ var d = new Date();
 var n = d.getTime();
 var but_color2 = '#DDDDDD';
 var but_color1 = '#AAAAAA';
+var but_color_low = '#AAAA00';
+var but_color_down = '#AA0000';
 
 for ( let i=0; i<=12; i++ ) {
   display.push( new SegmentDisplay("display"+i) );
@@ -383,7 +385,11 @@ function reset_batt() {
     $('#batt4').css('backgroundColor', but_color1);
     $('#batt5').css('backgroundColor', but_color1);
     $('#batt6').css('backgroundColor', but_color1);
+/*    if ( <?php print $bat7; ?> < <?php print $bat7_umin; ?> ) {
+    $('#batt7').css('backgroundColor', but_color_warn);
+    } else { */
     $('#batt7').css('backgroundColor', but_color1);
+/*    }    */
     $('#batt8').css('backgroundColor', but_color1);
     $('#batt9').css('backgroundColor', but_color1);
     $('#batt10').css('backgroundColor', but_color1);

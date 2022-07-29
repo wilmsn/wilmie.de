@@ -13,6 +13,9 @@ $(window).resize(function() {
 	}
 });
 
+function nothing() {
+}
+
 function listjobs(){
 	if ($('#jobs').is(":visible")) {
 		$('#jobshead').attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');

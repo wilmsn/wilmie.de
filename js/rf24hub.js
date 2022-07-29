@@ -216,8 +216,15 @@ function add_device_ht(room_no, dev_no, dev_name, fhem_dev) {
     device_enable_switch(room_no);
     $("#r"+room_no+"d").append("<div class='dev' id='r" + room_no + "d" + dev_no + "'></div>");
     $("#r"+room_no+"d"+dev_no).append("<div class='dev_label' id='r" + room_no + "d" + dev_no + "l'></div>");
+    $("#r"+room_no+"d"+dev_no+"l").append("<div class='dev_label' id='r" + room_no + "d" + dev_no + "l1'></div><div class='dev_label' id='r" + room_no + "d" + dev_no + "l2'></div><div class='dev_label' id='r" + room_no + "d" + dev_no + "l3'></div>");
     $("#r"+room_no+"hd"+dev_no).css("display","inline");
-    $("#r"+room_no+"d"+dev_no + "l").html(dev_name);
+    $("#r"+room_no+"d"+dev_no + "l1").html(dev_name).css("display","inline");
+    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "valveposition" }, function(data) {
+	$("#r"+room_no+"d"+dev_no + "l2").html("Ventil: "+data).css("display","inline");
+    });
+    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "temperature" }, function(data) {
+	$("#r"+room_no+"d"+dev_no + "l3").html("Temperatur: "+data).css("display","inline");
+    });
     if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","70%");
     $("#r"+room_no+"d"+dev_no + "a").html("action");
     $("#r"+room_no+"hd" + dev_no + "l").html(dev_name);

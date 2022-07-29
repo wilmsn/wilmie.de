@@ -1,4 +1,3 @@
-
 <script> var basedir="/admin/"; </script>
 
 <script src="/js/rf24hub.js"></script> 
@@ -11,15 +10,15 @@ $(document).ready(function() {
     header_addLine(1,"Aussentemperatur", parseInt(data*10)/10 + "°C");
   });
   add_room(1, "Wohnzimmer", "Wohnzimmernode", "Temperatur");
-  add_device_ht(1, 1, "Thermostat", "HT_Wohnzimmer1");
-  add_device_ht(1, 2, "Thermostat", "HT_Wohnzimmer2");
+  add_device_ht(1, 1, "Hzg_gross", "HT_Wohnzimmer1");
+  add_device_ht(1, 2, "Hzg_klein", "HT_Wohnzimmer2");
   add_device_switch(1, 3, "Licht", "HS_WohnzimmerLicht", "WohnzimmerLicht");
   add_device_switch(1, 4, "Display", "HS_Wohnzimmer_Display", "Wohnzimmer_Display");
 //  add_device_switch(1, 3, "Fenstertanne", "HS_Steckdose5", "MQTT2_DVES_F97216");
   add_device_switch(1, 5, "Schranklicht", "HS_Steckdose2", "Steckdose2_");
   add_room(2, "Kueche", "Kueche_Temp", "state");
-  add_device_ht(2, 1, "Thermostat", "HT_Kueche1");
-  add_device_ht(2, 2, "Thermostat", "HT_Kueche2");
+  add_device_ht(2, 1, "Hzg_gross", "HT_Kueche1");
+  add_device_ht(2, 2, "Handtuchheizung", "HT_Kueche2");
   add_room(3, "Bastelzimmer", "Bastelzimmer_Temp", "state");
   add_device_ht(3, 1, "Thermostat", "HT_Bastelzimmer");
   add_room(4, "Flur", "FlurLicht", "Temperatur");
