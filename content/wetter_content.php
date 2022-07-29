@@ -324,7 +324,7 @@ function set_divs() {
 		$('#wetter3').css('backgroundColor', but_color1);
 		mycolor='FFFF00';
 		mylegend='Solarzelle';
-		mydatabase='rf24hub';
+		mydatabase='datahub';
 		add_param ='&ymin=0&ymax=2.5';
         break;
     case "3":
@@ -478,7 +478,7 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
  &#37;</div></center></div>
 <div id='wetter1d'><center><div class='label'>Solarzelle:</div><div class='wert'>
 <?php
-  $results = $db_sh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_sol_sensor." LIMIT 1");
+  $results = $db_dh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_sol_sensor." LIMIT 1");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
