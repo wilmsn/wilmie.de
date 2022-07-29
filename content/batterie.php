@@ -136,7 +136,7 @@ if($mobile_browser) {
   width: 100%;	  
   }
 
-#range_1d, #range_1m, #range_3m, #range_6m, #range_1y, #range_2y {  
+#range_1d, #range_1m, #range_3m, #range_6m, #range_1y, #range_2y, #range_5y {  
   height: 45px;
   width: 30%;	  
   position: absolute;
@@ -231,11 +231,16 @@ if($mobile_browser) {
   top:  950px;
 }
 
+#range_5y {
+  left: 0%;
+  top:  1000px;
+}
+
 <?php
 } else { 
 ?>
 
-#range_1d, #range_1m, #range_3m, #range_6m, #range_1y, #range_2y {  
+#range_1d, #range_1m, #range_3m, #range_6m, #range_1y, #range_2y, #range_5y {  
   height: 45px;
   width: 110px;	  
   position: absolute;
@@ -289,6 +294,11 @@ if($mobile_browser) {
 
 #range_2y {
   left: 950px;
+  top:  410px;
+}
+
+#range_5y {
+  left: 1070px;
   top:  410px;
 }
 
@@ -408,6 +418,7 @@ function reset_range() {
     $('#range_6m').css('backgroundColor', but_color1);
     $('#range_1y').css('backgroundColor', but_color1);
     $('#range_2y').css('backgroundColor', but_color1);
+    $('#range_5y').css('backgroundColor', but_color1);
 }
 
 function set_divs() {
@@ -670,6 +681,13 @@ $("#range_2y").click(function(){
     set_divs();
 });
 
+$("#range_5y").click(function(){
+    reset_range();
+    $('#batt_range').html('5y');  
+    $('#range_5y').css('backgroundColor', but_color2);
+    set_divs();
+});
+
 $('#batt_sensor').html('<?php print $batt1_sensor; ?>');  
 $('#batt_sensor').hide();  
 $('#batt_name').html('<?php print $batt1_name; ?>');  
@@ -816,6 +834,7 @@ set_divs();
 <div id='range_6m'>Diagramm<br>6 Monate</div>
 <div id='range_1y'>Diagramm<br>1 Jahr</div>
 <div id='range_2y'>Diagramm<br>2 Jahre</div>
+<div id='range_5y'>Diagramm<br>5 Jahre</div>
 <div id='batt_sensor'></div>
 <div id='batt_name'></div>
 <div id='batt_range'></div>
