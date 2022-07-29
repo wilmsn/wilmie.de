@@ -128,6 +128,11 @@ switch ($sensor1legend) {
     $einheit= " ";
 }	
 
+if (isset($_GET["database"])) {
+    $database = $_GET["database"];
+} else {
+    $database = "rf24hub";
+}
 if (isset($_GET["sensor1"])) {
     $sensor1 = $_GET["sensor1"];
 } else {
@@ -153,67 +158,70 @@ if (isset($_GET["ymax"])) {
 $range = $_GET["range"];
 //$by_range = True;
 switch ($range) {
-		case '10y':
-			$label_date_format = '%d.%m.%y'; 
-			$label_2 = ' Kalenderjahr ->';
-			$diagramtime = 315360000;
-			$table = $sensordata_agg_tab;;
-            		$minData = 100;
-		break;
-        	case '5y':
-			$label_date_format = '%d.%m.%y'; 
-            		$label_2 = ' Kalenderjahr ->';
-            		$diagramtime = 157680000;
-            		$table = $sensordata_agg_tab;
-            		$minData = 100;
-        	break;
-		case '2y':
-			$label_date_format = '%d.%m.%y'; 
-			$label_2 = ' Kalendermonat ->';
-			$diagramtime = 63072000;
-			$table = $sensordata_agg_tab;
-            		$minData = 100;
-		break;
-		case '1y':
-			$label_date_format = '%d.%m.%y'; 
-			$label_2 = ' Kalendermonat ->';
-			$diagramtime = 31536000;
-			$table = $sensordata_agg_tab;
-            		$minData = 100;
-		break;
-		case '6m':
-			$label_date_format = '%d.%m.%y'; 
-			$label_2 = ' Kalendermonat ->';
-			$diagramtime = 16070400;
-			$table = $sensordata_agg_tab;
-            		$minData = 100;
-		break;
-		case '3m':
-			$label_date_format = '%d.%m.%y'; 
-			$label_2 = ' Kalendertag ->';
-			$diagramtime = 8035200;
-			$table = $sensordata_agg_tab;
-            		$minData = 50;
-		break;
-		case '1m':
-			$label_date_format = '%d.%m.%y'; 
-			$label_2 = ' Kalendertag ->';
-			$diagramtime = 2678400;
-			$table = $sensordata_tab;
-            		$minData = 20;
-		break;
-		default:
-			$label_date_format = '%d.%m.%y %H:%i'; 
-			$label_2 = " Uhrzeit ->"; 
-			$diagramtime = 86400;
-            		$table = $sensordata_tab;
-            		$minData = 20;
+    case '10y':
+	$label_date_format = '%d.%m.%y'; 
+	$label_2 = ' Kalenderjahr ->';
+	$diagramtime = 315360000;
+	$table = $sensordata_agg_tab;
+	$minData = 100;
+    break;
+    case '5y':
+	$label_date_format = '%d.%m.%y'; 
+	$label_2 = ' Kalenderjahr ->';
+	$diagramtime = 157680000;
+	$table = $sensordata_agg_tab;
+	$minData = 100;
+    break;
+    case '2y':
+	$label_date_format = '%d.%m.%y'; 
+	$label_2 = ' Kalendermonat ->';
+	$diagramtime = 63072000;
+	$table = $sensordata_agg_tab;
+	$minData = 100;
+    break;
+    case '1y':
+	$label_date_format = '%d.%m.%y'; 
+	$label_2 = ' Kalendermonat ->';
+	$diagramtime = 31536000;
+	$table = $sensordata_agg_tab;
+	$minData = 100;
+    break;
+    case '6m':
+	$label_date_format = '%d.%m.%y'; 
+	$label_2 = ' Kalendermonat ->';
+	$diagramtime = 16070400;
+	$table = $sensordata_agg_tab;
+	$minData = 100;
+    break;
+    case '3m':
+	$label_date_format = '%d.%m.%y'; 
+	$label_2 = ' Kalendertag ->';
+	$diagramtime = 8035200;
+	$table = $sensordata_agg_tab;
+	$minData = 50;
+    break;
+    case '1m':
+	$label_date_format = '%d.%m.%y'; 
+	$label_2 = ' Kalendertag ->';
+	$diagramtime = 2678400;
+	$table = $sensordata_tab;
+	$minData = 20;
+    break;
+    default:
+	$label_date_format = '%d.%m.%y %H:%i'; 
+	$label_2 = " Uhrzeit ->"; 
+	$diagramtime = 86400;
+	$table = $sensordata_tab;
+	$minData = 5;
 }
 
 $xdata = array();
 $ydata = array();
 $monate = array(1=>"Januar", 2=>"Februar", 3=>"M&auml;rz", 4=>"April", 5=>"Mai", 6=>"Juni",7=>"Juli", 8=>"August", 9=>"September", 10=>"Oktober", 11=>"November", 12=>"Dezember");
-$db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
+//if (strcmp($database,"rf24hub")==0) 
+$db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $database);
+//if (strcmp($database,"datahub")==0) 
+//$db = new mysqli($db_dh_server, $db_dh_user, $db_dh_pass, $database);
 $starttime = mk_starttime($offset, $range);
 #Starttag für Label ermitteln
 	switch ($range) {
@@ -305,7 +313,7 @@ if (count($ydata) < $minData) {
         $ydataMin=min($ydata);
         $ydataMax=max($ydata);
         if ($ydataMax > 0) {
-            if ($ydataMax-$ydataMin > 2 ) {
+            if ($ydataMax-$ydataMin > 3 ) {
                 if ($ydataMin > 0) {
                     $yscaleMin=floor($ydataMin/10)*10;
                 } else {
