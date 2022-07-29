@@ -1,5 +1,5 @@
 <?php
-$instance="intern";
+$instance="prod";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
