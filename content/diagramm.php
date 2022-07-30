@@ -392,7 +392,7 @@ if (count($ydata) < $minData) {
     $graph->xaxis->title->Set($label_2); 
     $graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
     $graph->xaxis->SetTitleMargin(10);
-    $graph->legend->SetAbsPos(10,30,'right','top');
+    $graph->legend->SetAbsPos(80,20,'left','top');
     $graph->legend->SetFrameWeight(2);
     $graph->legend->SetShadow();
     $graph->legend->SetColor('darkgreen');
