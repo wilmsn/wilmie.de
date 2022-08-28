@@ -5,7 +5,7 @@ require_once ($webroot.'/php_inc/check_mobile.php');
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
 $mobile_browser = is_mobile_browser(); 
 if ( isset( $batt1_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt1_sensor;
+    $stmt = "select value from sensordata where sensor_id = ".$batt1_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt1_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat1=$row['value'];
@@ -13,7 +13,7 @@ if ( isset( $batt1_name ) ) {
     $bat1=0;
 }
 if ( isset( $batt2_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt2_sensor;
+    $stmt = "select value from sensordata where sensor_id = ".$batt2_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt2_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat2=$row['value'];
@@ -21,7 +21,7 @@ if ( isset( $batt2_name ) ) {
     $bat2=0;
 }
 if ( isset( $batt3_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt3_sensor;
+   $stmt = "select value from sensordata where sensor_id = ".$batt3_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt3_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat3=$row['value'];
@@ -29,7 +29,7 @@ if ( isset( $batt3_name ) ) {
     $bat3=0;
 }
 if ( isset( $batt4_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt4_sensor;
+   $stmt = "select value from sensordata where sensor_id = ".$batt4_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt4_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat4=$row['value'];
@@ -37,7 +37,7 @@ if ( isset( $batt4_name ) ) {
     $bat4=0;
 }
 if ( isset( $batt5_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt5_sensor;
+   $stmt = "select value from sensordata where sensor_id = ".$batt5_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt5_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat5=$row['value'];
@@ -45,7 +45,7 @@ if ( isset( $batt5_name ) ) {
     $bat5=0;
 }
 if ( isset( $batt6_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt6_sensor;
+   $stmt = "select value from sensordata where sensor_id = ".$batt6_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt6_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat6=$row['value'];
@@ -53,7 +53,7 @@ if ( isset( $batt6_name ) ) {
     $bat6=0;
 }
 if ( isset( $batt7_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt7_sensor;
+    $stmt = "select value from sensordata where sensor_id = ".$batt7_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt7_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat7=$row['value'];
@@ -61,7 +61,7 @@ if ( isset( $batt7_name ) ) {
     $bat7=0;
 }
 if ( isset( $batt8_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt8_sensor;
+    $stmt = "select value from sensordata where sensor_id = ".$batt8_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt8_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat8=$row['value'];
@@ -69,7 +69,7 @@ if ( isset( $batt8_name ) ) {
     $bat8=0;
 }
 if ( isset( $batt9_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt9_sensor;
+    $stmt = "select value from sensordata where sensor_id = ".$batt9_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt9_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat9=$row['value'];
@@ -77,7 +77,7 @@ if ( isset( $batt9_name ) ) {
     $bat9=0;
 }
 if ( isset( $batt10_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt10_sensor;
+    $stmt = "select value from sensordata where sensor_id = ".$batt10_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt10_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat10=$row['value'];
@@ -85,7 +85,7 @@ if ( isset( $batt10_name ) ) {
     $bat10=0;
 }
 if ( isset( $batt11_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt11_sensor;
+    $stmt = "select value from sensordata where sensor_id = ".$batt11_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt11_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat11=$row['value'];
@@ -93,7 +93,7 @@ if ( isset( $batt11_name ) ) {
     $bat11=0;
 }
 if ( isset( $batt12_name ) ) {
-    $stmt = "select value from sensor_im where sensor_id = ".$batt12_sensor;
+    $stmt = "select value from sensordata where sensor_id = ".$batt12_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt12_sensor.")";
     $results = $db->query($stmt);
     $row = $results->fetch_assoc();
     $bat12=$row['value'];

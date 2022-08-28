@@ -16,6 +16,24 @@ $(window).resize(function() {
 function nothing() {
 }
 
+function syncSensor() {
+    var tn_in;
+    tn_in = "sync sensor";
+    alert(tn_in);
+    $.get(mydir+'/rf24hubadm_tn.php',{tn_in: tn_in }, function(data) {
+          // alert(data);
+    });
+}
+
+function syncNode() {
+    var tn_in;
+    tn_in = "sync node";
+    alert(tn_in);
+    $.get(mydir+'/rf24hubadm_tn.php',{tn_in: tn_in }, function(data) {
+          // alert(data);
+    });
+}
+
 function listjobs(){
 	if ($('#jobs').is(":visible")) {
 		$('#jobshead').attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');
@@ -63,6 +81,7 @@ function savenewnode(mynodeid){
 	$.get(mydir+'/savenode.php',{nid: mynid, onid: mynodeid, nn: mynn, ni: myni, bid: mybid }, function(data) { 
 		alert(data);
 	});
+	syncNode();
 	init_window();
 }
 
@@ -97,6 +116,7 @@ function savesensor(mysensorid){
 	$.get(mydir+'/savesensor.php',{osid: mysensorid, sid: mysid, sn: mysn, si: mysi, nid: mynid, ch: mych, so: myso, sh: mysh, sd: mysd, fh: myfh }, function(data) { 
 		alert(data);
 	});
+	syncSensor();
 }
 
 function showsensor(mysensor) {

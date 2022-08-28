@@ -8,20 +8,18 @@ $rf24hub_db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user, 
 # Nodes auflisten
 #
 #######################
-foreach ($rf24hub_db->query(" select node_id, node_name, add_info from node where html_show = 'y' ".
-						   " order by html_order ") as $row_node) {
+foreach ($rf24hub_db->query(" select node_id, node_name, add_info, volt_lv, lv_flag from node where html_show = 'y' order by html_order ") as $row_node) {
     $mynode="'".$row_node[0]."'";					   
     $mynodeid=$row_node[0];
+    $volt_lv=$row_node[3];
+    $lv_flag=$row_node[4][0];
     $myage = 100000;
-    $bgcolor = "#119911"; 
-    foreach ($rf24hub_db->query("select ifnull(unix_timestamp() - max(a.last_utime), 100000) from sensor_im a, sensor b where a.sensor_id = b.sensor_id and b.node_id = ".$mynode." group by b.node_id ") as $node_age ) {
+    if ( $row_node[4] == "n" ) { $bgcolor = "#fefe04";  } else { $bgcolor = "#119911"; }
+    foreach ($rf24hub_db->query("select ifnull(unix_timestamp() - max(utime), 100000) from sensordata where sensor_id in (select sensor_id from sensor where node_id = ".$mynode." ) limit 1") as $node_age ) {
         $myage = $node_age[0]+1;
     }
-    foreach ($rf24hub_db->query("select low_voltage from node where node_id = ".$mynode) as $node_lv ) {
-        $mylv = $node_lv[0];
-    }
-    if ( $myage > 70000 ) { $bgcolor = "#991111";  } 
-    if ( $mylv == "y" ) { $bgcolor = "#fefe04";  } 
+    if ( $myage > 70000 ) { $bgcolor = "#991111"; } else {$bgcolor = "#119911"; }
+    if ( $lv_flag == "y" ) { $bgcolor = "#fefe04"; }
     if ( $mynodeid < 10 ) {
 	print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
 		"<li class='ui-li-divider ui-first-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li>".

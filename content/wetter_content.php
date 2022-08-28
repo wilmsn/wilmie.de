@@ -304,7 +304,7 @@ function set_divs() {
 		$('#wetter3').css('backgroundColor', but_color1);
 		mycolor='0000FF';
 		mylegend='Luftdruck';
-		mydatabase='datahub';
+		mydatabase='rf24hub';
         break;
     case "1c":
 		$('#wetter1a').css('backgroundColor', but_color1);
@@ -314,7 +314,7 @@ function set_divs() {
 		$('#wetter3').css('backgroundColor', but_color1);
 		mycolor='00FFFF';
 		mylegend='rel. Luftfeuchte';
-		mydatabase='datahub';
+		mydatabase='rf24hub';
         break;
     case "1d":
 		$('#wetter1a').css('backgroundColor', but_color1);
@@ -324,7 +324,7 @@ function set_divs() {
 		$('#wetter3').css('backgroundColor', but_color1);
 		mycolor='FFFF00';
 		mylegend='Solarzelle';
-		mydatabase='datahub';
+		mydatabase='rf24hub';
 		add_param ='&ymin=0&ymax=2.5';
         break;
     case "3":
@@ -334,7 +334,7 @@ function set_divs() {
 		$('#wetter3').css('backgroundColor', but_color2);
 		mycolor='00FF00';
 		mylegend='Batterie';
-		mydatabase='datahub';
+		mydatabase='rf24hub';
         break;
     default:
 		$('#wetter1a').css('backgroundColor', but_color2);
@@ -344,7 +344,7 @@ function set_divs() {
 		$('#wetter3').css('backgroundColor', but_color1);
 		mycolor='FF0000';
 		mylegend='Temperatur';
-		mydatabase='datahub';
+		mydatabase='rf24hub';
 	} 
 //	alert(mycolor);
 	$('#wetter_dia').attr('src', '/content/diagramm.php?database='+mydatabase+'&sensor1='+$('#wetter_t3').html()+'&sensor1color='+mycolor+'&sensor1legend='+mylegend+'&sizex='+w+'&sizey=370&offset='+$('#wetter_t4').html()+'&range='+$('#wetter_t1').html()+add_param+'&t='+n);
@@ -457,28 +457,28 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </div>
 <div id='wetter1a'><center><div class='label'>Temperatur:</div><div class='wert'>
 <?php
-  $results = $db_dh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_temp_sensor." LIMIT 1");
+  $results = $db_sh->query("select value from sensordata where sensor_id = ".$wetter_temp_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$wetter_temp_sensor.")");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
  C</b></center></div>
 <div id='wetter1b'><center><div class='label'>Luftdruck:</div><div class='wert'>
 <?php
-  $results = $db_dh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_pres_sensor." LIMIT 1");
+  $results = $db_sh->query("select value from sensordata where sensor_id = ".$wetter_pres_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$wetter_pres_sensor.")");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],0, ",", ".");
 ?>
  hPa</b></center></div>
 <div id='wetter1c'><center><div class='label'>rel. Luftfeuchte:</div><div class='wert'>
 <?php
-  $results = $db_dh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_humi_sensor." LIMIT 1");
+  $results = $db_sh->query("select value from sensordata where sensor_id = ".$wetter_humi_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$wetter_humi_sensor.")");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
  &#37;</div></center></div>
 <div id='wetter1d'><center><div class='label'>Solarzelle:</div><div class='wert'>
 <?php
-  $results = $db_dh->query("SELECT value FROM sensor_im where sensor_id = ".$wetter_sol_sensor." LIMIT 1");
+  $results = $db_sh->query("select value from sensordata where sensor_id = ".$wetter_sol_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$wetter_sol_sensor.")");
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>

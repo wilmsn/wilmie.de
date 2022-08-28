@@ -4,7 +4,7 @@ require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot."/php_inc/check_mobile.php");
 $db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user, $db_sh_pass);
 $reg_array = "";
-
+$bg_gray = "style='background: #444444;'";
 
 if (isset($_GET["node"]))  {
   $node=$_GET["node"];
@@ -17,7 +17,7 @@ if ( $node > 0 ) {
         print "<div class='node'><p>Node: ".$row[0]."&nbsp;&nbsp;<input id='nodename' value='".$row[1]."'></p></div>".
               "<div class='hb'><div class='hb'> <input type='checkbox' name='mastered' value='y'";
         if ( $row[4] == 'y' ) { print " checked "; } 
-        print "><label for='mastered'> mastered by rpi1 </label></div>".
+        print "><label for='mastered'> mastered </label></div>".
               "<div class='hb'>Batterie <select id='bat' name='bat'>";
         foreach ($db->query("select battery_id, battery_sel_txt from battery where battery_id = ".$row[3] ) as $brow) {
             print "<option value='".$brow[0]."' selected>".$brow[1]."</option>"; 
@@ -44,7 +44,7 @@ if ( $node > 0 ) {
     $i = 0;
     $reg_array = "var reg_array = [";
     $reg_val=0;
-    $sql = "select a.channel, itemname, value, min, max, readonly from (select node_id, channel, itemname, min, max, readonly, x.html_order from node x, node_configitem y ) a left join node_configdata_im b on ( a.node_id = b.node_id and a.channel = b.channel) where a.node_id = ".$node." order by html_order";
+    $sql = "select a.channel, itemname, value, min, max, readonly, a.html_order from node_configitem a, node_configdata b where a.channel = b.channel and b.node_id = ".$node. " order by html_order";
 	foreach ($db->query($sql) as $crow) { 
         $i1 = $i + 1;
         $i2 = $i + 2;
@@ -72,11 +72,18 @@ if ( $node > 0 ) {
         break;
         case 4: print "";
     }
-    $sql = "select from_unixtime(min(utime)), from_unixtime(max(utime)) from node_configdata_im where node_id = ".$node;
+    $sql = "select from_unixtime(min(utime)), from_unixtime(max(utime)) from node_configdata where node_id = ".$node;
 	foreach ($db->query($sql) as $drow) { 
         print "<div class='reg'>Datenstand<br> min: ".$drow[0]."<br>max: ".$drow[1]."</div>";
     }
-    print "<div><button class='ui-btn' onclick='init_window()'>abbrechen</button></div><div></div>".
+    print "<div><button ".$bg_gray." class='ui-btn' onclick='transReg($node)'>Register auslesen</button></div>".
+          "<div><button ".$bg_gray." class='ui-btn' onclick='transPA($node)'>Pingtest starten</button></div>".
+          "<div>".
+            "<div class='half'><input class='reg_value' id='sltkor' size='4' value='0'></div>".
+            "<div class='half'><button ".$bg_gray." class='ui-btn half' onclick='sleeptimeKor($node)'>Add Sleeptime</button></div>".
+          "</div>".
+          "<div><button class='ui-btn' onclick='resetNode($node)'>Werte zurücksetzen</button></div>".
+          "<div><button ".$bg_gray." class='ui-btn' onclick='init_window()'>abbrechen</button></div>".
           "<div><button class='ui-btn' onclick='savenode($node)'>Werte speichern</button></div><div></div>".
           "</div>";
 }
@@ -109,6 +116,42 @@ $('#sort').on('input', function() {
 });
 
 });
+
+function sleeptimeKor(mynodeid) {
+    var tn_in;
+    tn_in = "push "+mynodeid+" 80 "+$("#sltkor").val();
+    alert(tn_in);
+    $.get(mydir+'/rf24hubadm_tn.php',{tn_in: tn_in }, function(data) {
+          // alert(data);
+    });
+}
+
+function resetNode(mynodeid) {
+    var tn_in;
+    tn_in = "push "+mynodeid+" 83 1";
+    alert(tn_in);
+    $.get(mydir+'/rf24hubadm_tn.php',{tn_in: tn_in }, function(data) {
+          // alert(data);
+    });
+}
+
+function transReg(mynodeid) {
+    var tn_in;
+    tn_in = "push "+mynodeid+" 81 1";
+    alert(tn_in);
+    $.get(mydir+'/rf24hubadm_tn.php',{tn_in: tn_in }, function(data) {
+          // alert(data);
+    });
+}
+
+function transPA(mynodeid) {
+    var tn_in;
+    tn_in = "push "+mynodeid+" 82 1";
+    alert(tn_in);
+    $.get(mydir+'/rf24hubadm_tn.php',{tn_in: tn_in }, function(data) {
+          // alert(data);
+    });
+}
 
 function savenode(mynodeid){
    <?php print $reg_array; ?>
@@ -148,40 +191,50 @@ function savenode(mynodeid){
 
 </script>
 
-<?php if( is_mobile_browser() ): ?>
-
 <style type=text/css>
+
 #nodename {
-  width: 90%;
+    width: 90%;
+}
+
+.half {
+    width: 45%;
+    float: left;
+}
+
+#sltkor {
+    margin: 1em;
+    width: auto;
 }
 
 .reg {
     border-radius: .5em;
-	border: 1px solid;
-	padding: .5em;
-	margin: .5em; 
+    border: 1px solid;
+    padding: .5em;
+    margin: .5em;
 }
 
 .reg_label {
     float: left;
-	width: 60%;
+    width: 60%;
 }
 
 .reg_value {
-  float: left;
-  width: 30%;
+    float: left;
+    width: 30%;
 }
+
+.hb {
+    float: left;
+    padding: 10px;
+}
+
+<?php if( is_mobile_browser() ): ?>
 
 .node {
 /*  float: left;
   width: 70%; */
 }
-.hb {
-  float: left;
-  padding: 10px;
-}
-
-
 
 .container {
     display: grid;
@@ -193,15 +246,15 @@ function savenode(mynodeid){
     align-items: stretch
  }
 
-
 textarea {
-	caret-color: red;  
+	caret-color: red;
 	width: 90%;
 	height: 15em;
 	border: 1px solid #cccccc;
 	padding: 0.5em;
 	/*font-family: Tahoma, sans-serif;*/
 }
+
 textarea:focus {
       background: #FFC;
 }
@@ -214,11 +267,10 @@ input {
 	padding: 0.5em;
 	/*font-family: Tahoma, sans-serif;*/
 }
+
 input:focus {
       background: #FFC;
 }
-
-</style>
 
 <?php 
 // End mobile Browser
@@ -226,34 +278,10 @@ else:
 // Start Desktop Browser
 ?>
 
-<style type=text/css>
-
-.reg {
-    border-radius: .5em;
-	border: 1px solid;
-	padding: .5em;
-	margin: .5em; 
-}
-
-.reg_label {
-    float: left;
-	width: 60%;
-}
-
-.reg_value {
-  float: left;
-  width: 30%;
-}
-
 .node {
-  float: left;
-  width: 50%;
+    float: left;
+    width: 50%;
 }
-.hb {
-  float: left;
-  padding-top: 10px; 
-}
-
 
 .container {
     display: grid;
@@ -265,30 +293,30 @@ else:
     align-items: stretch
  }
 
-
 textarea {
-	caret-color: red;  
-	width: 100%;
-	height: 15em;
-	border: 1px solid #cccccc;
-	padding: 0.5em;
-	/*font-family: Tahoma, sans-serif;*/
+    caret-color: red;
+    width: 100%;
+    height: 15em;
+    border: 1px solid #cccccc;
+    padding: 0.5em;
+    /*font-family: Tahoma, sans-serif;*/
 }
+
 textarea:focus {
-      background: #FFC;
+    background: #FFC;
 }
 
 input {
-	caret-color: red;  
-	width: 80%;
-	border: 1px solid #cccccc;
-	padding: 0.5em;
+    caret-color: red;
+    width: 80%;
+    border: 1px solid #cccccc;
+    padding: 0.5em;
 }
+
 input:focus {
-      background: #FFC;
+    background: #FFC;
 }
 
-
+<?php endif; ?>
 
 </style>
-<?php endif; ?>		
