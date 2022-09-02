@@ -13,20 +13,20 @@ if (isset($_GET["node"]))  {
 }
 
 if ( $node > 0 ) { 
-	foreach ($db->query("select node_id, node_name, add_info, battery_id, mastered from node where node_id = '".$node."'") as $row) {
-        print "<div class='node'><p>Node: ".$row[0]."&nbsp;&nbsp;<input id='nodename' value='".$row[1]."'></p></div>".
-              "<div class='hb'><div class='hb'> <input type='checkbox' name='mastered' value='y'";
-        if ( $row[4] == 'y' ) { print " checked "; } 
-        print "><label for='mastered'> mastered </label></div>".
-              "<div class='hb'>Batterie <select id='bat' name='bat'>";
+    foreach ($db->query("select node_id, node_name, add_info, battery_id, mastered, html_show from node where node_id = '".$node."'") as $row) {
+    if( is_mobile_browser() ) {
+        print "<table width='100%'>".
+              "<tr><td colspan=4>Node: ".$row[0]."</td></tr>".
+              "<tr><td colspan=4><input id='nodename' value='".$row[1]."'></td></tr>".
+              "<tr><td>Batterie</td><td>HTML Pos.</td><td>Mastered</td><td>Show</td></tr>".
+              "<tr><td><select id='bat' name='bat'>";
         foreach ($db->query("select battery_id, battery_sel_txt from battery where battery_id = ".$row[3] ) as $brow) {
             print "<option value='".$brow[0]."' selected>".$brow[1]."</option>"; 
         }
         foreach ($db->query("select battery_id, battery_sel_txt from battery where battery_id > 0 and battery_id != ".$row[3] ) as $brow) {
             print "<option value='".$brow[0]."'>".$brow[1]."</option>"; 
         }
-        print "</option></select></div>";
-        print "<div class='hb'>&nbsp;&nbsp;&nbsp;HTML Pos&nbsp;&nbsp;&nbsp;<select id='sort' name='sort'>";
+        print "</option></select></td><td><select id='sort' name='sort'>";
         foreach ($db->query("select html_order from node where node_id = ". $node) as $srow) {
             print "<option value='".$srow[0]."' selected>".$srow[0]."</option>"; 
         }
@@ -34,12 +34,38 @@ if ( $node > 0 ) {
             print "<option value='".$srow[0]."'>".$srow[0]."</option>"; 
         }
         
-        print "</select></div>".
-            "</div>".
-            "<textarea id='nodeinfo' class='textarea'>".$row[2]."</textarea>".
-            "<input id='onid' type=hidden value=".$node.">".
-            "<div class='container'>";
-            
+        print "</select></td><td><input type='checkbox' id='mas' name='mastered' value='y'";
+        if ( $row[4] == 'y' ) { print " checked "; } 
+        print "></td><td><input type='checkbox' id='sho' name='show' value='y'";
+        if ( $row[5] == 'y' ) { print " checked "; } 
+        print "</td></tr></table>";
+    } else {    
+        print "<table width='100%'>".
+              "<tr><td width='500'>Node: ".$row[0]."</td>".
+              "<td>Batterie</td><td>HTML Pos.</td><td>Mastered</td><td>Show</td></tr>".
+              "<tr><td><input id='nodename' value='".$row[1]."'></td><td><select id='bat' name='bat'>";
+        foreach ($db->query("select battery_id, battery_sel_txt from battery where battery_id = ".$row[3] ) as $brow) {
+            print "<option value='".$brow[0]."' selected>".$brow[1]."</option>"; 
+        }
+        foreach ($db->query("select battery_id, battery_sel_txt from battery where battery_id > 0 and battery_id != ".$row[3] ) as $brow) {
+            print "<option value='".$brow[0]."'>".$brow[1]."</option>"; 
+        }
+        print "</option></select></td><td><select id='sort' name='sort'>";
+        foreach ($db->query("select html_order from node where node_id = ". $node) as $srow) {
+            print "<option value='".$srow[0]."' selected>".$srow[0]."</option>"; 
+        }
+        foreach ($db->query("select number from numbers where number not in ( select html_order from node where html_order is not null)") as $srow) {
+            print "<option value='".$srow[0]."'>".$srow[0]."</option>"; 
+        }
+        print "</select></td><td><input type='checkbox' id='mas' name='mastered' value='y'";
+        if ( $row[4] == 'y' ) { print " checked "; } 
+        print "></td><td><input type='checkbox' id='sho' name='show' value='y'";
+        if ( $row[5] == 'y' ) { print " checked "; } 
+        print "</td></tr></table>";
+    }
+    print "<textarea id='nodeinfo' class='textarea'>".$row[2]."</textarea>".
+          "<input id='onid' type=hidden value=".$node.">".
+          "<div class='container'>";
     }
     $i = 0;
     $reg_array = "var reg_array = [";
@@ -110,6 +136,14 @@ $('#bat').on('input', function() {
     dirty=true;
 //    alert("bat dirty");
 });
+$('#mas').on('input', function() {
+    dirty=true;
+//    alert("isMastered dirty");
+});
+$('#sho').on('input', function() {
+    dirty=true;
+//    alert("Show dirty");
+});
 $('#sort').on('input', function() {
     dirty=true;
 //    alert("bat dirty");
@@ -176,12 +210,13 @@ function savenode(mynodeid){
     onid=$("#onid").val();
     nodename=$("#nodename").val();
     nodetyp=$("input[name='mastered']:checked").val();
+    nodeshow=$("input[name='show']:checked").val();
     nodeinfo=$("#nodeinfo").val();
     batid=$("#bat").val();
     hsort=$("#sort").val();
     if ( dirty ) {
        alert("saving Node: "+onid);
-        $.get(mydir+'/savenode.php',{onid: onid, nid: onid, nn: nodename, ni: nodeinfo, ms: nodetyp, bid: batid, sort: hsort }, function(data) { 
+        $.get(mydir+'/savenode.php',{onid: onid, nid: onid, nn: nodename, ni: nodeinfo, ms: nodetyp, bid: batid, sort: hsort, show: nodeshow }, function(data) { 
     //$.get(mydir+'/savenode.php',{onid: onid }, function(data) { 
             alert(data);
         });

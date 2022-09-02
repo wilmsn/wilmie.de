@@ -220,8 +220,8 @@ $ydata = array();
 $monate = array(1=>"Januar", 2=>"Februar", 3=>"M&auml;rz", 4=>"April", 5=>"Mai", 6=>"Juni",7=>"Juli", 8=>"August", 9=>"September", 10=>"Oktober", 11=>"November", 12=>"Dezember");
 if (strcmp($database,"rf24hub")==0) 
 $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $database);
-if (strcmp($database,"datahub")==0) 
-$db = new mysqli($db_dh_server, $db_dh_user, $db_dh_pass, $database);
+//if (strcmp($database,"datahub")==0) 
+//$db = new mysqli($db_dh_server, $db_dh_user, $db_dh_pass, $database);
 $starttime = mk_starttime($offset, $range);
 #Starttag für Label ermitteln
 	switch ($range) {
