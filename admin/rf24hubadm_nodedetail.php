@@ -13,7 +13,7 @@ if (isset($_GET["node"]))  {
 }
 
 if ( $node > 0 ) { 
-    foreach ($db->query("select node_id, node_name, add_info, battery_id, mastered, html_show from node where node_id = '".$node."'") as $row) {
+    foreach ($db->query("select node_id, node_name, add_info, battery_id, mastered, html_show, (select distinct delta_utime from sensor_im a, sensor b where a.sensor_id = b.sensor_id and node_id = ".$node.") from node where node_id = ".$node) as $row) {
     if( is_mobile_browser() ) {
         print "<table width='100%'>".
               "<tr><td colspan=4>Node: ".$row[0]."</td></tr>".
@@ -42,7 +42,7 @@ if ( $node > 0 ) {
     } else {    
         print "<table width='100%'>".
               "<tr><td width='500'>Node: ".$row[0]."</td>".
-              "<td>Batterie</td><td>HTML Pos.</td><td>Mastered</td><td>Show</td></tr>".
+              "<td>Batterie</td><td>HTML Pos.</td><td>Mastered</td><td>Show</td><td>Sendeintervall</td></tr>".
               "<tr><td><input id='nodename' value='".$row[1]."'></td><td><select id='bat' name='bat'>";
         foreach ($db->query("select battery_id, battery_sel_txt from battery where battery_id = ".$row[3] ) as $brow) {
             print "<option value='".$brow[0]."' selected>".$brow[1]."</option>"; 
@@ -61,7 +61,7 @@ if ( $node > 0 ) {
         if ( $row[4] == 'y' ) { print " checked "; } 
         print "></td><td><input type='checkbox' id='sho' name='show' value='y'";
         if ( $row[5] == 'y' ) { print " checked "; } 
-        print "</td></tr></table>";
+        print "</td><td>".$row[6]." Sek.</td></tr></table>";
     }
     print "<textarea id='nodeinfo' class='textarea'>".$row[2]."</textarea>".
           "<input id='onid' type=hidden value=".$node.">".
@@ -118,8 +118,10 @@ if ( $node > 0 ) {
 <script>
 
 var dirty;
+var hubupdate;
 $(document).ready(function(){
   dirty = false;
+  hubupdate = false;
 $('#nodename').on('input', function() {
     dirty=true;
 //    alert("nodename dirty");
@@ -138,6 +140,7 @@ $('#bat').on('input', function() {
 });
 $('#mas').on('input', function() {
     dirty=true;
+    hubupdate=true;
 //    alert("isMastered dirty");
 });
 $('#sho').on('input', function() {
@@ -219,6 +222,13 @@ function savenode(mynodeid){
         $.get(mydir+'/savenode.php',{onid: onid, nid: onid, nn: nodename, ni: nodeinfo, ms: nodetyp, bid: batid, sort: hsort, show: nodeshow }, function(data) { 
     //$.get(mydir+'/savenode.php',{onid: onid }, function(data) { 
             alert(data);
+        });
+    }
+    if ( hubupdate ) {
+        tn_in = "init ";
+        alert(tn_in);
+        $.get(mydir+'/rf24hubadm_tn.php',{tn_in: tn_in }, function(data) { 
+            // alert(data);
         });
     }
     init_window();
