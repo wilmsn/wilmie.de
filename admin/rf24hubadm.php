@@ -85,6 +85,15 @@ function savenewnode(mynodeid){
 	init_window();
 }
 
+function opennode(mynodeid){
+	$('#node'+mynodeid).toggle();
+	if ($('#node'+mynodeid).is(":visible")) {
+		$('#nodehead'+mynodeid).attr('class','ui-btn ui-btn-icon-right ui-icon-carat-d ui-shadow');
+	} else {
+		$('#nodehead'+mynodeid).attr('class','ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow');
+	}
+}
+
 function enablesensor(){
 	$('#sensoren').toggle();
 	if ($('#sensoren').is(":visible")) {

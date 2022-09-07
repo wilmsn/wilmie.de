@@ -14,32 +14,32 @@ foreach ($rf24hub_db->query(" select node_id, node_name, add_info, volt_lv, lv_f
     $volt_lv=$row_node[3];
     if ($row_node[4]) $lv_flag=$row_node[4][0]; else $lv_flag="n";
     $myage = 100000;
-    if ( $row_node[4] == "n" ) { $bgcolor = "#fefe04";  } else { $bgcolor = "#119911"; }
+    $bgcolor = "#119911";
+    if ( $row_node[4] == "n" ) { $bgcolor = "#fefe04"; }
+    if ( $lv_flag == "y" ) { $bgcolor = "#fefe04"; }
     foreach ($rf24hub_db->query("select ifnull(unix_timestamp() - last_utime, 100000) from sensor_im where sensor_id in (select sensor_id from sensor where node_id = ".$mynode." ) limit 1") as $node_age ) {
         $myage = $node_age[0]+1;
     }
-    if ( $myage > 70000 ) { $bgcolor = "#991111"; } else {$bgcolor = "#119911"; }
-    if ( $lv_flag == "y" ) { $bgcolor = "#fefe04"; }
-/*    if ( $mynodeid < 10 ) {
-	print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
-		"<li class='ui-li-divider ui-first-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li>".
-		"<li><a id='n".$row_node[0]."' class='ui-btn' data-theme='a' ".
-		" href='#' onclick=nothing(); ".
-		" data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></li>";	
-    } else {*/
-	print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
-		"<li class='ui-li-divider ui-bar-inherit ui-first-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li>".
-		"<li><a id='n".$row_node[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
-		" href='#' onclick=editnode(".$mynode."); ".
-		" data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].")</center></a></li>";	
-//    }    
-    foreach ($rf24hub_db->query("select Sensor_id, Sensor_name ".
-	                              " from sensor where node_id = '$row_node[0]' and html_show = 'y' order by html_order asc ") as $row_sensor) {
-        print "<a id='ss".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
-              " href='#' onclick='showsensor(".$row_sensor[0].");' ".
-              " data-rel='popup' style='background: #AAAAAA; color: white;' >".$row_sensor[1]."(".$row_sensor[0].")</a>";
-	}	  
-    print "<li class='ui-li-divider ui-bar-inherit ui-last-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li></ul>";
+    if ( $myage > 70000 ) { $bgcolor = "#991111"; }
+    print "<ul class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-inset='true' data-role='listview'>".
+          "<li class='ui-li-divider ui-bar-inherit ui-first-child' data-role='list-divider' role='heading' style='background: ".$bgcolor."; color: white;'></li>".
+          "<li><a id='nodehead".$row_node[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
+          " href='#' onclick=shownode(".$mynode."); ".
+          " data-rel='popup' style='background: #666666; color: black; ' ><center>".$row_node[1]."(".$row_node[0].
+          ")</center></a></li><div ID='node".$row_node[0]."' style='background: #AAAAAA; color: black; display: none;'>";
+    if (9 < $row_node[0]) {
+	print "<a id='nodeset".$row_node[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
+	      " href='#' onclick='editnode(".$row_node[0].");' ".
+	      " data-rel='popup' style='background: #888888; color: white;'><center>Einstellungen</center></a>";
+    }
+    foreach ($rf24hub_db->query("select Sensor_id, Sensor_name, channel from sensor where node_id = '$row_node[0]' and html_show = 'y' order by html_order asc ") as $row_sensor) {
+	print "<a id='ss".$row_sensor[0]."' class='ui-btn ui-btn-icon-right ui-icon-carat-r ui-shadow' data-theme='a' ".
+	      " href='#' onclick='showsensor(".$row_sensor[0].");' ".
+	      " data-rel='popup' style='background: #AAAAAA; color: white;' >".$row_sensor[1]."    (ID: ".$row_sensor[0].
+	      "   CH: ".$row_sensor[2].")</a>";
+    }
+    print "</div><li class='ui-li-divider ui-bar-inherit ui-last-child' data-role='list-divider' role='heading' style='background: ".
+          $bgcolor."; color: white;'></li></ul>";
 }
 #######################
 #
