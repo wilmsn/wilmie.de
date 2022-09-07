@@ -325,7 +325,7 @@ function set_divs() {
 		mycolor='FFFF00';
 		mylegend='Solarzelle';
 		mydatabase='rf24hub';
-		add_param ='&ymin=0&ymax=2.5';
+		add_param ='&ymin=0&ymax=110';
         break;
     case "3":
 		$('#wetter1a').css('backgroundColor', but_color1);
@@ -482,7 +482,7 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
- V</div></center></div>
+ &percnt;</div></center></div>
 <div id='wetter4'><img id='wetter_dia' /></div>
 <div id='wetter_s1'>Diagramm<br>1 Tag</div>
 <div id='wetter_s2'>Diagramm<br>1 Monat</div>

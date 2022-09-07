@@ -13,11 +13,11 @@ if (isset($_GET["node"]))  {
 }
 
 if ( $node > 0 ) { 
-    foreach ($db->query("select node_id, node_name, add_info, battery_id, mastered, html_show, (select distinct delta_utime from sensor_im a, sensor b where a.sensor_id = b.sensor_id and node_id = ".$node.") from node where node_id = ".$node) as $row) {
+    foreach ($db->query("select node_id, node_name, add_info, battery_id, mastered, html_show, (select min(delta_utime) from sensor_im a, sensor b where a.sensor_id = b.sensor_id and node_id = ".$node.") from node where node_id = ".$node) as $row) {
     if( is_mobile_browser() ) {
         print "<table width='100%'>".
-              "<tr><td colspan=4>Node: ".$row[0]."</td></tr>".
-              "<tr><td colspan=4><input id='nodename' value='".$row[1]."'></td></tr>".
+              "<tr><td colspan=2>Node: ".$row[0]."</td><td colspan=2>Intervall</td></tr>".
+              "<tr><td colspan=2><input id='nodename' value='".$row[1]."'></td><td colspan=2>".$row[6]." Sek.</td></tr>".
               "<tr><td>Batterie</td><td>HTML Pos.</td><td>Mastered</td><td>Show</td></tr>".
               "<tr><td><select id='bat' name='bat'>";
         foreach ($db->query("select battery_id, battery_sel_txt from battery where battery_id = ".$row[3] ) as $brow) {
