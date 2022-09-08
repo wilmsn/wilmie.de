@@ -100,25 +100,74 @@ if ( isset( $batt12_name ) ) {
 } else {
     $bat12=0;
 }
+if ( isset( $batt13_name ) ) {
+    $stmt = "select value from sensordata where sensor_id = ".$batt13_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt13_sensor.")";
+    $results = $db->query($stmt);
+    $row = $results->fetch_assoc();
+    $bat13=$row['value'];
+} else {
+    $bat13=0;
+}
+if ( isset( $batt14_name ) ) {
+    $stmt = "select value from sensordata where sensor_id = ".$batt14_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt14_sensor.")";
+    $results = $db->query($stmt);
+    $row = $results->fetch_assoc();
+    $bat14=$row['value'];
+} else {
+    $bat14=0;
+}
+if ( isset( $batt15_name ) ) {
+    $stmt = "select value from sensordata where sensor_id = ".$batt15_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt15_sensor.")";
+    $results = $db->query($stmt);
+    $row = $results->fetch_assoc();
+    $bat15=$row['value'];
+} else {
+    $bat15=0;
+}
+if ( isset( $batt16_name ) ) {
+    $stmt = "select value from sensordata where sensor_id = ".$batt16_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt16_sensor.")";
+    $results = $db->query($stmt);
+    $row = $results->fetch_assoc();
+    $bat16=$row['value'];
+} else {
+    $bat16=0;
+}
+if ( isset( $batt17_name ) ) {
+    $stmt = "select value from sensordata where sensor_id = ".$batt17_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt17_sensor.")";
+    $results = $db->query($stmt);
+    $row = $results->fetch_assoc();
+    $bat17=$row['value'];
+} else {
+    $bat17=0;
+}
+if ( isset( $batt18_name ) ) {
+    $stmt = "select value from sensordata where sensor_id = ".$batt18_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt18_sensor.")";
+    $results = $db->query($stmt);
+    $row = $results->fetch_assoc();
+    $bat18=$row['value'];
+} else {
+    $bat18=0;
+}
 ?>
 <html>
   <head>
     <meta charset="utf-8">
     <style>
- .batt_text {
+    
+.batt_text {
     font-family: Arial, Helvetica, sans-serif;
     font-size: small;
     position: absolute;
     text-align: center;
-    width: 150px;	  
+    width: 100px;	  
     top: -1px;
- }
+}
  
- .div_canvas {
+.div_canvas {
     position: absolute;
     top: 20px;
-    left: 20px;
- }
+    left: 5px;
+}
 
     
     
@@ -144,65 +193,89 @@ if($mobile_browser) {
   border: 1px solid #000; 
 }	  
     
-#batt1, #batt2, #batt3, #batt4, #batt5, #batt6, #batt7, #batt8, #batt9, #batt10, #batt11, #batt12 {
+#batt1, #batt2, #batt3, #batt4, #batt5, #batt6, #batt7, #batt8, #batt9, #batt10, #batt11, #batt12, #batt13, #batt14, #batt15, #batt16, #batt17, #batt18 {
   height: 70px;
-  width: 40%;	  
+  width: 30%;	  
   position: absolute;
   text-align: center;
   border: 1px solid #000; 
 }	  
 
 #batt1 {
-  left: 5%;
+  left: 2%;
   top:  10px;
 }
 #batt2 {
-  left: 55%;
+  left: 35%;
   top:  10px;
 }
 #batt3 {
-  left: 5%;
-  top:  90px;
+  left: 68%;
+  top:  10px;
 }
 #batt4 {
-  left: 55%;
+  left: 2%;
   top:  90px;
 }
 #batt5 {
-  left: 5%;
-  top:  170px;
+  left: 35%;
+  top:  90px;
 }
 #batt6 {
-  left: 55%;
-  top:  170px;
+  left: 68%;
+  top:  90px;
 }
 #batt7 {
-  left: 5%;
-  top:  250px;
+  left: 2%;
+  top:  170px;
 }
 #batt8 {
-  left: 55%;
-  top:  250px;
+  left: 35%;
+  top:  170px;
 }
 #batt9 {
-  left: 5%;
-  top:  330px;
+  left: 68%;
+  top:  170px;
 }
 #batt10 {
-  left: 55%;
-  top:  330px;
+  left: 2%;
+  top:  250px;
 }
 #batt11 {
-  left: 5%;
-  top:  410px;
+  left: 35%;
+  top:  250px;
 }
 #batt12 {
-  left: 55%;
+  left: 68%;
+  top:  250px;
+}
+#batt13 {
+  left: 2%;
+  top:  330px;
+}
+#batt14 {
+  left: 35%;
+  top:  330px;
+}
+#batt15 {
+  left: 68%;
+  top:  330px;
+}
+#batt16 {
+  left: 2%;
+  top:  410px;
+}
+#batt17 {
+  left: 35%;
+  top:  410px;
+}
+#batt18 {
+  left: 68%;
   top:  410px;
 }
 
 #range_1d {
-  left: 0px;
+  left: 2%;
   top:  900px;
 }
 
@@ -212,12 +285,12 @@ if($mobile_browser) {
 }
 
 #range_3m {
-  left: 70%;
+  left: 68%;
   top:  900px;
 }
 
 #range_6m {
-  left: 0%;
+  left: 2%;
   top:  950px;
 }
 
@@ -227,12 +300,12 @@ if($mobile_browser) {
 }
 
 #range_2y {
-  left: 70%;
+  left: 68%;
   top:  950px;
 }
 
 #range_5y {
-  left: 0%;
+  left: 2%;
   top:  1000px;
 }
 
@@ -248,9 +321,9 @@ if($mobile_browser) {
   border: 1px solid #000; 
   }	  
     
-#batt1, #batt2, #batt3, #batt4, #batt5, #batt6, #batt7, #batt8, #batt9, #batt10, #batt11, #batt12 {
+#batt1, #batt2, #batt3, #batt4, #batt5, #batt6, #batt7, #batt8, #batt9, #batt10, #batt11, #batt12, #batt13, #batt14, #batt15, #batt16, #batt17, #batt18 {
   height: 70px;
-  width: 150px;	  
+  width: 100px;	  
   position: absolute;
   text-align: center;
   border: 1px solid #000; 
@@ -307,47 +380,71 @@ if($mobile_browser) {
   top:  10px;
 }
 #batt2 {
-  left: 160px;
+  left: 110px;
   top:  10px;
 }
 #batt3 {
-  left: 0px;
-  top:  90px;
+  left: 230px;
+  top:  10px;
 }
 #batt4 {
-  left: 160px;
+  left: 0px;
   top:  90px;
 }
 #batt5 {
-  left: 0px;
-  top:  170px;
+  left: 110px;
+  top:  90px;
 }
 #batt6 {
-  left: 160px;
-  top:  170px;
+  left: 230px;
+  top:  90px;
 }
 #batt7 {
   left: 0px;
-  top:  250px;
+  top:  170px;
 }
 #batt8 {
-  left: 160px;
-  top:  250px;
+  left: 110px;
+  top:  170px;
 }
 #batt9 {
+  left: 230px;
+  top:  170px;
+}
+#batt10 {
+  left: 0px;
+  top:  250px;
+}
+#batt11 {
+  left: 110px;
+  top:  250px;
+}
+#batt12 {
+  left: 230px;
+  top:  250px;
+}
+#batt13 {
   left: 0px;
   top:  330px;
 }
-#batt10 {
-  left: 160px;
+#batt14 {
+  left: 110px;
   top:  330px;
 }
-#batt11 {
+#batt15 {
+  left: 230px;
+  top:  330px;
+}
+#batt16 {
   left: 0px;
   top:  410px;
 }
-#batt12 {
-  left: 160px;
+#batt17 {
+  left: 110px;
+  top:  410px;
+}
+#batt18 {
+  left: 230px;
   top:  410px;
 }
 
@@ -367,11 +464,13 @@ var but_color1 = '#AAAAAA';
 var but_color_low = '#AAAA00';
 var but_color_down = '#AA0000';
 
-for ( let i=0; i<=12; i++ ) {
+for ( let i=0; i<18; i++ ) {
   display.push( new SegmentDisplay("display"+i) );
   display[i].pattern         = "#.##";
   display[i].colorOn         = "#a90329";
   display[i].colorOff        = but_color2;
+  display[i].digitHeight     = 17;
+  display[i].digitWidth      = 10;
   display[i].draw();
 }
   display[0].setValue('<?php print $bat1; ?>');
@@ -386,6 +485,12 @@ for ( let i=0; i<=12; i++ ) {
   display[9].setValue('<?php print $bat10; ?>');
   display[10].setValue('<?php print $bat11; ?>');
   display[11].setValue('<?php print $bat12; ?>');
+  display[12].setValue('<?php print $bat13; ?>');
+  display[13].setValue('<?php print $bat14; ?>');
+  display[14].setValue('<?php print $bat15; ?>');
+  display[15].setValue('<?php print $bat16; ?>');
+  display[16].setValue('<?php print $bat17; ?>');
+  display[17].setValue('<?php print $bat18; ?>');
 
   
 function reset_batt() {
@@ -405,7 +510,13 @@ function reset_batt() {
     $('#batt10').css('backgroundColor', but_color1);
     $('#batt11').css('backgroundColor', but_color1);
     $('#batt12').css('backgroundColor', but_color1);
-    for ( let i=0; i<=12; i++ ) {
+    $('#batt13').css('backgroundColor', but_color1);
+    $('#batt14').css('backgroundColor', but_color1);
+    $('#batt15').css('backgroundColor', but_color1);
+    $('#batt16').css('backgroundColor', but_color1);
+    $('#batt17').css('backgroundColor', but_color1);
+    $('#batt18').css('backgroundColor', but_color1);
+    for ( let i=0; i<18; i++ ) {
         display[i].colorOff = but_color1;
         display[i].draw();
     }
@@ -471,7 +582,14 @@ if($mobile_browser) {
         $('#batt12').css('top', '230px');
         $('#batt12').css('width', '30%');
 
-    
+        $('#batt13').css('left', '69%');
+        $('#batt13').css('top', '155px');
+        $('#batt13').css('width', '30%');
+        $('#batt14').css('left', '1%');
+        $('#batt14').css('top', '230px');
+        $('#batt14').css('width', '30%');
+
+        
         $('#batt_dia_div').css('top', '305px');
     
         $('#range_1d').css('top', '700px');
@@ -639,6 +757,78 @@ $("#batt12").click(function(){
     set_divs();
 });
 
+$("#batt13").click(function(){
+    $('#batt_sensor').html('<?php print $batt13_sensor; ?>');
+    $('#batt_name').html('<?php print $batt13_name; ?>');
+    reset_batt();
+    $('#batt13').css('backgroundColor', but_color2);
+    display[12].colorOff = but_color2;
+    display[12].draw();
+    $('#batt_umin').html('<?php print $batt13_umin; ?>');
+    $('#batt_umax').html('<?php print $batt13_umax; ?>');
+    set_divs();
+});
+
+$("#batt14").click(function(){
+    $('#batt_sensor').html('<?php print $batt14_sensor; ?>');
+    $('#batt_name').html('<?php print $batt14_name; ?>');
+    reset_batt();
+    $('#batt14').css('backgroundColor', but_color2);
+    display[13].colorOff = but_color2;
+    display[13].draw();
+    $('#batt_umin').html('<?php print $batt14_umin; ?>');
+    $('#batt_umax').html('<?php print $batt14_umax; ?>');
+    set_divs();
+});
+
+$("#batt15").click(function(){
+    $('#batt_sensor').html('<?php print $batt15_sensor; ?>');
+    $('#batt_name').html('<?php print $batt15_name; ?>');
+    reset_batt();
+    $('#batt15').css('backgroundColor', but_color2);
+    display[14].colorOff = but_color2;
+    display[14].draw();
+    $('#batt_umin').html('<?php print $batt15_umin; ?>');
+    $('#batt_umax').html('<?php print $batt15_umax; ?>');
+    set_divs();
+});
+
+$("#batt16").click(function(){
+    $('#batt_sensor').html('<?php print $batt16_sensor; ?>');
+    $('#batt_name').html('<?php print $batt16_name; ?>');
+    reset_batt();
+    $('#batt16').css('backgroundColor', but_color2);
+    display[15].colorOff = but_color2;
+    display[15].draw();
+    $('#batt_umin').html('<?php print $batt16_umin; ?>');
+    $('#batt_umax').html('<?php print $batt16_umax; ?>');
+    set_divs();
+});
+
+$("#batt17").click(function(){
+    $('#batt_sensor').html('<?php print $batt17_sensor; ?>');
+    $('#batt_name').html('<?php print $batt17_name; ?>');
+    reset_batt();
+    $('#batt17').css('backgroundColor', but_color2);
+    display[16].colorOff = but_color2;
+    display[16].draw();
+    $('#batt_umin').html('<?php print $batt17_umin; ?>');
+    $('#batt_umax').html('<?php print $batt17_umax; ?>');
+    set_divs();
+});
+
+$("#batt18").click(function(){
+    $('#batt_sensor').html('<?php print $batt18_sensor; ?>');
+    $('#batt_name').html('<?php print $batt18_name; ?>');
+    reset_batt();
+    $('#batt18').css('backgroundColor', but_color2);
+    display[17].colorOff = but_color2;
+    display[17].draw();
+    $('#batt_umin').html('<?php print $batt18_umin; ?>');
+    $('#batt_umax').html('<?php print $batt18_umax; ?>');
+    set_divs();
+});
+
 $("#range_1d").click(function(){
     reset_range();
     $('#batt_range').html('1d');  
@@ -711,6 +901,12 @@ $('#batt_umax').hide();
 <?php if ( ! isset( $batt10_name ) ) print "$('#batt10').hide();"; ?>
 <?php if ( ! isset( $batt11_name ) ) print "$('#batt11').hide();"; ?>
 <?php if ( ! isset( $batt12_name ) ) print "$('#batt12').hide();"; ?>
+<?php if ( ! isset( $batt13_name ) ) print "$('#batt13').hide();"; ?>
+<?php if ( ! isset( $batt14_name ) ) print "$('#batt14').hide();"; ?>
+<?php if ( ! isset( $batt15_name ) ) print "$('#batt15').hide();"; ?>
+<?php if ( ! isset( $batt16_name ) ) print "$('#batt16').hide();"; ?>
+<?php if ( ! isset( $batt17_name ) ) print "$('#batt17').hide();"; ?>
+<?php if ( ! isset( $batt18_name ) ) print "$('#batt18').hide();"; ?>
 
 
 reset_batt();
@@ -822,6 +1018,54 @@ set_divs();
 </div>
 <div class='div_canvas'>
 <canvas id="display11" width="90" height="45"></canvas>
+</div>
+</div>
+<div id='batt13'>
+<div class='batt_text'>
+<?php if(isset($batt13_name)) print $batt13_name; ?>
+</div>
+<div class='div_canvas'>
+<canvas id="display12" width="90" height="45"></canvas>
+</div>
+</div>
+<div id='batt14'>
+<div class='batt_text'>
+<?php if(isset($batt14_name)) print $batt14_name; ?>
+</div>
+<div class='div_canvas'>
+<canvas id="display13" width="90" height="45"></canvas>
+</div>
+</div>
+<div id='batt15'>
+<div class='batt_text'>
+<?php if(isset($batt15_name)) print $batt15_name; ?>
+</div>
+<div class='div_canvas'>
+<canvas id="display14" width="90" height="45"></canvas>
+</div>
+</div>
+<div id='batt16'>
+<div class='batt_text'>
+<?php if(isset($batt16_name)) print $batt16_name; ?>
+</div>
+<div class='div_canvas'>
+<canvas id="display15" width="90" height="45"></canvas>
+</div>
+</div>
+<div id='batt17'>
+<div class='batt_text'>
+<?php if(isset($batt17_name)) print $batt17_name; ?>
+</div>
+<div class='div_canvas'>
+<canvas id="display16" width="90" height="45"></canvas>
+</div>
+</div>
+<div id='batt18'>
+<div class='batt_text'>
+<?php if(isset($batt18_name)) print $batt18_name; ?>
+</div>
+<div class='div_canvas'>
+<canvas id="display17" width="90" height="45"></canvas>
 </div>
 </div>
 
