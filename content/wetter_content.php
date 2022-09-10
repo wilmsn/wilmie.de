@@ -2,7 +2,7 @@
 $instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
-$db_dh = new mysqli($db_dh_server, $db_dh_user, $db_dh_pass, $db_dh_db);
+//$db_dh = new mysqli($db_dh_server, $db_dh_user, $db_dh_pass, $db_dh_db);
 $db_sh = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
 $mobile_browser = is_mobile_browser(); 
 ?>
@@ -457,28 +457,28 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </div>
 <div id='wetter1a'><center><div class='label'>Temperatur:</div><div class='wert'>
 <?php
-  $results = $db_sh->query("select value from sensordata where sensor_id = ".$wetter_temp_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$wetter_temp_sensor.")");
+  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_temp_sensor);
   $row = $results->fetch_assoc();
-  echo number_format($row['value'],1, ",", ".");
+  echo number_format($row['last_value'],1, ",", ".");
 ?>
  C</b></center></div>
 <div id='wetter1b'><center><div class='label'>Luftdruck:</div><div class='wert'>
 <?php
-  $results = $db_sh->query("select value from sensordata where sensor_id = ".$wetter_pres_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$wetter_pres_sensor.")");
+  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_pres_sensor);
   $row = $results->fetch_assoc();
-  echo number_format($row['value'],0, ",", ".");
+  echo number_format($row['last_value'],0, ",", ".");
 ?>
  hPa</b></center></div>
 <div id='wetter1c'><center><div class='label'>rel. Luftfeuchte:</div><div class='wert'>
 <?php
-  $results = $db_sh->query("select value from sensordata where sensor_id = ".$wetter_humi_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$wetter_humi_sensor.")");
+  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_humi_sensor);
   $row = $results->fetch_assoc();
-  echo number_format($row['value'],1, ",", ".");
+  echo number_format($row['last_value'],1, ",", ".");
 ?>
  &#37;</div></center></div>
 <div id='wetter1d'><center><div class='label'>Solarzelle:</div><div class='wert'>
 <?php
-  $results = $db_sh->query("select value from sensordata where sensor_id = ".$wetter_sol_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$wetter_sol_sensor.")");
+  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_sol_sensor);
   $row = $results->fetch_assoc();
   echo number_format($row['value'],1, ",", ".");
 ?>
