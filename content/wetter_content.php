@@ -480,7 +480,7 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 <?php
   $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_sol_sensor);
   $row = $results->fetch_assoc();
-  echo number_format($row['value'],1, ",", ".");
+  echo number_format($row['last_value'],1, ",", ".");
 ?>
  &percnt;</div></center></div>
 <div id='wetter4'><img id='wetter_dia' /></div>
