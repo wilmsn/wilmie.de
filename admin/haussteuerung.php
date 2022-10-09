@@ -6,7 +6,7 @@
 
 $(document).ready(function() {
   header_init("Haussteuerung");
-  $.get(basedir+'getfhem.php',{geraet: "Aussen_Temp", eigenschaft: "state" }, function(data) {
+  $.get(basedir+'getfhem.php',{geraet: "Aussen2_Temp", eigenschaft: "state" }, function(data) {
     header_addLine(1,"Aussentemperatur", parseInt(data*10)/10 + "°C");
   });
   add_room(1, "Wohnzimmer", "Wohnzimmernode", "Temperatur");
