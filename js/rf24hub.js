@@ -281,12 +281,12 @@ function add_device_ht(room_no, dev_no, dev_name, fhem_dev) {
     
 }
 
-function add_device_temperature(room_no, dev_no, dev_name, fhem_dev, fhem_reading) {
+function add_device_measure(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit) {
     $("#r" + room_no + "hd" + dev_no).css("display","inline");
     $("#r" + room_no + "hd" + dev_no + "l").html(dev_name);
     if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
     $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
-        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" &deg;C");
+        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
     });
     if ( window.innerWidth < 600 ) {
         $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
@@ -298,7 +298,14 @@ function add_device_temperature(room_no, dev_no, dev_name, fhem_dev, fhem_readin
     }
 }
 
+function add_sw_field( field_no ) {
+//    $("#haus").append("<div class='room' id='f" + field_no + "'></div>");
+}
 
+function add_switch(field_no, sw_no) {
+//    $("#f"+field_no).append("<div class='room' id='sw_" + sw_no + "'></div>");
+//    $("#sw_"+sw_no).append("<div class='xxx' id='yyyy'>test</div>");
+}
 
 
 

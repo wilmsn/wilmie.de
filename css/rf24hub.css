@@ -209,8 +209,14 @@
     width: 10%;
 }	
 
-
-
+.switch_div {
+    position: absolute; 
+    background-color: #cccccc;
+    top: 0px;
+    left: 0%;
+    width: 60%;
+    height: 50px;
+}
 
 .button_akt {
    -webkit-border-radius: 10px;
@@ -231,16 +237,16 @@
 }
 
 .stateicon {
-	-moz-border-radius:30px;
-	-webkit-border-radius:30px;
-	border-radius:30px;
-	border:2px solid #a80329;
-	display:inline-block;
-	cursor:pointer;
-	color:#000000;
-	font-family:Arial;
-	font-size:17px;
-	padding:6px 10px;
-	text-decoration:none;
-	cursor: default; 
+    -moz-border-radius:30px;
+    -webkit-border-radius:30px;
+    border-radius:30px;
+    border:2px solid #a80329;
+    display:inline-block;
+    cursor:pointer;
+    color:#000000;
+    font-family:Arial;
+    font-size:17px;
+    padding:6px 10px;
+    text-decoration:none;
+    cursor: default; 
 }
