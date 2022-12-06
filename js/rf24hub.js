@@ -111,8 +111,6 @@ function add_room( room_no, room_name, fhem_dev, fhem_reading ) {
         $("#r" + room_no + "hd8").css("width","25%").css("left","0%");
         $("#r" + room_no + "hd8l").css("font-size","small");
         $("#r" + room_no + "hd8v").css("font-size","x-small");
-            
-        
     }
 }
 
@@ -164,15 +162,15 @@ function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
 }
 
 function device_switch_click_func(room_no, dev_no, fhem_HS_dev, fhem_dev, dev_state) {
-        $.get(basedir+'setfhem.php',{geraet: fhem_HS_dev, eigenschaft: " ", wert: dev_state }, function(data) {
-            // alert(data);
-            setTimeout(function() {
-                //alert(dev_no + " " + dev_disp_name + " " + dev_disp_read + " " + dev_fhem_name);
-                device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev);
-            }, 5000);
-                //alert(data);
-                device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev);
-        });    
+    $.get(basedir+'setfhem.php',{geraet: fhem_HS_dev, eigenschaft: " ", wert: dev_state }, function(data) {
+        // alert(data);
+        setTimeout(function() {
+            //alert(dev_no + " " + dev_disp_name + " " + dev_disp_read + " " + dev_fhem_name);
+            device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev);
+        }, 5000);
+            //alert(data);
+            device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev);
+    });
 }
 
 function add_device_switch(room_no, dev_no, dev_name, fhem_HS_dev, fhem_dev) {
@@ -277,8 +275,6 @@ function add_device_ht(room_no, dev_no, dev_name, fhem_dev) {
             $("#r" + room_no + "hd" + dev_no).css("top","60px");
         }
     }
-    
-    
 }
 
 function add_device_measure(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit) {
@@ -298,17 +294,62 @@ function add_device_measure(room_no, dev_no, dev_name, fhem_dev, fhem_reading, u
     }
 }
 
-function add_sw_field( field_no ) {
-//    $("#haus").append("<div class='room' id='f" + field_no + "'></div>");
+function add_sw_field( room_no ) {
+    $("#haus").append("<div class='room' id='r" + room_no + "'></div>");
 }
 
-function add_switch(field_no, sw_no) {
-//    $("#f"+field_no).append("<div class='room' id='sw_" + sw_no + "'></div>");
-//    $("#sw_"+sw_no).append("<div class='xxx' id='yyyy'>test</div>");
+function add_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev) {
+    $("#r"+room_no).append("<div class='dev_sx' id='r"+room_no+"d"+sw_no+"'></div>");
+    $("#r"+room_no+"d"+sw_no).append("<div class='dev_sx_s' id='r"+room_no+"d"+sw_no+"s'></div>")
+                             .append("<div class='dev_sx_t' id='r"+room_no+"d"+sw_no+"t'></div>");
+    $("#r"+room_no+"d"+sw_no+"t").append("<div class='dev_sx_touch' id='r"+room_no+"d"+sw_no+"t1' style='left: 0px;'></div>")
+                                 .append("<div class='dev_sx_touch' id='r"+room_no+"d"+sw_no+"t2' style='left: 66px;'></div>")
+                                 .append("<div class='dev_sx_touch' id='r"+room_no+"d"+sw_no+"t3' style='left: 132px;'></div>");
+    $("#r"+room_no+"d"+sw_no+"t1").click(function(){
+        // Set device off
+        $.get(basedir+'setfhem.php',{geraet: fhem_hs_dev, wert: "0" }, function(data) {
+            //alert(data);
+        });
+        //alert("Feld links");
+        set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev);
+    });
+    $("#r"+room_no+"d"+sw_no+"t2").click(function(){
+        // Set device on
+        $.get(basedir+'setfhem.php',{geraet: fhem_hs_dev, wert: "1" }, function(data) {
+            //alert(data);
+        });
+        //alert("Feld mitte");
+        set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev);
+    });
+    $("#r"+room_no+"d"+sw_no+"t3").click(function(){
+        // Set device auto
+        $.get(basedir+'setfhem.php',{geraet: fhem_hs_dev, wert: "2" }, function(data) {
+            //alert(data);
+        });
+        //alert("Feld rechts");
+        set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev);
+    });
+    $("#r"+room_no+"d"+sw_no+"s").append("<div class='dev_sx_head' id='r"+room_no+"d"+sw_no+"s1'>" + sw_name + "</div>");
+    $("#r"+room_no+"d"+sw_no+"s").append("<div class='dev_sx_sw'   id='r"+room_no+"d"+sw_no+"s2'><img id='r"+room_no+"d"+sw_no+"s2i' src='/content/schalter.php?st=0&sw=0'></div>");
+    set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev);
+    if ( window.innerWidth < 600 ) {
+
+    }
 }
 
-
-
-
-
-
+function set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev) {
+    var sw_st = 0;
+    var sw_sw = 0;
+    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+//        alert(data);
+        if ( data == "on" || data == "set_on" ) { sw_st = 1; } else { sw_st = 0; }
+        $.get(basedir+'getfhem.php',{geraet: fhem_hs_dev, eigenschaft: "state" }, function(data) {
+//            alert(data);
+            if ( data == "auto" ) sw_sw = "A";
+            if ( data == "ein" ) sw_sw = "1";
+            if ( data == "aus" ) sw_sw = "0";
+//            alert("ST:" + sw_st + " SW:" + sw_sw);
+            $("#r"+room_no+"d"+sw_no+"s2i").attr("src", "/content/schalter.php?st="+sw_st+"&sw="+sw_sw);
+        });
+    });
+}

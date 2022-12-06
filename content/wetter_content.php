@@ -502,7 +502,7 @@ SOI = (typeof(SOI) != 'undefined') ? SOI : {};
 </center>
 </div>
 <?php
-$db_dh->close(); 
+//$db_dh->close();
 $db_sh->close(); 
 ?>
 

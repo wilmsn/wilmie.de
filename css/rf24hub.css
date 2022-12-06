@@ -207,7 +207,37 @@
     top: 0px;
     left: 70%;
     width: 10%;
-}	
+}
+
+.dev_sx {
+    display: inline-block;
+    border: 2px solid #a80329;
+    width: 200px;
+    height: 120px;
+}
+.dev_sx_t {
+    position: absolute;
+    width: 200px;
+    height: 120px;
+}
+.dev_sx_s {
+    position: absolute;
+    width: 200px;
+    height: 120px;
+}
+.dev_sx_head {
+    width: 200px;
+    text-align: center;
+}
+.dev_sx_sw {
+    width: 200px;
+}
+.dev_sx_touch {
+    top: 20px;
+    position: absolute;
+    width: 66px;
+    height: 100px;
+}
 
 .switch_div {
     position: absolute; 
