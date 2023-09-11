@@ -4,7 +4,7 @@
 # Change this part to your individual configuration
 #
 # this is the document root of your webserver
-$basedir="/sd_p2/web/www";   # No slash "/" at the back !!!!!
+$basedir="/daten/web/www_intern";   # No slash "/" at the back !!!!!
 # the dir of the galleries as seen from the werbserver
 $htmlprefix="/bilder";                    # No slash "/" at the back !!!!!
 # $mytext contains the headline from the file "text.txt"

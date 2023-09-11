@@ -21,7 +21,7 @@ $(document).ready(function() {
   add_device_ht(2, 2, "Handtuchheizung", "HT_Kueche2");
   add_room(3, "Bastelzimmer", "Bastelzimmer_Temp", "state");
   add_device_ht(3, 1, "Thermostat", "HT_Bastelzimmer");
-  add_room(4, "Flur", "FlurLicht", "Temperatur");
+  add_room(4, "Flur", "FlurNode", "Temperatur");
   add_device_switch(4, 1, "Treppenhaus", "HS_TreppenhausLicht", "TreppenhausLicht_");
   add_device_switch(4, 2, "Flurlicht", "HS_FlurLicht", "FlurLicht_");
   add_room(5, "Schlafzimmer", "Schlafzimmer_Temp", "state");
@@ -30,11 +30,11 @@ $(document).ready(function() {
   add_room(8, "Draussen", "Aussen2_Temp", "state");
   add_device_switch(8, 1, "Balkon", "HS_Balkon_Steckdose", "Balkon_Steckdose");
   add_device_switch(8, 2, "Terasse", "HS_Terasse_Steckdose", "Terasse_Steckdose");
-  add_device_measure(8, 3, "Terassentemp", "Terassennode", "Temperatur", "&deg;C");
+  add_device_measure(8, 3, "Terassentemp", "Terassennode", "Temp", "&deg;C");
 //  add_device_switch(8, 3, "Girlande", "HS_Steckdose1", "MQTT2_DVES_1DD752");
 //  add_device_switch(8, 3, "Teich", "HS_Teichpumpe", "MQTT2_DVES_814318");  
-  add_device_switch(8, 4, "Teich", "HS_Teichpumpe", "Teichpumpe");  
-  add_device_measure(8, 5, "Schuppentemp", "Teichpumpe", "Temperatur", "&deg;C");
+  add_device_switch(8, 4, "Teich", "HS_Teichpumpe", "TeichNode");  
+  add_device_measure(8, 5, "Schuppentemp", "TeichNode", "Temp", "&deg;C");
   add_room(9, "MW_Wohnzimmer", "MW_Wohnzimmer_Temp", "state");
   add_device_ht(9,1,"Thermostat","HT_MW_Wohnzimmer");
   add_device_measure(9, 2, "Feuchte", "MW_Wohnzimmer_Humi", "state", "&#037;");
