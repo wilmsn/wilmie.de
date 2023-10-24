@@ -90,6 +90,8 @@ function  TimeCallbackH( $aVal) {
    return Date ('H',$aVal);
 }
 
+date_default_timezone_set('Europe/Berlin');
+
 if (isset($_GET["sizex"])) {
 	$sizex = $_GET["sizex"];
 } else {
