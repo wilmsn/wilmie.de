@@ -9,6 +9,7 @@ function sysinfo(){
          "SCREEN-WIDTH: "+screen.width+"\n"+
 		 "SCREEN-HIGHT: "+screen.height);	
 }	
+//sysinfo();
 </script>
 <?php
 $mobile_browser = is_mobile_browser(); 

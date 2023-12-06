@@ -22,7 +22,7 @@ function header_addLine(line_no, text_l, text_r) {
   $("#content_header_line" + line_no).append("<div class='content_header_line_r' id='content_header_line_r" + line_no + "'>" + text_r + "</div>");
 }
 
-function add_room( room_no, room_name, fhem_dev, fhem_reading ) {
+function add_room( room_no, room_name, fhem_dev, fhem_reading, has_switch ) {
     $("#haus").append("<div class='room' id='r" + room_no + "'></div>");
     $("#r" + room_no).append("<div class='room_status' id='r" + room_no + "h'></div>");
     $("#r" + room_no).append("<div class='room_addinfo' id='r" + room_no + "m'></div>");
@@ -75,16 +75,18 @@ function add_room( room_no, room_name, fhem_dev, fhem_reading ) {
             $("#r" + room_no + "v").html(parseInt(data*10)/10+" &deg;C");
         });
     }
-    
-    $("#r" + room_no + "s").click(function() {
-        if ($("#r" + room_no + "d").is(':hidden')) {
-            $("#r" + room_no + "d").show();
-            document.getElementById("r" + room_no + "i").src = arrow_down;
-        } else {
-            $("#r" + room_no + "d").hide();
-            document.getElementById("r" + room_no + "i").src = arrow_up;
-        }
-    });
+
+    if (has_switch) {
+        $("#r" + room_no + "s").click(function() {
+            if ($("#r" + room_no + "d").is(':hidden')) {
+                $("#r" + room_no + "d").show();
+                document.getElementById("r" + room_no + "i").src = arrow_down;
+            } else {
+                $("#r" + room_no + "d").hide();
+                document.getElementById("r" + room_no + "i").src = arrow_up;
+            }
+        });
+    }
 
     if ( window.innerWidth < 600 ) {
         $("#r" + room_no + "hd1").css("width","25%").css("left","75%");
@@ -118,6 +120,12 @@ function device_enable_switch(room_no) {
     $("#r" + room_no +"s").css("height", "60px");
     $("#r" + room_no +"h").css("height", "60px");
     $("#r" + room_no +"i").css("display", "inline");
+}
+
+function device_enable_details(room_no) {
+    $("#r" + room_no +"s").css("height", "60px");
+    $("#r" + room_no +"h").css("height", "60px");
+//    $("#r" + room_no +"i").css("display", "inline");
 }
 
 function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
@@ -278,6 +286,7 @@ function add_device_ht(room_no, dev_no, dev_name, fhem_dev) {
 }
 
 function add_device_measure(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit) {
+    device_enable_details(room_no);
     $("#r" + room_no + "hd" + dev_no).css("display","inline");
     $("#r" + room_no + "hd" + dev_no + "l").html(dev_name);
     if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");

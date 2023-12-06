@@ -511,7 +511,7 @@ if($mobile_browser) {
 }  
 ?>
     
-    if ( w > 846 ) { w = 846; } else { if ( w > 500 ) { w = w-50; } }
+    if ( w > 846 ) { w = 846; } else { if ( w > 400 ) { w = w-60; } }
 	$('#batt_dia').attr('src', '/content/diagramm.php?sensor1='+$('#batt_sensor').html()+'&sensor1color=FF0000&sensor1legend='+$('#batt_name').html()+'&sizex='+w+'&sizey=390&offset=0&range='+$('#batt_range').html()+'&ymin='+$('#batt_umin').html()+'&ymax='+$('#batt_umax').html()+'&t='+n);
 }
 

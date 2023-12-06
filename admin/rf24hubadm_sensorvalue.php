@@ -9,9 +9,18 @@ function one_col($rf24hub_db,$mypage,$id) {
 	$limit2=10;
     global $sensordata_tab;
 	$returnstr="<table><tr><th>Zeitpunkt</th><th>Wert</th></th></tr>";
+/*
 	foreach ($rf24hub_db->query("select date_format(from_unixtime(utime),'%d.%m.%y %H:%i'), substr(value,1,4) from " . $sensordata_tab .
 	               " where sensor_id = ".$id." order by utime desc LIMIT ".$limit1.", ".$limit2) as $row) {
   	    $returnstr=$returnstr."<tr><td>$row[0]</td><td>$row[1]</td></tr>";
+	}
+*/
+	foreach ($rf24hub_db->query("select date_format(from_unixtime(utime),'%d.%m.%y %H:%i'), value from " . $sensordata_tab .
+	               " where sensor_id = ".$id." order by utime desc LIMIT ".$limit1.", ".$limit2) as $row) {
+		// bis 1100 da Luftdruckwerte nur vierstellig angezeigt werden sollen
+		if ($row[1] < 1100) $erg = substr($row[1],0,4);
+		else $erg = substr($row[1],0,6);
+  	    $returnstr=$returnstr."<tr><td>$row[0]</td><td>$erg</td></tr>";
 	}
 	$returnstr=$returnstr."</table>";
 	return $returnstr;

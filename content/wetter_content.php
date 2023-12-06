@@ -85,7 +85,7 @@ if($mobile_browser) {
   .wert {
   font-size: 15px;
   }
-  \n";
+  ";
 } else {
   echo "
   #zeit {
@@ -181,7 +181,7 @@ if($mobile_browser) {
   .wert {
   font-size: 20px;
   }
-  \n";
+  ";
 }
 
 ?>
@@ -244,7 +244,7 @@ function set_divs() {
 	var n = d.getTime();
 	var w = screen.width;
 	var add_param = "";
-	if ( w > 846 ) { w = 846; } else { if ( w > 500 ) { w = w-50; } }
+	if ( w > 846 ) { w = 846; } else { if ( w > 300 ) { w = w-50; } }
     switch($('#wetter_t1').html()) {
     case "1m":
 		$('#wetter_s1').css('backgroundColor', but_color1);
@@ -435,8 +435,8 @@ $("#wetter3").click(function(){
 <div id='zeit'>
 Die aktuellen Werte aus Nottuln: <br>
 <!--
-Kostenlose, frei konfigurierbare Homepage-Uhr von www.schnelle-online.info/Homepage/Tools.html. Ohne Gewähr, ohne Haftung.
-Nutzungbedingung: Dieser Kommentar und der Link unten dürfen nicht entfernt oder (nofollow) modifiziert werden.
+Kostenlose, frei konfigurierbare Homepage-Uhr von www.schnelle-online.info/Homepage/Tools.html. Ohne Gew\E4hr, ohne Haftung.
+Nutzungbedingung: Dieser Kommentar und der Link unten d\FCrfen nicht entfernt oder (nofollow) modifiziert werden.
 -->
 <a style="text-decoration:none;border-style:none;color:black;" target="_blank" href="http://www.schnelle-online.info/Atomuhr-Uhrzeit.html" id="soitime121693632552">Uhrzeit</a><br/>
 <a style="text-decoration:none;border-style:none;color:black;" target="_blank" href="http://www.schnelle-online.info/Kalender.html" id="soidate121693632552">Kalender</a>
