@@ -131,6 +131,16 @@
     border-top: 1px solid #a80329;
     border-left: 1px solid #a80329;
 }
+.dev_statusswitch {
+    position: absolute;
+    top: 0px;
+    width: 0%;
+    left: 70%;
+    hight: 100%;
+    text-align: center;
+    border-top: 1px solid #a80329;
+    border-left: 1px solid #a80329;
+}
 .dev_status1 {
     left: 87.5%;
 }
