@@ -126,6 +126,9 @@ switch ($sensor1legend) {
    case "Batterie":
 	$einheit="V ->";
 	break;
+   case "Gasverbrauch":
+	$einheit="KW ->";
+	break;
    default:
     $einheit= " ";
 }	
@@ -294,7 +297,7 @@ while ($row = $results->fetch_assoc()) {
 $results->close();
 $db->close();
 $graph = new Graph($sizex, $sizey);
-$graph->SetMargin(70,20,0,0);
+$graph->SetMargin(60,20,0,0);
 $graph->title->Set($label_1);
 
 if (count($ydata) < $minData) {

@@ -29,11 +29,14 @@ $(document).ready(function() {
   add_room(7, "Gaestezimmer", "Gaestezimmer_Temp", "state", false);
   add_room(8, "Keller", "Keller_Temp", "state", false);
   add_device_measure(8, 1, "Gaszaehler", "GasZaehler", "state", " ");
+  add_device_measure_dia(8, 2, "akt. Verbrauch", "GasVerbrauch_KW_aktuell", "state", "KW", "datahub", "1004", "FF7000", "Gasverbrauch");
+  add_device_measure(8, 3, "Verbrauch Tag", "GasVerbrauch_KWH_Tag", "state", "KWh");
+  add_device_measure(8, 4, "Verbrauch Vortag", "GasVerbrauch_KWH_Vortag", "state", "KWh");
 //  add_device_ht(8, 2, "Hzg_gross", "HT_Kueche1");
   add_room(9, "Draussen", "Aussen2_Temp", "state", true);
   add_device_switch(9, 1, "Balkon", "HS_Balkon_Steckdose", "Balkon_Steckdose");
   add_device_switch(9, 2, "Terasse", "HS_Terasse_Steckdose", "Terasse_Steckdose");
-  add_device_measure(9, 3, "Terassentemp", "Terassennode", "Temp", "&deg;C");
+  add_device_measure_dia(9, 3, "Terassentemp", "Terassennode", "Temp", "&deg;C", "datahub", "1", "FF0000", "Temperatur");
 //  add_device_switch(8, 3, "Girlande", "HS_Steckdose1", "MQTT2_DVES_1DD752");
 //  add_device_switch(8, 3, "Teich", "HS_Teichpumpe", "MQTT2_DVES_814318");  
   add_device_switch(9, 4, "Teich", "HS_Teichpumpe", "TeichNode");

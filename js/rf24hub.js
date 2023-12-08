@@ -4,6 +4,10 @@ var getfhem = "/admin/getfhem.php";
 var needhelp = "/img/gefahrenstelle_20x20.jpg"
 //var getfhem = "https://rpi2.fritz.box/demo/getfhem.php";
 //var getfhem = "https://www.wilmie.myhome-server.de/demo/getfhem.php";
+var w = screen.width;
+var add_param = "";
+if ( w > 1150 ) { w = 1150; } else { if ( w > 300 ) { w = w-50; } }
+
 
 function header_init(titel) {
   // Parameter:
@@ -30,6 +34,7 @@ function add_room( room_no, room_name, fhem_dev, fhem_reading, has_switch ) {
     $("#r" + room_no).append("<div class='room_value' id='r" + room_no + "v'></div>");
     $("#r" + room_no).append("<div class='room_switch' id='r" + room_no + "s'></div>");
     $("#r" + room_no).append("<div class='room_dev' id='r" + room_no + "d'></div>");
+    $("#r" + room_no).append("<div class='room_dev' id='r" + room_no + "e'></div>");
     $("#r" + room_no + "s").append("<img id='r" + room_no + "i' src=" + arrow_up + " width='48' height='60' />");
     $("#r" + room_no + "i").css("display", "none");
     $("#r" + room_no + "h").append("<div class='room_label' id='r" + room_no + "hl'></div>");
@@ -41,23 +46,32 @@ function add_room( room_no, room_name, fhem_dev, fhem_reading, has_switch ) {
     $("#r" + room_no + "h").append("<div class='dev_status dev_status6' id='r" + room_no + "hd6'></div>");
     $("#r" + room_no + "h").append("<div class='dev_status dev_status7' id='r" + room_no + "hd7'></div>");
     $("#r" + room_no + "h").append("<div class='dev_status dev_status8' id='r" + room_no + "hd8'></div>");
+// Achtung dev_status2value nicht definiert !!!!
     $("#r" + room_no + "hd1").append("<div class='dev_statuslabel dev_status1label' id='r" + room_no + "hd1l'></div>");
     $("#r" + room_no + "hd1").append("<div class='dev_statusvalue dev_status1value' id='r" + room_no + "hd1v'></div>");
+    $("#r" + room_no + "hd1").append("<div class='dev_statusswitch' id='r" + room_no + "hd1s'></div>");
     $("#r" + room_no + "hd2").append("<div class='dev_statuslabel dev_status2label' id='r" + room_no + "hd2l'></div>");
     $("#r" + room_no + "hd2").append("<div class='dev_statusvalue dev_status2value' id='r" + room_no + "hd2v'></div>");
+    $("#r" + room_no + "hd2").append("<div class='dev_statusswitch' id='r" + room_no + "hd2s'></div>");
     $("#r" + room_no + "hd3").append("<div class='dev_statuslabel dev_status3label' id='r" + room_no + "hd3l'></div>");
     $("#r" + room_no + "hd3").append("<div class='dev_statusvalue dev_status3value' id='r" + room_no + "hd3v'></div>");
+    $("#r" + room_no + "hd3").append("<div class='dev_statusswitch' id='r" + room_no + "hd3s'></div>");
     $("#r" + room_no + "hd4").append("<div class='dev_statuslabel dev_status4label' id='r" + room_no + "hd4l'></div>");
     $("#r" + room_no + "hd4").append("<div class='dev_statusvalue dev_status4value' id='r" + room_no + "hd4v'></div>");
+    $("#r" + room_no + "hd4").append("<div class='dev_statusswitch' id='r" + room_no + "hd4s'></div>");
     $("#r" + room_no + "hd5").append("<div class='dev_statuslabel dev_status5label' id='r" + room_no + "hd5l'></div>");
     $("#r" + room_no + "hd5").append("<div class='dev_statusvalue dev_status5value' id='r" + room_no + "hd5v'></div>");
+    $("#r" + room_no + "hd5").append("<div class='dev_statusswitch' id='r" + room_no + "hd5s'></div>");
     $("#r" + room_no + "hd6").append("<div class='dev_statuslabel dev_status6label' id='r" + room_no + "hd6l'></div>");
     $("#r" + room_no + "hd6").append("<div class='dev_statusvalue dev_status6value' id='r" + room_no + "hd6v'></div>");
+    $("#r" + room_no + "hd6").append("<div class='dev_statusswitch' id='r" + room_no + "hd6s'></div>");
     $("#r" + room_no + "hd7").append("<div class='dev_statuslabel dev_status7label' id='r" + room_no + "hd7l'></div>");
     $("#r" + room_no + "hd7").append("<div class='dev_statusvalue dev_status7value' id='r" + room_no + "hd7v'></div>");
+    $("#r" + room_no + "hd7").append("<div class='dev_statusswitch' id='r" + room_no + "hd7s'></div>");
     $("#r" + room_no + "hd8").append("<div class='dev_statuslabel dev_status8label' id='r" + room_no + "hd8l'></div>");
     $("#r" + room_no + "hd8").append("<div class='dev_statusvalue dev_status8value' id='r" + room_no + "hd8v'></div>");
-    
+    $("#r" + room_no + "hd8").append("<div class='dev_statusswitch' id='r" + room_no + "hd8s'></div>");
+
     $("#r" + room_no + "hl").html(room_name);
 
     $.get(basedir+'getfhem.php',{geraet: room_name+"_Status", eigenschaft: "state" }, function(data) {
@@ -289,6 +303,37 @@ function add_device_measure(room_no, dev_no, dev_name, fhem_dev, fhem_reading, u
     device_enable_details(room_no);
     $("#r" + room_no + "hd" + dev_no).css("display","inline");
     $("#r" + room_no + "hd" + dev_no + "l").html(dev_name);
+    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
+    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
+        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
+    });
+    if ( window.innerWidth < 600 ) {
+        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
+        if ( dev_no > 4 ) {
+            $("#r" + room_no + "s").css("height","100px");
+            $("#r" + room_no + "h").css("height","100px");
+            $("#r" + room_no + "hd" + dev_no).css("top","60px");
+        }
+    }
+}
+
+function add_device_measure_dia(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit, database, sensorno, graphcolor, legend) {
+    device_enable_details(room_no);
+    $("#r" + room_no + "hd" + dev_no + "s").click(function() {
+        if ($("#r" + room_no + "e").is(':hidden')) {
+            $("#r" + room_no + "e").show();
+            $("#r" + room_no + "e").html("<img src='/content/diagramm.php?database="+database+"&sensor1="+sensorno+"&sensor1color="+graphcolor+"&sensor1legend="+legend+"&sizex="+w+"&sizey=370'>");
+            document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_down;
+        } else {
+            $("#r" + room_no + "e").hide();
+            document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_up;
+        }
+    });
+    $("#r" + room_no + "hd" + dev_no).css("display","inline");
+    $("#r" + room_no + "hd" + dev_no).css("cursor: pointer");
+    $("#r" + room_no + "hd" + dev_no + "l").html(dev_name).css("width","70%");
+    $("#r" + room_no + "hd" + dev_no + "v").css("width","70%");
+    $("#r" + room_no + "hd" + dev_no + "s").html("<img id='r" + room_no + "hd"+dev_no+"sd' src=" + arrow_up + " width='20' height='30' />").css("width","30%");
     if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
     $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
         $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
