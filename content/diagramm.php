@@ -4,6 +4,49 @@ require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ('jpgraph/jpgraph.php');
 require_once ('jpgraph/jpgraph_line.php');
 require_once ('jpgraph/jpgraph_utils.inc.php');
+//Default settings
+$mindata = 10;
+$range = "1d";
+$sizex=650;
+$sizey=370;
+$database = "rf24hub";
+//sensor1
+$sensor1color = "#000000";
+$sensor1legend = "unbekannt";
+$sensor1 = 1;
+$offset = 0;
+$ymin_set = false;
+$ymax_set = false;
+//sensor2
+$hasSecondGrah=false;
+$sensor2 = 2;
+$sensor2legend = "unbekannt";
+$sensor2color = "#00ffff";
+$y2min_set = false;
+$y2max_set = false;
+
+function set_title($input) {
+    switch ($input) {
+    case "Temperatur":
+        $einheit="Grad C ->";
+        break;
+    case "Luftdruck":
+        $einheit="hPa ->";
+        break;
+    case "Luftfeuchte":
+        $einheit="% ->";
+        break;
+    case "Batterie":
+        $einheit="V ->";
+        break;
+    case "Gasverbrauch":
+        $einheit="KW ->";
+        break;
+    default:
+        $einheit= " ";
+    }
+    return $einheit;
+}
 
 function mk_starttime($my_offset, $my_range) {
     $akttime=time();
@@ -94,73 +137,61 @@ date_default_timezone_set('Europe/Berlin');
 
 if (isset($_GET["sizex"])) {
 	$sizex = $_GET["sizex"];
-} else {
-    $sizex=650;
 }	
 if ($sizex > 1200) { $sizex = 1200; }
 if (isset($_GET["sizey"])) {
 	$sizey = $_GET["sizey"];
-} else {
-    $sizey=370;
 }	
+if (isset($_GET["database"])) {
+    $database = $_GET["database"];
+}
 if (isset($_GET["sensor1color"])) {
     $sensor1color = "#".$_GET["sensor1color"];
-} else {
-    $sensor1color = "#ff0000";
 }
 if (isset($_GET["sensor1legend"])) {
     $sensor1legend = $_GET["sensor1legend"];
-} else {
-    $sensor1legend = "unbekannt";
 }
-switch ($sensor1legend) {
-   case "Temperatur":
-	$einheit="Grad C ->";
-	break;
-   case "Luftdruck":
-	$einheit="hPa ->";
-	break;
-   case "Luftfeuchte":
-	$einheit="% ->";
-	break;
-   case "Batterie":
-	$einheit="V ->";
-	break;
-   case "Gasverbrauch":
-	$einheit="KW ->";
-	break;
-   default:
-    $einheit= " ";
-}	
+$einheit = set_title($sensor1legend);
 
-if (isset($_GET["database"])) {
-    $database = $_GET["database"];
-} else {
-    $database = "rf24hub";
-}
 if (isset($_GET["sensor1"])) {
     $sensor1 = $_GET["sensor1"];
-} else {
-    $sensor1 = 1;
 }
 if (isset($_GET["offset"])) {
     $offset = $_GET["offset"];
-} else {
-    $offset = 0;
 }
 if (isset($_GET["ymin"])) {
     $ymin = $_GET["ymin"];
     $ymin_set = true;
-} else {
-    $ymin_set = false;
 }
 if (isset($_GET["ymax"])) {
     $ymax = $_GET["ymax"];
     $ymax_set = true;
-} else {
-    $ymax_set = false;
 }
-$range = $_GET["range"];
+if (isset($_GET["sensor2"])) {
+    $sensor2 = $_GET["sensor2"];
+    $hasSecondGrah = true;
+}
+if ($hasSecondGrah) {
+    if (isset($_GET["sensor2legend"])) {
+        $sensor2legend = $_GET["sensor2legend"];
+    }
+    if (isset($_GET["sensor2color"])) {
+        $sensor2color = "#".$_GET["sensor2color"];
+    }
+    if (isset($_GET["sensor2legend"])) {
+        $sensor2legend = $_GET["sensor2legend"];
+    }
+    if (isset($_GET["y2min"])) {
+        $y2min = $_GET["y2min"];
+        $y2min_set = true;
+    }
+    if (isset($_GET["y2max"])) {
+        $y2max = $_GET["y2max"];
+        $y2max_set = true;
+    }
+    $einheit2 = set_title($sensor2legend);
+}
+if (isset($_GET["range"])) $range = $_GET["range"];
 //$by_range = True;
 switch ($range) {
     case '10y':
@@ -295,12 +326,47 @@ while ($row = $results->fetch_assoc()) {
    }
 }
 $results->close();
+
+if ($hasSecondGrah) {
+  $y2data = array();
+  $x2data = array();
+  $stmt = " select value, utime from ".$table." where sensor_id = ".$sensor2." and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime." order by utime asc";
+  $results = $db->query($stmt);
+  $last_utime2=0;
+  $minTickPos2=array();
+  $tickPos2=array();
+  $firstOfHour2=0;
+  while ($row = $results->fetch_assoc()) {
+	$y2data[]=$row['value'];
+	$x2data[]=$row['utime'];
+	if ($range == '1d') {
+	    if ( count($minTickPos2) == 0 ) { $minTickPos2[] = $row['utime']; }
+            if ( $last_utime2 > 0 and date('H',$row['utime']) <> date('H',$last_utime2) ) {
+                $tickPos2[]=$row['utime'];
+                $firstOfHour2=1;
+            } else {
+                $firstOfHour2=0;
+            }
+        $last_utime2=$row['utime'];
+    }
+  }
+  $results->close();
+}
 $db->close();
 $graph = new Graph($sizex, $sizey);
-$graph->SetMargin(50,20,0,0);
+if ($hasSecondGrah) {
+    $graph->SetMargin(50,50,0,0);
+} else {
+    $graph->SetMargin(50,20,0,0);
+}
 $graph->title->Set($label_1);
 
-if (count($ydata) < $minData) {
+if ($hasSecondGrah) {
+  $secondGraphOK = count($y2data) > $mindata;
+} else{
+  $secondGraphOK = true;
+}
+if (count($ydata) < $minData and ! $secondGraphOK ) {
     $graph->SetScale('intlin',0,1,0,1);
     $dummydata=array();
     $dummydata[]=0;
@@ -347,6 +413,43 @@ if (count($ydata) < $minData) {
         }	
         $graph->SetScale('intlin',$yscaleMin,$yscaleMax,min($xdata),max($xdata));
     }
+    if ($hasSecondGrah) {
+        if ( $y2min_set and $y2max_set ) {
+            $graph->SetY2Scale('lin',$ymin,$ymax);
+        } else {
+            $y2dataMin=min($y2data);
+            $y2dataMax=max($y2data);
+            if ($y2dataMax > 0) {
+                if ($y2dataMax-$y2dataMin > 3 ) {
+                    if ($y2dataMin > 0) {
+                        $y2scaleMin=floor($y2dataMin/10)*10;
+                    } else {
+                        $y2scaleMin=floor($y2dataMin/10)*10;
+                    }
+                    if ($y2dataMax > 0) {
+                        $y2scaleMax=ceil($y2dataMax/10)*10;
+                    } else {
+                        $y2scaleMax=ceil($y2dataMax/10)*10;
+                    }
+                } else {
+                    if ($y2dataMin > 0) {
+                        $y2scaleMin=floor($y2dataMin);
+                    } else {
+                        $y2scaleMin=floor($y2dataMin)-1;
+                    }
+                    if ($y2dataMax > 0) {
+                        $y2scaleMax=floor($y2dataMax)+1;
+                    } else {
+                        $y2scaleMax=floor($y2dataMax);
+                    }
+                }
+            } else {
+                $y2scaleMin=floor($y2dataMin/10)*10;
+                $y2scaleMax=ceil($y2dataMax/10)*10;
+            }
+            $graph->SetY2Scale('lin',$yscaleMin,$yscaleMax);
+        }
+    }
     $dateUtils = new DateScaleUtils();
     $graph->xaxis->SetColor('black','black');
     $graph->xgrid->Show();
@@ -391,9 +494,20 @@ if (count($ydata) < $minData) {
     $line->SetLegend($sensor1legend);
     $graph->Add($line);
     $line->SetColor($sensor1color);
+//    $graph->yaxis->SetColor("red");
     $graph->yaxis->title->Set($einheit);
     $graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
     $graph->yaxis->SetTitleMargin(30);
+    if ($hasSecondGrah) {
+        $line2 = new LinePlot($y2data,$x2data);
+        $line2->SetLegend($sensor2legend);
+        $graph->Add($line2);
+        $line2->SetColor($sensor2color);
+        $graph->y2axis->title->Set($einheit2);
+        $graph->y2axis->title->SetFont(FF_FONT1,FS_BOLD);
+        $graph->y2axis->SetTitleMargin(30);
+//      $graph->SetY2Scale("lin",0,10);
+    }
     $graph->xaxis->title->Set($label_2); 
     $graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
     $graph->xaxis->SetTitleMargin(10);
