@@ -1,6 +1,6 @@
 <script> var basedir="/admin/"; </script>
 
-<script src="/js/rf24hub.js"></script> 
+<script src="/js/haussteuerung.js"></script>
 
 <script type="text/javascript">
 
@@ -32,18 +32,22 @@ $(document).ready(function() {
   add_device_measure_dia(8, 2, "akt. Verbrauch", "GasVerbrauch_KW_aktuell", "state", "KW", "datahub", "1004", "FF7000", "Gasverbrauch");
   add_device_measure(8, 3, "Verbrauch Tag", "GasVerbrauch_KWH_Tag", "state", "KWh");
   add_device_measure(8, 4, "Verbrauch Vortag", "GasVerbrauch_KWH_Vortag", "state", "KWh");
+  add_device_measure(8, 5, "Verbrauch Monat", "GasVerbrauch_Monat", "state", "KWh");
+  add_device_measure(8, 6, "Verbrauch Jahr", "GasVerbrauch_Jahr", "state", "KWh");
 //  add_device_ht(8, 2, "Hzg_gross", "HT_Kueche1");
   add_room(9, "Draussen", "Aussen2_Temp", "state", true);
   add_device_switch(9, 1, "Balkon", "HS_Balkon_Steckdose", "Balkon_Steckdose");
   add_device_switch(9, 2, "Terasse", "HS_Terasse_Steckdose", "Terasse_Steckdose");
-  add_device_measure_dia(9, 3, "Terassentemp", "Terassennode", "Temp", "&deg;C", "datahub", "1", "FF0000", "Temperatur");
+  add_device_measure_dia(9, 3, "Terassentemp", "Terassennode", "Temperatur", "&deg;C", "datahub", "21", "FF0000", "Temperatur");
 //  add_device_switch(8, 3, "Girlande", "HS_Steckdose1", "MQTT2_DVES_1DD752");
 //  add_device_switch(8, 3, "Teich", "HS_Teichpumpe", "MQTT2_DVES_814318");  
   add_device_switch(9, 4, "Teich", "HS_Teichpumpe", "TeichNode");
-  add_device_measure(9, 5, "Schuppentemp", "TeichNode", "Temp", "&deg;C");
+  add_device_measure(9, 5, "Schuppentemp", "TeichNode", "Temperatur", "&deg;C");
   add_room(10, "MW_Wohnzimmer", "MW_Wohnzimmer_Temp", "state", true);
   add_device_ht(10,1,"Thermostat","HT_MW_Wohnzimmer");
-  add_device_measure(10, 2, "Feuchte", "MW_Wohnzimmer_Humi", "state", "&#037;");
+  add_device_measure_dia(10, 2, "Temperatur", "MW_Wohnzimmer_Temp", "state", "&deg;C", "datahub", "51", "FF0000", "Temperatur");
+  add_device_measure_dia(10, 3, "Feuchte", "MW_Wohnzimmer_Humi", "state", "&#037;", "datahub", "52", "FF0000", "Luftfeuchte");
+// add_device_measure(10, 2, "Feuchte", "MW_Wohnzimmer_Humi", "state", "&#037;");
   add_room(11, "MW_Kueche", "HT_MW_Kueche", "temperature", true);
   add_device_ht(11,1,"Thermostat","HT_MW_Kueche");
 //  add_room(11, "Weihnachtsbeleuchtung", "", "");
@@ -53,7 +57,7 @@ $(document).ready(function() {
 
 </script>
 
-<link rel="stylesheet" href="/css/rf24hub.css" /> 
+<link rel="stylesheet" href="/css/mypage.css" />
    
 <div id="haus" class="haus">
 </div>  
