@@ -297,7 +297,7 @@ while ($row = $results->fetch_assoc()) {
 $results->close();
 $db->close();
 $graph = new Graph($sizex, $sizey);
-$graph->SetMargin(60,20,0,0);
+$graph->SetMargin(50,20,0,0);
 $graph->title->Set($label_1);
 
 if (count($ydata) < $minData) {
@@ -393,7 +393,7 @@ if (count($ydata) < $minData) {
     $line->SetColor($sensor1color);
     $graph->yaxis->title->Set($einheit);
     $graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
-    $graph->yaxis->SetTitleMargin(50);
+    $graph->yaxis->SetTitleMargin(30);
     $graph->xaxis->title->Set($label_2); 
     $graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
     $graph->xaxis->SetTitleMargin(10);

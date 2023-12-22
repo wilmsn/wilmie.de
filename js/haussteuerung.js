@@ -2,8 +2,6 @@ var arrow_up = "/img/arrow_up.gif";
 var arrow_down = "/img/arrow_down.gif";
 var getfhem = "/admin/getfhem.php";
 var needhelp = "/img/gefahrenstelle_20x20.jpg"
-//var getfhem = "https://rpi2.fritz.box/demo/getfhem.php";
-//var getfhem = "https://www.wilmie.myhome-server.de/demo/getfhem.php";
 var w = screen.width;
 var add_param = "";
 if ( w > 1150 ) { w = 1150; } else { if ( w > 300 ) { w = w-50; } }
@@ -35,6 +33,8 @@ function add_room( room_no, room_name, fhem_dev, fhem_reading, has_switch ) {
     $("#r" + room_no).append("<div class='room_switch' id='r" + room_no + "s'></div>");
     $("#r" + room_no).append("<div class='room_dev' id='r" + room_no + "d'></div>");
     $("#r" + room_no).append("<div class='room_dev' id='r" + room_no + "e'></div>");
+    $("#r" + room_no).append("<div id='r" + room_no + "x'></div>");
+    $("#r" + room_no + "x").css("display", "none");
     $("#r" + room_no + "s").append("<img id='r" + room_no + "i' src=" + arrow_up + " width='48' height='60' />");
     $("#r" + room_no + "i").css("display", "none");
     $("#r" + room_no + "h").append("<div class='room_label' id='r" + room_no + "hl'></div>");
@@ -139,7 +139,6 @@ function device_enable_switch(room_no) {
 function device_enable_details(room_no) {
     $("#r" + room_no +"s").css("height", "60px");
     $("#r" + room_no +"h").css("height", "60px");
-//    $("#r" + room_no +"i").css("display", "inline");
 }
 
 function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
@@ -324,9 +323,15 @@ function add_device_measure_dia(room_no, dev_no, dev_name, fhem_dev, fhem_readin
             $("#r" + room_no + "e").show();
             $("#r" + room_no + "e").html("<img src='/content/diagramm.php?database="+database+"&sensor1="+sensorno+"&sensor1color="+graphcolor+"&sensor1legend="+legend+"&sizex="+w+"&sizey=370'>");
             document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_down;
+            $("#r" + room_no + "x").html("r" + room_no + "hd"+ dev_no + "sd");
         } else {
-            $("#r" + room_no + "e").hide();
-            document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_up;
+            var akt_element = $("#r" + room_no + "x").html();
+            if (akt_element.localeCompare("r" + room_no + "hd"+ dev_no + "sd") != 0 ) {
+              alert("Grafik geöffnet, bitte schliessen");
+            } else {
+              $("#r" + room_no + "e").hide();
+              document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_up;
+            }
         }
     });
     $("#r" + room_no + "hd" + dev_no).css("display","inline");
