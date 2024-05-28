@@ -353,6 +353,80 @@ function add_device_measure_dia(room_no, dev_no, dev_name, fhem_dev, fhem_readin
     }
 }
 
+function add_device_measure_dia_day(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit, database, sensorno, graphcolor, legend) {
+    device_enable_details(room_no);
+    $("#r" + room_no + "hd" + dev_no + "s").click(function() {
+        if ($("#r" + room_no + "e").is(':hidden')) {
+            $("#r" + room_no + "e").show();
+            $("#r" + room_no + "e").html("<img src='/content/diagramm.php?database="+database+"&sensor1="+sensorno+"&sizex="+w+"&sizey=370&range=1m&graph=bar&sensor1legend="+legend+"'>");
+            document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_down;
+            $("#r" + room_no + "x").html("r" + room_no + "hd"+ dev_no + "sd");
+        } else {
+            var akt_element = $("#r" + room_no + "x").html();
+            if (akt_element.localeCompare("r" + room_no + "hd"+ dev_no + "sd") != 0 ) {
+              alert("Grafik geöffnet, bitte schliessen");
+            } else {
+              $("#r" + room_no + "e").hide();
+              document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_up;
+            }
+        }
+    });
+    $("#r" + room_no + "hd" + dev_no).css("display","inline");
+    $("#r" + room_no + "hd" + dev_no).css("cursor: pointer");
+    $("#r" + room_no + "hd" + dev_no + "l").html(dev_name).css("width","70%");
+    $("#r" + room_no + "hd" + dev_no + "v").css("width","70%");
+    $("#r" + room_no + "hd" + dev_no + "s").html("<img id='r" + room_no + "hd"+dev_no+"sd' src=" + arrow_up + " width='20' height='30' />").css("width","30%");
+    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
+    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
+        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
+    });
+    if ( window.innerWidth < 600 ) {
+        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
+        if ( dev_no > 4 ) {
+            $("#r" + room_no + "s").css("height","100px");
+            $("#r" + room_no + "h").css("height","100px");
+            $("#r" + room_no + "hd" + dev_no).css("top","60px");
+        }
+    }
+}
+
+function add_device_measure_dia_year(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit, database, sensorno, graphcolor, legend) {
+    device_enable_details(room_no);
+    $("#r" + room_no + "hd" + dev_no + "s").click(function() {
+        if ($("#r" + room_no + "e").is(':hidden')) {
+            $("#r" + room_no + "e").show();
+            $("#r" + room_no + "e").html("<img src='/content/diagramm.php?database="+database+"&sensor1="+sensorno+"&sizex="+w+"&sizey=370&range=1y&graph=bar&sensor1legend="+legend+"'>");
+            document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_down;
+            $("#r" + room_no + "x").html("r" + room_no + "hd"+ dev_no + "sd");
+        } else {
+            var akt_element = $("#r" + room_no + "x").html();
+            if (akt_element.localeCompare("r" + room_no + "hd"+ dev_no + "sd") != 0 ) {
+              alert("Grafik geöffnet, bitte schliessen");
+            } else {
+              $("#r" + room_no + "e").hide();
+              document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_up;
+            }
+        }
+    });
+    $("#r" + room_no + "hd" + dev_no).css("display","inline");
+    $("#r" + room_no + "hd" + dev_no).css("cursor: pointer");
+    $("#r" + room_no + "hd" + dev_no + "l").html(dev_name).css("width","70%");
+    $("#r" + room_no + "hd" + dev_no + "v").css("width","70%");
+    $("#r" + room_no + "hd" + dev_no + "s").html("<img id='r" + room_no + "hd"+dev_no+"sd' src=" + arrow_up + " width='20' height='30' />").css("width","30%");
+    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
+    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
+        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
+    });
+    if ( window.innerWidth < 600 ) {
+        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
+        if ( dev_no > 4 ) {
+            $("#r" + room_no + "s").css("height","100px");
+            $("#r" + room_no + "h").css("height","100px");
+            $("#r" + room_no + "hd" + dev_no).css("top","60px");
+        }
+    }
+}
+
 function add_sw_field( room_no ) {
     $("#haus").append("<div class='room' id='r" + room_no + "'></div>");
 }
