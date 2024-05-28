@@ -1,0 +1,292 @@
+.haus {
+    position: relative; 
+    width: calc(100% - 6px);
+    border: 3px solid #a80329; 
+    text-align: center;
+}	
+.content_header {
+    position: relative; 
+/*    color: white;  */
+    align: center;
+/*    border: 2px solid #444444; */ 
+}	
+.content_header_head {
+    position: relative; 
+/*    color: white; */
+    text-align: center;
+/*    border: 1px solid #000000; */
+}	
+.content_header_line {
+    position: relative; 
+/*    color: white; */
+    align: left;
+    width: 100%; 
+    height: 22px;
+    border-top: 1px solid #000000;
+}	
+.content_header_line_l {
+    position: absolute; 
+    top: 0px;
+    left: 5px;
+    height: 22px;
+}	
+.content_header_line_r {
+    position: absolute; 
+    top: 0px;
+    right: 5px;
+    width: 310px; 
+    height: 22px;
+    text-align: right;
+}	
+.room {
+    position: relative; 
+    width: 100%;
+    border-top: 3px solid #a80329;
+/*    border-bottom: 3px solid #a80329; */
+    text-align: left;
+}
+.room_status {
+    position: relative; 
+    height: 20px;
+    width: calc(100% - 53px);
+/*    border: 3px solid #a80329; */
+    text-align: left;
+    background-color: #666666;
+    color: white;
+}
+.room_switch {
+    position: absolute; 
+    height: 20px;
+    right: 0px;
+    top: 0px;
+    width: 50px;
+    border-left: 3px solid #a80329;
+}
+.room_dev {
+    position: relative; 
+    width: 100%;
+    Display: none; 
+    border-top: 3px solid #a80329;
+}
+.room_label {
+    position: relative; 
+    height: 20px;
+    width: 60%;
+    text-align: left;
+    padding-left: 10px;
+}
+.room_addinfo {
+    position: absolute; 
+    height: 20px;
+    right: 155px;
+    top: 0px;
+    width: 100px;
+    text-align: right;
+    color: white;
+}
+.room_value {
+    position: absolute; 
+    height: 20px;
+    right: 55px;
+    top: 0px;
+    width: 100px;
+    text-align: right;
+    color: white;
+}
+.dev {
+    position: relative; 
+    width: 100%;
+    border: 1px solid #a80329;
+    text-align: left;
+}
+.dev_label {
+    position: relative; 
+    width: 100%;
+    text-align: left;
+    padding-left: 10px;
+}
+.dev_status {
+    position: absolute;
+    top: 20px; 
+    width: 12.5%;
+    height: 40px;
+    text-align: center;  
+    border-top: 1px solid #a80329;
+    border-left: 1px solid #a80329;
+    Display: none; 
+}
+.dev_statuslabel {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid #a80329;
+    border-left: 1px solid #a80329;
+}
+.dev_statusvalue {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid #a80329;
+    border-left: 1px solid #a80329;
+}
+.dev_statusswitch {
+    position: absolute;
+    top: 0px;
+    width: 0%;
+    left: 70%;
+    hight: 100%;
+    text-align: center;
+    border-top: 1px solid #a80329;
+    border-left: 1px solid #a80329;
+}
+.dev_status1 {
+    left: 87.5%;
+}
+.dev_status2 {
+    left: 75%;
+}
+.dev_status3 {
+    left: 62.5%;
+}
+.dev_status4 {
+    left: 50%;
+}
+.dev_status5 {
+    left: 37.5%;
+}
+.dev_status6 {
+    left: 25%;
+}
+.dev_status7 {
+    left: 12.5%;
+}
+.dev_status8 {
+    left: 0%;
+}
+.dev_sw {
+    position: relative; 
+    width: 100%;
+    height: 60px;
+    text-align: left;
+}
+.dev_sw_box0, .dev_sw_box1, .dev_sw_box2, .dev_sw_box3 {
+    position: absolute; 
+    top: 5px;
+    height: 60px;
+    text-align: center;
+}
+.dev_sw_box0 {
+    left: 0px;
+    width: 10%; 
+}
+.dev_sw_box1 {
+    left: 10%;
+    width: 30%; 
+}
+.dev_sw_box2 {
+    left: 40%;
+    width: 30%; 
+}
+.dev_sw_box3 {
+    left: 70%;
+    width: 30%; 
+}
+
+.dev_ht {
+    position: relative; 
+    height: 50px;
+    width: 100%;
+	}
+.dev_ht_temp {
+    position: absolute; 
+    background-color: #cccccc;
+    top: 0px;
+    left: 0%;
+    width: 60%;
+}
+.dev_ht_ok {
+    position: absolute; 
+    top: -5px;
+    left: 85%;
+    width: 15%;
+}	
+.dev_ht_am {
+    position: absolute; 
+    top: 0px;
+    left: 70%;
+    width: 10%;
+}
+
+.dev_sx {
+    display: inline-block;
+    border: 2px solid #a80329;
+    width: 200px;
+    height: 120px;
+}
+.dev_sx_t {
+    position: absolute;
+    width: 200px;
+    height: 120px;
+}
+.dev_sx_s {
+    position: absolute;
+    width: 200px;
+    height: 120px;
+}
+.dev_sx_head {
+    width: 200px;
+    text-align: center;
+}
+.dev_sx_sw {
+    width: 200px;
+}
+.dev_sx_touch {
+    top: 20px;
+    position: absolute;
+    width: 66px;
+    height: 100px;
+}
+
+.switch_div {
+    position: absolute; 
+    background-color: #cccccc;
+    top: 0px;
+    left: 0%;
+    width: 60%;
+    height: 50px;
+}
+
+.button_akt {
+   -webkit-border-radius: 10px;
+   -moz-border-radius: 10px;
+   border-radius: 10px;
+   color: #000000;
+   font-size: 20px;
+   font-weight: 500;
+   padding: 2px;
+   box-shadow: 1px 1px 20px 0px #000000;
+   -webkit-box-shadow: 1px 1px 20px 0px #000000;
+   -moz-box-shadow: 1px 1px 20px 0px #000000;
+   border: solid #a80329 2px;
+   text-decoration: none;
+   display: inline-block;
+   width: 70%;
+   cursor: pointer;
+}
+
+.stateicon {
+    -moz-border-radius:30px;
+    -webkit-border-radius:30px;
+    border-radius:30px;
+    border:2px solid #a80329;
+    display:inline-block;
+    cursor:pointer;
+    color:#000000;
+    font-family:Arial;
+    font-size:17px;
+    padding:6px 10px;
+    text-decoration:none;
+    cursor: default; 
+}
