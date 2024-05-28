@@ -428,32 +428,37 @@ $("#wetter3").click(function(){
   set_divs();
 });  
 
+function uhrzeit() {
+  var datestr;
+  var date;
+  var y, mo, d, h, m, s;
+  $.get('/content/datetime.php', function(data) {
+//    alert(data);
+    datestr = data;
+    date = new Date(datestr);
+    y = date.getFullYear();
+    mo = date.getMonth();
+	d = date.getDate();
+    h = date.getHours();
+    m = date.getMinutes();
+	s = date.getSeconds();
+    if(m < 10) { m = '0' + m; };
+    if(s < 10) { s = '0' + s; };
+    $("#zeit").html("Die aktuellen Werte aus Nottuln:<br><br>" + d + "." + mo + "." + y + "<br>" + h + ':' + m + ':' + s);
+  });
+  setTimeout(uhrzeit, 1000);
+}
+
+$(document).ready(function() {
+  uhrzeit();
+});
+
 </script>	
 <meta http-equiv="expires" content="0">
 </head>
 <div id="seitenbereich">
 <div id='zeit'>
-Die aktuellen Werte aus Nottuln: <br>
-<!--
-Kostenlose, frei konfigurierbare Homepage-Uhr von www.schnelle-online.info/Homepage/Tools.html. Ohne Gew\E4hr, ohne Haftung.
-Nutzungbedingung: Dieser Kommentar und der Link unten d\FCrfen nicht entfernt oder (nofollow) modifiziert werden.
--->
-<a style="text-decoration:none;border-style:none;color:black;" target="_blank" href="http://www.schnelle-online.info/Atomuhr-Uhrzeit.html" id="soitime121693632552">Uhrzeit</a><br/>
-<a style="text-decoration:none;border-style:none;color:black;" target="_blank" href="http://www.schnelle-online.info/Kalender.html" id="soidate121693632552">Kalender</a>
-<script type="text/javascript">
-SOI = (typeof(SOI) != 'undefined') ? SOI : {};
-(SOI.ac21fs = SOI.ac21fs || []).push(function() {
-(new SOI.DateTimeService("121693632552", "DE")).appendTime(" Uhr").setWeekdayMode(1).setMonthMode(1).start();});
-(function() {
-  if (typeof(SOI.scrAc21) == "undefined") {
-    SOI.scrAc21=document.createElement('script');
-    SOI.scrAc21.type='text/javascript';
-    SOI.scrAc21.async=true;
-    SOI.scrAc21.src=((document.location.protocol == 'https:') ? 'https://' : 'http://') + 'homepage-tools.schnelle-online.info/Homepage/atomicclock2_1.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(SOI.scrAc21, s);
-  }
-})();
-</script>
+
 </div>
 <div id='wetter1a'><center><div class='label'>Temperatur:</div><div class='wert'>
 <?php

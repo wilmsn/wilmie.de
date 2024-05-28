@@ -3,13 +3,16 @@ $instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ('jpgraph/jpgraph.php');
 require_once ('jpgraph/jpgraph_line.php');
+require_once ('jpgraph/jpgraph_bar.php');
 require_once ('jpgraph/jpgraph_utils.inc.php');
 //Default settings
+date_default_timezone_set('Europe/Berlin');
 $mindata = 10;
 $range = "1d";
 $sizex=650;
 $sizey=370;
 $database = "rf24hub";
+$gtype = "line";
 //sensor1
 $sensor1color = "#000000";
 $sensor1legend = "unbekannt";
@@ -133,8 +136,10 @@ function  TimeCallbackH( $aVal) {
    return Date ('H',$aVal);
 }
 
-date_default_timezone_set('Europe/Berlin');
 
+if (isset($_GET["graph"])) {
+	$gtype = $_GET["graph"];
+}	
 if (isset($_GET["sizex"])) {
 	$sizex = $_GET["sizex"];
 }	
@@ -240,7 +245,8 @@ switch ($range) {
 	$label_date_format = '%d.%m.%y'; 
 	$label_2 = ' Kalendertag ->';
 	$diagramtime = 2678400;
-	$table = $sensordata_tab;
+    if ( $gtype == "line" )	$table = $sensordata_tab;
+    if ( $gtype == "bar" )	$table = $sensordata_agg_tab;
 	$minData = 20;
     break;
     default:
@@ -327,6 +333,14 @@ while ($row = $results->fetch_assoc()) {
 }
 $results->close();
 
+if ( $gtype == "bar" ) {
+  $max_utime = max($xdata);
+  if ($range == "1m") {
+    array_push($xdata, $max_utime + 24*60*60);
+    array_push($ydata, 0);
+  }
+}
+
 if ($hasSecondGrah) {
   $y2data = array();
   $x2data = array();
@@ -362,7 +376,7 @@ if ($hasSecondGrah) {
 $graph->title->Set($label_1);
 
 if ($hasSecondGrah) {
-  $secondGraphOK = count($y2data) > $mindata;
+  $secondGraphOK = ( count($y2data) > $mindata );
 } else{
   $secondGraphOK = true;
 }
@@ -384,7 +398,7 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
         $ydataMin=min($ydata);
         $ydataMax=max($ydata);
         if ($ydataMax > 0) {
-            if ($ydataMax-$ydataMin > 3 ) {
+            if ($ydataMax-$ydataMin > 5 ) {
                 if ($ydataMin > 0) {
                     $yscaleMin=floor($ydataMin/10)*10;
                 } else {
@@ -396,7 +410,7 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
                     $yscaleMax=ceil($ydataMax/10)*10;
                 }
             } else {
-                if ($ydataMin > 0) {
+                if ($ydataMin >= 0) {
                     $yscaleMin=floor($ydataMin);
                 } else {
                     $yscaleMin=floor($ydataMin)-1;
@@ -490,10 +504,19 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
     }
     $graph->xaxis->SetLabelAlign(1);
     $graph->xaxis->SetLabelSide(SIDE_BOTTOM);
-    $line = new LinePlot($ydata,$xdata);
-    $line->SetLegend($sensor1legend);
-    $graph->Add($line);
-    $line->SetColor($sensor1color);
+    if ( $gtype == "line" ) {
+        $line = new LinePlot($ydata,$xdata);
+        $line->SetLegend($sensor1legend);
+        $graph->Add($line);
+        $line->SetColor($sensor1color);
+    }
+    if ( $gtype == "bar" ) {
+        $bar = new BarPlot($ydata,$xdata);
+        $bar->SetLegend($sensor1legend);
+        $bar->SetWidth(5);
+        $graph->Add($bar);
+        $bar->SetColor($sensor1color);
+    }
 //    $graph->yaxis->SetColor("red");
     $graph->yaxis->title->Set($einheit);
     $graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
