@@ -20,6 +20,8 @@ $sensor1 = 1;
 $offset = 0;
 $ymin_set = false;
 $ymax_set = false;
+$hasSensor1a = false;
+$hasSensor1b = false;
 //sensor2
 $hasSecondGrah=false;
 $sensor2 = 2;
@@ -172,6 +174,21 @@ if (isset($_GET["ymax"])) {
     $ymax = $_GET["ymax"];
     $ymax_set = true;
 }
+if (isset($_GET["sensor1a"])) {
+    $sensor1a = $_GET["sensor1a"];
+    $hasSensor1a = true;
+}
+if (isset($_GET["sensor1alegend"])) {
+    $sensor1alegend = $_GET["sensor1alegend"];
+}
+if (isset($_GET["sensor1b"])) {
+    $sensor1b = $_GET["sensor1b"];
+    $hasSensor1b = true;
+}
+if (isset($_GET["sensor1blegend"])) {
+    $sensor1blegend = $_GET["sensor1blegend"];
+}
+
 if (isset($_GET["sensor2"])) {
     $sensor2 = $_GET["sensor2"];
     $hasSecondGrah = true;
@@ -332,6 +349,28 @@ while ($row = $results->fetch_assoc()) {
    }
 }
 $results->close();
+if ($hasSensor1a) {
+    $yadata = array();
+    $xadata = array();
+    $stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1a." and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime." order by utime asc";
+    $results = $db->query($stmt);
+    while ($row = $results->fetch_assoc()) {
+        $yadata[]=$row['value'];
+        $xadata[]=$row['utime'];
+    }
+    $results->close();
+}
+if ($hasSensor1b) {
+    $ybdata = array();
+    $xbdata = array();
+    $stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1b." and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime." order by utime asc";
+    $results = $db->query($stmt);
+    while ($row = $results->fetch_assoc()) {
+        $ybdata[]=$row['value'];
+        $xbdata[]=$row['utime'];
+    }
+    $results->close();
+}
 
 if ( $gtype == "bar" ) {
   $max_utime = max($xdata);
@@ -521,6 +560,16 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
     $graph->yaxis->title->Set($einheit);
     $graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
     $graph->yaxis->SetTitleMargin(30);
+    if ($hasSensor1a) {
+        $line1 = new LinePlot($yadata,$xadata);
+        $line1->SetLegend($sensor1alegend);
+        $graph->Add($line1);
+    }
+    if ($hasSensor1b) {
+        $line2 = new LinePlot($ybdata,$xbdata);
+        $line2->SetLegend($sensor1blegend);
+        $graph->Add($line2);
+    }
     if ($hasSecondGrah) {
         $line2 = new LinePlot($y2data,$x2data);
         $line2->SetLegend($sensor2legend);
