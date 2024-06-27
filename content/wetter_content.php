@@ -15,7 +15,7 @@ $mobile_browser = is_mobile_browser();
 if($mobile_browser) { 
   echo "
   #zeit { 
-  height: 70px;
+  height: 100px;
   width: 100%;
   font-weight: bold;
   text-align: center;
@@ -444,7 +444,7 @@ function uhrzeit() {
 	s = date.getSeconds();
     if(m < 10) { m = '0' + m; };
     if(s < 10) { s = '0' + s; };
-    $("#zeit").html("Die aktuellen Werte aus Nottuln:<br><br>" + d + "." + mo + "." + y + "<br>" + h + ':' + m + ':' + s);
+    $("#zeit").html("Die aktuellen Werte aus Nottuln:<br>" + d + "." + mo + "." + y + "<br>" + h + ':' + m + ':' + s + "<br>");
   });
   setTimeout(uhrzeit, 1000);
 }
