@@ -18,6 +18,7 @@ if($mobile_browser) {
   height: 100px;
   width: 100%;
   font-weight: bold;
+  font-size: 16px;
   text-align: center;
   border: 1px solid #000;
   background: #ddd;
@@ -94,6 +95,7 @@ if($mobile_browser) {
   height: 80px;
   width: 300px;
   font-weight: bold;
+  font-size: 16px;
   text-align: center;
   border: 1px solid #000;
   position: absolute;
@@ -437,7 +439,7 @@ function uhrzeit() {
     datestr = data;
     date = new Date(datestr);
     y = date.getFullYear();
-    mo = date.getMonth();
+    mo = date.getMonth()+1;
 	d = date.getDate();
     h = date.getHours();
     m = date.getMinutes();
