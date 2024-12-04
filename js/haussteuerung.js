@@ -3,523 +3,326 @@ var arrow_down = "/img/arrow_down.gif";
 var getfhem = "/admin/getfhem.php";
 var needhelp = "/img/gefahrenstelle_20x20.jpg"
 var w = screen.width;
-var add_param = "";
-if ( w > 1150 ) { w = 1150; } else { if ( w > 300 ) { w = w-50; } }
-
-
-function header_init(titel) {
-  // Parameter:
-  // titel = Die Ueberschrift in der ersten Zeile (zentriert)
-  $("#haus").append("<div class='content_header' id='content_header'>");
-  $("#content_header").append("<div class='content_header_head' id='content_header_head'>" + titel + "</div>");
-}
-
-function header_addLine(line_no, text_l, text_r) {
-  // Parameter: 
-  // line_no = Zeilennummer (nur fuer ID verwendet) muss unique sein!
-  // text_l = linksbuendiger Text
-  // text_r = rechtsbuendiger Text
-  $("#content_header").append("<div class='content_header_line' id='content_header_line" + line_no + "'></div>");
-  $("#content_header_line" + line_no).append("<div class='content_header_line_l' id='content_header_line_l" + line_no + "'>" + text_l + "</div>");
-  $("#content_header_line" + line_no).append("<div class='content_header_line_r' id='content_header_line_r" + line_no + "'>" + text_r + "</div>");
-}
-
-function add_room( room_no, room_name, fhem_dev, fhem_reading, has_switch ) {
-    $("#haus").append("<div class='room' id='r" + room_no + "'></div>");
-    $("#r" + room_no).append("<div class='room_status' id='r" + room_no + "h'></div>");
-    $("#r" + room_no).append("<div class='room_addinfo' id='r" + room_no + "m'></div>");
-    $("#r" + room_no + "m").append("<img id='r" + room_no + "m_i1' src=" + needhelp + " width='20' height='20' />");
-    $("#r" + room_no).append("<div class='room_value' id='r" + room_no + "v'></div>");
-    $("#r" + room_no).append("<div class='room_switch' id='r" + room_no + "s'></div>");
-    $("#r" + room_no).append("<div class='room_dev' id='r" + room_no + "d'></div>");
-    $("#r" + room_no).append("<div class='room_dev' id='r" + room_no + "e'></div>");
-    $("#r" + room_no).append("<div id='r" + room_no + "x'></div>");
-    $("#r" + room_no + "x").css("display", "none");
-    $("#r" + room_no + "s").append("<img id='r" + room_no + "i' src=" + arrow_up + " width='48' height='60' />");
-    $("#r" + room_no + "i").css("display", "none");
-    $("#r" + room_no + "h").append("<div class='room_label' id='r" + room_no + "hl'></div>");
-    $("#r" + room_no + "h").append("<div class='dev_status dev_status1' id='r" + room_no + "hd1'></div>");
-    $("#r" + room_no + "h").append("<div class='dev_status dev_status2' id='r" + room_no + "hd2'></div>");
-    $("#r" + room_no + "h").append("<div class='dev_status dev_status3' id='r" + room_no + "hd3'></div>");
-    $("#r" + room_no + "h").append("<div class='dev_status dev_status4' id='r" + room_no + "hd4'></div>");
-    $("#r" + room_no + "h").append("<div class='dev_status dev_status5' id='r" + room_no + "hd5'></div>");
-    $("#r" + room_no + "h").append("<div class='dev_status dev_status6' id='r" + room_no + "hd6'></div>");
-    $("#r" + room_no + "h").append("<div class='dev_status dev_status7' id='r" + room_no + "hd7'></div>");
-    $("#r" + room_no + "h").append("<div class='dev_status dev_status8' id='r" + room_no + "hd8'></div>");
-// Achtung dev_status2value nicht definiert !!!!
-    $("#r" + room_no + "hd1").append("<div class='dev_statuslabel dev_status1label' id='r" + room_no + "hd1l'></div>");
-    $("#r" + room_no + "hd1").append("<div class='dev_statusvalue dev_status1value' id='r" + room_no + "hd1v'></div>");
-    $("#r" + room_no + "hd1").append("<div class='dev_statusswitch' id='r" + room_no + "hd1s'></div>");
-    $("#r" + room_no + "hd2").append("<div class='dev_statuslabel dev_status2label' id='r" + room_no + "hd2l'></div>");
-    $("#r" + room_no + "hd2").append("<div class='dev_statusvalue dev_status2value' id='r" + room_no + "hd2v'></div>");
-    $("#r" + room_no + "hd2").append("<div class='dev_statusswitch' id='r" + room_no + "hd2s'></div>");
-    $("#r" + room_no + "hd3").append("<div class='dev_statuslabel dev_status3label' id='r" + room_no + "hd3l'></div>");
-    $("#r" + room_no + "hd3").append("<div class='dev_statusvalue dev_status3value' id='r" + room_no + "hd3v'></div>");
-    $("#r" + room_no + "hd3").append("<div class='dev_statusswitch' id='r" + room_no + "hd3s'></div>");
-    $("#r" + room_no + "hd4").append("<div class='dev_statuslabel dev_status4label' id='r" + room_no + "hd4l'></div>");
-    $("#r" + room_no + "hd4").append("<div class='dev_statusvalue dev_status4value' id='r" + room_no + "hd4v'></div>");
-    $("#r" + room_no + "hd4").append("<div class='dev_statusswitch' id='r" + room_no + "hd4s'></div>");
-    $("#r" + room_no + "hd5").append("<div class='dev_statuslabel dev_status5label' id='r" + room_no + "hd5l'></div>");
-    $("#r" + room_no + "hd5").append("<div class='dev_statusvalue dev_status5value' id='r" + room_no + "hd5v'></div>");
-    $("#r" + room_no + "hd5").append("<div class='dev_statusswitch' id='r" + room_no + "hd5s'></div>");
-    $("#r" + room_no + "hd6").append("<div class='dev_statuslabel dev_status6label' id='r" + room_no + "hd6l'></div>");
-    $("#r" + room_no + "hd6").append("<div class='dev_statusvalue dev_status6value' id='r" + room_no + "hd6v'></div>");
-    $("#r" + room_no + "hd6").append("<div class='dev_statusswitch' id='r" + room_no + "hd6s'></div>");
-    $("#r" + room_no + "hd7").append("<div class='dev_statuslabel dev_status7label' id='r" + room_no + "hd7l'></div>");
-    $("#r" + room_no + "hd7").append("<div class='dev_statusvalue dev_status7value' id='r" + room_no + "hd7v'></div>");
-    $("#r" + room_no + "hd7").append("<div class='dev_statusswitch' id='r" + room_no + "hd7s'></div>");
-    $("#r" + room_no + "hd8").append("<div class='dev_statuslabel dev_status8label' id='r" + room_no + "hd8l'></div>");
-    $("#r" + room_no + "hd8").append("<div class='dev_statusvalue dev_status8value' id='r" + room_no + "hd8v'></div>");
-    $("#r" + room_no + "hd8").append("<div class='dev_statusswitch' id='r" + room_no + "hd8s'></div>");
-
-    $("#r" + room_no + "hl").html(room_name);
-
-    $.get(basedir+'getfhem.php',{geraet: room_name+"_Status", eigenschaft: "state" }, function(data) {
-        if ( data == 0 ) {
-            $("#r" + room_no + "m_i1").hide();
-        } else {
-            $("#r" + room_no + "m_i1").show();
-        }
-    });
-    
-    var str1 = " ";
-    var str2 = str1.concat(fhem_dev);
-    if ( str2.length > 3 ) {
-        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
-            $("#r" + room_no + "v").html(parseInt(data*10)/10+" &deg;C");
-        });
-    }
-
-    if (has_switch) {
-        $("#r" + room_no + "s").click(function() {
-            if ($("#r" + room_no + "d").is(':hidden')) {
-                $("#r" + room_no + "d").show();
-                document.getElementById("r" + room_no + "i").src = arrow_down;
-            } else {
-                $("#r" + room_no + "d").hide();
-                document.getElementById("r" + room_no + "i").src = arrow_up;
-            }
-        });
-    }
-
-    if ( window.innerWidth < 600 ) {
-        $("#r" + room_no + "hd1").css("width","25%").css("left","75%");
-        $("#r" + room_no + "hd1l").css("font-size","small");
-        $("#r" + room_no + "hd1v").css("font-size","x-small");
-        $("#r" + room_no + "hd2").css("width","25%").css("left","50%");
-        $("#r" + room_no + "hd2l").css("font-size","small");
-        $("#r" + room_no + "hd2v").css("font-size","x-small");
-        $("#r" + room_no + "hd3").css("width","25%").css("left","25%");
-        $("#r" + room_no + "hd3l").css("font-size","small");
-        $("#r" + room_no + "hd3v").css("font-size","x-small");
-        $("#r" + room_no + "hd4").css("width","25%").css("left","0%");
-        $("#r" + room_no + "hd4l").css("font-size","small");
-        $("#r" + room_no + "hd4v").css("font-size","x-small");
-        $("#r" + room_no + "hd5").css("width","25%").css("left","75%");
-        $("#r" + room_no + "hd5l").css("font-size","small");
-        $("#r" + room_no + "hd5v").css("font-size","x-small");
-        $("#r" + room_no + "hd6").css("width","25%").css("left","50%");
-        $("#r" + room_no + "hd6l").css("font-size","small");
-        $("#r" + room_no + "hd6v").css("font-size","x-small");
-        $("#r" + room_no + "hd7").css("width","25%").css("left","25%");
-        $("#r" + room_no + "hd7l").css("font-size","small");
-        $("#r" + room_no + "hd7v").css("font-size","x-small");
-        $("#r" + room_no + "hd8").css("width","25%").css("left","0%");
-        $("#r" + room_no + "hd8l").css("font-size","small");
-        $("#r" + room_no + "hd8v").css("font-size","x-small");
-    }
-}
-
-function device_enable_switch(room_no) {
-    $("#r" + room_no +"s").css("height", "60px");
-    $("#r" + room_no +"h").css("height", "60px");
-    $("#r" + room_no +"i").css("display", "inline");
-}
-
-function device_enable_details(room_no) {
-    $("#r" + room_no +"s").css("height", "60px");
-    $("#r" + room_no +"h").css("height", "60px");
-}
+var devwidth = "25%"
 
 function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
+    var value;
     $.get(basedir+'getfhem.php',{geraet: fhem_HS_dev, eigenschaft: "state" }, function(data) {
-        $("#r"+room_no+"hd"+dev_no+"v").html("("+data+") ");
+        if (data == 0) { value = "(aus) "; } else { value = "("+data+") "; }
+        if (data == 1) { value = "(ein) "; }
+        if (data == 2) { value = "(auto) "; }
         switch (data) {
             case "aus":
-                $("#r" + room_no + "d" + dev_no + "b1g").css("background-color", "#a80329");
-                $("#r" + room_no + "d" + dev_no + "b2g").css("background-color", "grey");
-                $("#r" + room_no + "d" + dev_no + "b3g").css("background-color", "grey");
+                $("#r" + room_no + "sws1b").css("background-color", "#a80329");
+                $("#r" + room_no + "sws2b").css("background-color", "grey");
+                $("#r" + room_no + "sws3b").css("background-color", "grey");
             break;
             case "auto":
-                $("#r" + room_no + "d" + dev_no + "b1g").css("background-color", "grey");
-                $("#r" + room_no + "d" + dev_no + "b2g").css("background-color", "#a80329");
-                $("#r" + room_no + "d" + dev_no + "b3g").css("background-color", "grey");
+                $("#r" + room_no + "sws1b").css("background-color", "grey");
+                $("#r" + room_no + "sws2b").css("background-color", "#a80329");
+                $("#r" + room_no + "sws3b").css("background-color", "grey");
             break;
             case "ein":
-                $("#r" + room_no + "d" + dev_no + "b1g").css("background-color", "grey");
-                $("#r" + room_no + "d" + dev_no + "b2g").css("background-color", "grey");
-                $("#r" + room_no + "d" + dev_no + "b3g").css("background-color", "#a80329");
+                $("#r" + room_no + "sws1b").css("background-color", "grey");
+                $("#r" + room_no + "sws2b").css("background-color", "grey");
+                $("#r" + room_no + "sws3b").css("background-color", "#a80329");
             break;
-        }	
-    });			
+        }
+    });
 	$.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
-	// alert(fhem_dev + " state: " + data + "#");
+        if (data == 0) { value = value + "aus"; }
+        if (data == 1) { value = value + "ein"; }
+        $("#r"+room_no+"d"+dev_no+"v").html(value);
 	    switch(data) {
-			case "1":
-			case "on":
-				$("#r"+room_no+"hd"+dev_no+"v").append("Ein");
-				$("#r"+room_no+"d"+dev_no+"b0g").css("background-color", "yellow"); //.css("color","black");
-			break;	
-			case "0":
-			case "off":
-				$("#r"+room_no+"hd"+dev_no+"v").append("Aus");
-				$("#r"+room_no+"d"+dev_no+"b0g").css("background-color", "black").css("color","white");
-			break;	
-			default:
-				$("#r"+room_no+"hd"+dev_no+"v").append("-"+data);					
-		}
+            case "1":
+            case "on":
+                $("#r"+room_no+"sws0b").css("background-color", "yellow"); //.css("color","black");
+            break;
+            case "0":
+            case "off":
+                $("#r"+room_no+"sws0b").css("background-color", "black").css("color","white");
+            break;
+            default:
+                $("#r"+room_no+"sws0b").append("-"+data);
+        }
 	});
-//	alert("Test");
 }
 
 function device_switch_click_func(room_no, dev_no, fhem_HS_dev, fhem_dev, dev_state) {
     $.get(basedir+'setfhem.php',{geraet: fhem_HS_dev, eigenschaft: " ", wert: dev_state }, function(data) {
-        // alert(data);
         setTimeout(function() {
-            //alert(dev_no + " " + dev_disp_name + " " + dev_disp_read + " " + dev_fhem_name);
             device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev);
         }, 5000);
-            //alert(data);
             device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev);
     });
 }
 
-function add_device_switch(room_no, dev_no, dev_name, fhem_HS_dev, fhem_dev) {
-    device_enable_switch(room_no);
-    $("#r" + room_no + "d").append("<div class='dev' id='r" + room_no + "d" + dev_no + "'></div>");
-    $("#r" + room_no + "d" + dev_no).append("<div class='dev_label' id='r" + room_no + "d" + dev_no + "l'></div>");
-    $("#r" + room_no + "d" + dev_no + "l").html(dev_name);
-    $("#r" + room_no + "d" + dev_no + "a").html("action");
-    $("#r" + room_no + "hd" + dev_no).css("display","inline");
-    $("#r" + room_no + "hd" + dev_no + "l").html(dev_name);
-    $("#r" + room_no + "d" + dev_no).append("<div class='dev_sw' id='r" + room_no + "d" + dev_no + "a'></div>");
-    $("#r" + room_no + "d" + dev_no + "a").append("<div id='r" + room_no + "d" + dev_no + "a1' class='dev_sw_box0'></div>");
-    $("#r" + room_no + "d" + dev_no + "a1").append("<button type='button' id='r" + room_no + "d" + dev_no + "b0g' class='stateicon'>X</button>");
-    $("#r" + room_no + "d" + dev_no + "a").append("<div id='r" + room_no + "d" + dev_no + "a2' class='dev_sw_box1'></div>");
-    $("#r" + room_no + "d" + dev_no + "a2").append("<button type='button' id='r" + room_no + "d" + dev_no + "b1g' class='button_akt'>Aus</button>");
-    $("#r" + room_no + "d" + dev_no + "a").append("<div id='r" + room_no + "d" + dev_no + "a3' class='dev_sw_box2'></div>");
-    $("#r" + room_no + "d" + dev_no + "a3").append("<button type='button' id='r" + room_no + "d" + dev_no + "b2g' class='button_akt'>Auto</button>");
-    $("#r" + room_no + "d" + dev_no + "a").append("<div id='r" + room_no + "d" + dev_no + "a4' class='dev_sw_box3'></div>");
-    $("#r" + room_no + "d" + dev_no + "a4").append("<button type='button' id='r" + room_no + "d" + dev_no + "b3g' class='button_akt'>Ein</button>");
-    device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev);
-    $("#r" + room_no + "d" + dev_no + "b1g").click(function(){
-        device_switch_click_func(room_no, dev_no, fhem_HS_dev, fhem_dev, "aus");
-    }); 
-    $("#r" + room_no + "d"+dev_no+"b2g").click(function(){
-        device_switch_click_func(room_no, dev_no, fhem_HS_dev, fhem_dev, "auto");
-    }); 
-    $("#r" + room_no + "d"+dev_no+"b3g").click(function(){
-        device_switch_click_func(room_no, dev_no, fhem_HS_dev, fhem_dev, "ein");
-    }); 
-    if ( window.innerWidth < 600 ) {
-        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
-        if ( dev_no > 4 ) {
-            $("#r" + room_no + "s").css("height","100px");
-            $("#r" + room_no + "h").css("height","100px");
-            $("#r" + room_no + "hd" + dev_no).css("top","60px");
-        }
-    }
+function haus(titel) {
+  // Parameter:
+  // titel = Die Ueberschrift in der ersten Zeile (zentriert)
+  $("#haus").html("<div class='haus_head'>" + titel + "</div>");
 }
 
-function add_device_ht(room_no, dev_no, dev_name, fhem_dev) {
-    device_enable_switch(room_no);
-    $("#r"+room_no+"d").append("<div class='dev' id='r" + room_no + "d" + dev_no + "'></div>");
-    $("#r"+room_no+"d"+dev_no).append("<div class='dev_label' id='r" + room_no + "d" + dev_no + "l'></div>");
-    $("#r"+room_no+"d"+dev_no+"l").append("<div class='dev_label' id='r" + room_no + "d" + dev_no + "l1'></div><div class='dev_label' id='r" + room_no + "d" + dev_no + "l2'></div><div class='dev_label' id='r" + room_no + "d" + dev_no + "l3'></div>");
-    $("#r"+room_no+"hd"+dev_no).css("display","inline");
-    $("#r"+room_no+"d"+dev_no + "l1").html(dev_name).css("display","inline");
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "valveposition" }, function(data) {
-	$("#r"+room_no+"d"+dev_no + "l2").html("Ventil: "+data).css("display","inline");
-    });
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "temperature" }, function(data) {
-	$("#r"+room_no+"d"+dev_no + "l3").html("Temperatur: "+data).css("display","inline");
-    });
-    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","70%");
-    $("#r"+room_no+"d"+dev_no + "a").html("action");
-    $("#r"+room_no+"hd" + dev_no + "l").html(dev_name);
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "mode" }, function(data) {
-        $("#r"+room_no+"hd"+dev_no+"v").append("("+data+") ");
-        $("#r"+room_no+"hd"+dev_no+"v").css("font-size","xx-small");
-        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature" }, function(data) {
-            $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" &deg;C");
-        });
-    });
-    $("#r"+room_no+"d"+dev_no).append("<div class='dev_ht' id='r"+room_no+"d"+dev_no+"d'></div>");
-    $("#r"+room_no+"d"+dev_no+"d").append("<div class='dev_ht_temp' id='r"+room_no+"d"+dev_no+"d1'></div>");
-    $("#r"+room_no+"d"+dev_no+"d1").append("<input id='r"+room_no+"d"+dev_no+"s1' min='5' max='22' step='0.5' data-highlight='true' data-role='slider' />");   
-    $("#r"+room_no+"d"+dev_no+"s1").slider();
-    $("#r"+room_no+"d"+dev_no+"d").append("<div class='dev_ht_am' id='r"+room_no+"d"+dev_no+"d2'></div>");
-    $("#r"+room_no+"d"+dev_no+"d2").append("<select name='room"+room_no+"d"+dev_no+"s2' id='r"+room_no+"d"+dev_no+"s2' data-role='slider'><option value='auto'>Auto</option><option value='manual'>Man.</option></select>");
-    $("#r"+room_no+"d"+dev_no+"s2").slider();
-    $("#r"+room_no+"d"+dev_no+"d").append("<div class='dev_ht_ok' id='r"+room_no+"d"+dev_no+"d3'></div>");
-    $("#r"+room_no+"d"+dev_no+"d3").append("<input type='button' id='r"+room_no+"d"+dev_no+"s3' value='Wert setzen' />");
-    $("#r"+room_no+"d"+dev_no+"s3").buttonMarkup({ theme: "a" });
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature" }, function(data) {
-        $("#r"+room_no+"d"+dev_no+"s1").val(data).slider("refresh");
-    });
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "mode" }, function(data) {
-        $("#r"+room_no+"d"+dev_no+"s2").val(data).slider("refresh");	
-    });
-    $("#r"+room_no+"d"+dev_no+"s3").click(function(){
-        mytemp=$("#r"+room_no+"d"+dev_no+"s1").val();
-        mymode=$("#r"+room_no+"d"+dev_no+"s2").val();
-        if ( mymode == "auto" ) { 
-            $.get(basedir+'setfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature", wert: mymode, wert1: mytemp }, function(data) {
-                alert(data);
-            });	
-        } else {
-            $.get(basedir+'setfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature", wert: mytemp }, function(data) {
-                alert(data);
-            });
-        }	
-    }); 
-    if ( window.innerWidth < 600 ) {
-       //alert("mobile"); 
-        $("#r"+room_no+"d"+dev_no+"d1").css("width","100%");
-        $("#r"+room_no+"d"+dev_no+"d2").css("width","40%").css("top","50px").css("left","10%");
-        $("#r"+room_no+"d"+dev_no+"d3").css("width","50%").css("top","45px").css("left","50%");
-        $("#r"+room_no+"d"+dev_no+"d").css("height","100px");
-        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
-        if ( dev_no > 4 ) {
-            $("#r" + room_no + "s").css("height","100px");
-            $("#r" + room_no + "h").css("height","100px");
-            $("#r" + room_no + "hd" + dev_no).css("top","60px");
-        }
-    }
+function show_val(room_no, dev_no, value, lev1, lev2, lev3) {
+    $("#r"+room_no+"d"+dev_no+"v").html(value);
+    if (value.length > lev1) $("#r" + room_no + "d" + dev_no + "v").css("font-size","small");
+    if (value.length > lev2) $("#r" + room_no + "d" + dev_no + "v").css("font-size","x-small");
+    if (value.length > lev3) $("#r" + room_no + "d" + dev_no + "v").css("font-size","xx-small");
 }
 
-function add_device_measure(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit) {
-    device_enable_details(room_no);
-    $("#r" + room_no + "hd" + dev_no).css("display","inline");
-    $("#r" + room_no + "hd" + dev_no + "l").html(dev_name);
-    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
-        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
-    });
-    if ( window.innerWidth < 600 ) {
-        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
-        if ( dev_no > 4 ) {
-            $("#r" + room_no + "s").css("height","100px");
-            $("#r" + room_no + "h").css("height","100px");
-            $("#r" + room_no + "hd" + dev_no).css("top","60px");
-        }
-    }
-}
-
-function add_device_measure_dia(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit, database, sensorno, graphcolor, legend) {
-    device_enable_details(room_no);
-    $("#r" + room_no + "hd" + dev_no + "s").click(function() {
-        if ($("#r" + room_no + "e").is(':hidden')) {
-            $("#r" + room_no + "e").show();
-            $("#r" + room_no + "e").html("<img src='/content/diagramm.php?database="+database+"&sensor1="+sensorno+"&sensor1color="+graphcolor+"&sensor1legend="+legend+"&sizex="+w+"&sizey=370'>");
-            document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_down;
-            $("#r" + room_no + "x").html("r" + room_no + "hd"+ dev_no + "sd");
-        } else {
-            var akt_element = $("#r" + room_no + "x").html();
-            if (akt_element.localeCompare("r" + room_no + "hd"+ dev_no + "sd") != 0 ) {
-              alert("Grafik geöffnet, bitte schliessen");
-            } else {
-              $("#r" + room_no + "e").hide();
-              document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_up;
-            }
-        }
-    });
-    $("#r" + room_no + "hd" + dev_no).css("display","inline");
-    $("#r" + room_no + "hd" + dev_no).css("cursor: pointer");
-    $("#r" + room_no + "hd" + dev_no + "l").html(dev_name).css("width","70%");
-    $("#r" + room_no + "hd" + dev_no + "v").css("width","70%");
-    $("#r" + room_no + "hd" + dev_no + "s").html("<img id='r" + room_no + "hd"+dev_no+"sd' src=" + arrow_up + " width='20' height='30' />").css("width","30%");
-    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
-        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
-    });
-    if ( window.innerWidth < 600 ) {
-        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
-        if ( dev_no > 4 ) {
-            $("#r" + room_no + "s").css("height","100px");
-            $("#r" + room_no + "h").css("height","100px");
-            $("#r" + room_no + "hd" + dev_no).css("top","60px");
-        }
-    }
-}
-
-function add_device_measure_dia_3(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit, database, sensorno, graphcolor, legend, sensorno1, graphcolor1, legend1, sensorno2, graphcolor2, legend2) {
-    device_enable_details(room_no);
-    $("#r" + room_no + "hd" + dev_no + "s").click(function() {
-        if ($("#r" + room_no + "e").is(':hidden')) {
-            $("#r" + room_no + "e").show();
-            $("#r" + room_no + "e").html("<img src='/content/diagramm.php?database="+database+"&sensor1="+sensorno+"&sensor1color="+graphcolor+"&sensor1legend="+legend+"&sensor1a="+sensorno1+"&sensor1acolor="+graphcolor1+"&sensor1alegend="+legend1+"&sensor1b="+sensorno2+"&sensor1bcolor="+graphcolor2+"&sensor1blegend="+legend2+"&sizex="+w+"&sizey=370'>");
-            document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_down;
-            $("#r" + room_no + "x").html("r" + room_no + "hd"+ dev_no + "sd");
-        } else {
-            var akt_element = $("#r" + room_no + "x").html();
-            if (akt_element.localeCompare("r" + room_no + "hd"+ dev_no + "sd") != 0 ) {
-              alert("Grafik geöffnet, bitte schliessen");
-            } else {
-              $("#r" + room_no + "e").hide();
-              document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_up;
-            }
-        }
-    });
-    $("#r" + room_no + "hd" + dev_no).css("display","inline");
-    $("#r" + room_no + "hd" + dev_no).css("cursor: pointer");
-    $("#r" + room_no + "hd" + dev_no + "l").html(dev_name).css("width","70%");
-    $("#r" + room_no + "hd" + dev_no + "v").css("width","70%");
-    $("#r" + room_no + "hd" + dev_no + "s").html("<img id='r" + room_no + "hd"+dev_no+"sd' src=" + arrow_up + " width='20' height='30' />").css("width","30%");
-    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
-        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
-    });
-    if ( window.innerWidth < 600 ) {
-        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
-        if ( dev_no > 4 ) {
-            $("#r" + room_no + "s").css("height","100px");
-            $("#r" + room_no + "h").css("height","100px");
-            $("#r" + room_no + "hd" + dev_no).css("top","60px");
-        }
-    }
-}
-
-function add_device_measure_dia_day(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit, database, sensorno, graphcolor, legend) {
-    device_enable_details(room_no);
-    $("#r" + room_no + "hd" + dev_no + "s").click(function() {
-        if ($("#r" + room_no + "e").is(':hidden')) {
-            $("#r" + room_no + "e").show();
-            $("#r" + room_no + "e").html("<img src='/content/diagramm.php?database="+database+"&sensor1="+sensorno+"&sizex="+w+"&sizey=370&range=1m&graph=bar&sensor1legend="+legend+"'>");
-            document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_down;
-            $("#r" + room_no + "x").html("r" + room_no + "hd"+ dev_no + "sd");
-        } else {
-            var akt_element = $("#r" + room_no + "x").html();
-            if (akt_element.localeCompare("r" + room_no + "hd"+ dev_no + "sd") != 0 ) {
-              alert("Grafik geöffnet, bitte schliessen");
-            } else {
-              $("#r" + room_no + "e").hide();
-              document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_up;
-            }
-        }
-    });
-    $("#r" + room_no + "hd" + dev_no).css("display","inline");
-    $("#r" + room_no + "hd" + dev_no).css("cursor: pointer");
-    $("#r" + room_no + "hd" + dev_no + "l").html(dev_name).css("width","70%");
-    $("#r" + room_no + "hd" + dev_no + "v").css("width","70%");
-    $("#r" + room_no + "hd" + dev_no + "s").html("<img id='r" + room_no + "hd"+dev_no+"sd' src=" + arrow_up + " width='20' height='30' />").css("width","30%");
-    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
-        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
-    });
-    if ( window.innerWidth < 600 ) {
-        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
-        if ( dev_no > 4 ) {
-            $("#r" + room_no + "s").css("height","100px");
-            $("#r" + room_no + "h").css("height","100px");
-            $("#r" + room_no + "hd" + dev_no).css("top","60px");
-        }
-    }
-}
-
-function add_device_measure_dia_year(room_no, dev_no, dev_name, fhem_dev, fhem_reading, unit, database, sensorno, graphcolor, legend) {
-    device_enable_details(room_no);
-    $("#r" + room_no + "hd" + dev_no + "s").click(function() {
-        if ($("#r" + room_no + "e").is(':hidden')) {
-            $("#r" + room_no + "e").show();
-            $("#r" + room_no + "e").html("<img src='/content/diagramm.php?database="+database+"&sensor1="+sensorno+"&sizex="+w+"&sizey=370&range=1y&graph=bar&sensor1legend="+legend+"'>");
-            document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_down;
-            $("#r" + room_no + "x").html("r" + room_no + "hd"+ dev_no + "sd");
-        } else {
-            var akt_element = $("#r" + room_no + "x").html();
-            if (akt_element.localeCompare("r" + room_no + "hd"+ dev_no + "sd") != 0 ) {
-              alert("Grafik geöffnet, bitte schliessen");
-            } else {
-              $("#r" + room_no + "e").hide();
-              document.getElementById("r" + room_no + "hd"+ dev_no + "sd").src = arrow_up;
-            }
-        }
-    });
-    $("#r" + room_no + "hd" + dev_no).css("display","inline");
-    $("#r" + room_no + "hd" + dev_no).css("cursor: pointer");
-    $("#r" + room_no + "hd" + dev_no + "l").html(dev_name).css("width","70%");
-    $("#r" + room_no + "hd" + dev_no + "v").css("width","70%");
-    $("#r" + room_no + "hd" + dev_no + "s").html("<img id='r" + room_no + "hd"+dev_no+"sd' src=" + arrow_up + " width='20' height='30' />").css("width","30%");
-    if (dev_name.length > 7) $("#r" + room_no + "hd" + dev_no + "l").css("font-size","xx-small");
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: fhem_reading }, function(data) {
-        $("#r"+room_no+"hd"+dev_no+"v").append(parseInt(data*10)/10+" "+unit);
-    });
-    if ( window.innerWidth < 600 ) {
-        $("#r" + room_no + "hd" + dev_no).css("border-bottom","1px solid #a80329");
-        if ( dev_no > 4 ) {
-            $("#r" + room_no + "s").css("height","100px");
-            $("#r" + room_no + "h").css("height","100px");
-            $("#r" + room_no + "hd" + dev_no).css("top","60px");
-        }
-    }
-}
-
-function add_sw_field( room_no ) {
+/*******************************************************************************
+ * Im Raum werden folgende Felder angeegt:
+ * r<X>     => Der Raum
+ * r<X>h    => Eine Kofzeile zur Beschriftung
+ * r<X>x    => Ein verstecktes Feld, hier wird eingetragen ob (>1) und welches device ein Diagramm geöffnet hat
+ * r<X>a    => Ein Feld als Wrapper für Diagramm bzw. Schalter oder Regler
+ * r<X>a1   => Ein Feld als Zeitdiagramm
+ * r<X>d    => Ein Wrapper für die Devices
+ * r<X>d<Y> => 10 Platzhalter für Devices
+ *******************************************************************************/
+function add_room( room_no, room_name ) {
     $("#haus").append("<div class='room' id='r" + room_no + "'></div>");
-}
-
-function add_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev) {
-    $("#r"+room_no).append("<div class='dev_sx' id='r"+room_no+"d"+sw_no+"'></div>");
-    $("#r"+room_no+"d"+sw_no).append("<div class='dev_sx_s' id='r"+room_no+"d"+sw_no+"s'></div>")
-                             .append("<div class='dev_sx_t' id='r"+room_no+"d"+sw_no+"t'></div>");
-    $("#r"+room_no+"d"+sw_no+"t").append("<div class='dev_sx_touch' id='r"+room_no+"d"+sw_no+"t1' style='left: 0px;'></div>")
-                                 .append("<div class='dev_sx_touch' id='r"+room_no+"d"+sw_no+"t2' style='left: 66px;'></div>")
-                                 .append("<div class='dev_sx_touch' id='r"+room_no+"d"+sw_no+"t3' style='left: 132px;'></div>");
-    $("#r"+room_no+"d"+sw_no+"t1").click(function(){
-        // Set device off
-        $.get(basedir+'setfhem.php',{geraet: fhem_hs_dev, wert: "0" }, function(data) {
-            //alert(data);
-        });
-        //alert("Feld links");
-        set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev);
-    });
-    $("#r"+room_no+"d"+sw_no+"t2").click(function(){
-        // Set device on
-        $.get(basedir+'setfhem.php',{geraet: fhem_hs_dev, wert: "1" }, function(data) {
-            //alert(data);
-        });
-        //alert("Feld mitte");
-        set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev);
-    });
-    $("#r"+room_no+"d"+sw_no+"t3").click(function(){
-        // Set device auto
-        $.get(basedir+'setfhem.php',{geraet: fhem_hs_dev, wert: "2" }, function(data) {
-            //alert(data);
-        });
-        //alert("Feld rechts");
-        set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev);
-    });
-    $("#r"+room_no+"d"+sw_no+"s").append("<div class='dev_sx_head' id='r"+room_no+"d"+sw_no+"s1'>" + sw_name + "</div>");
-    $("#r"+room_no+"d"+sw_no+"s").append("<div class='dev_sx_sw'   id='r"+room_no+"d"+sw_no+"s2'><img id='r"+room_no+"d"+sw_no+"s2i' src='/content/schalter.php?st=0&sw=0'></div>");
-    set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev);
+    $("#r" + room_no).append("<div class='room_head' id='r" + room_no + "h'></div>"+
+                              "<div class='room_dev' id='r" + room_no + "d'></div>"+
+                              "<div class='room_dia' id='r" + room_no + "a'></div>"+
+                              "<div id='r" + room_no + "x'>0</div>");
+    $("#r" + room_no + "h").html(room_name);
+    $("#r" + room_no + "a").hide();
+    $("#r" + room_no + "x").hide();
+    $("#r"+room_no+"d").append("<div class='dev dev_1' id='r" + room_no + "d1'></div>").append("<div class='dev dev_2' id='r" + room_no + "d2'></div>"+
+                               "<div class='dev dev_3' id='r" + room_no + "d3'></div>").append("<div class='dev dev_4' id='r" + room_no + "d4'></div>"+
+                               "<div class='dev dev_5' id='r" + room_no + "d5'></div>").append("<div class='dev dev_6' id='r" + room_no + "d6'></div>"+
+                               "<div class='dev dev_7' id='r" + room_no + "d7'></div>").append("<div class='dev dev_8' id='r" + room_no + "d8'></div>");
+    $("#r"+room_no+"d1").hide();
+    $("#r"+room_no+"d2").hide();
+    $("#r"+room_no+"d3").hide();
+    $("#r"+room_no+"d4").hide();
+    $("#r"+room_no+"d5").hide();
+    $("#r"+room_no+"d6").hide();
+    $("#r"+room_no+"d7").hide();
+    $("#r"+room_no+"d8").hide();
     if ( window.innerWidth < 600 ) {
-
+//       $("#r" + room_no).css("height","80px;");
+        $("#r" + room_no + "d1").css("width",devwidth).css("left","0%");
+        $("#r" + room_no + "d1l").css("font-size","small");
+        $("#r" + room_no + "d1v").css("font-size","x-small");
+        $("#r" + room_no + "d2").css("width",devwidth).css("left","25%");
+        $("#r" + room_no + "d2l").css("font-size","small");
+        $("#r" + room_no + "d2v").css("font-size","x-small");
+        $("#r" + room_no + "d3").css("width",devwidth).css("left","50%");
+        $("#r" + room_no + "d3l").css("font-size","small");
+        $("#r" + room_no + "d3v").css("font-size","x-small");
+        $("#r" + room_no + "d4").css("width",devwidth).css("left","75%");
+        $("#r" + room_no + "d4l").css("font-size","small");
+        $("#r" + room_no + "d4v").css("font-size","x-small");
+        $("#r" + room_no + "d5").css("width",devwidth).css("left","0%");
+        $("#r" + room_no + "d5l").css("font-size","small");
+        $("#r" + room_no + "d5v").css("font-size","x-small");
+        $("#r" + room_no + "d6").css("width",devwidth).css("left","25%");
+        $("#r" + room_no + "d6l").css("font-size","small");
+        $("#r" + room_no + "d6v").css("font-size","x-small");
+        $("#r" + room_no + "d7").css("width",devwidth).css("left","50%");
+        $("#r" + room_no + "d7l").css("font-size","small");
+        $("#r" + room_no + "d7v").css("font-size","x-small");
+        $("#r" + room_no + "d8").css("width",devwidth).css("left","75%");
+        $("#r" + room_no + "d8l").css("font-size","small");
+        $("#r" + room_no + "d8v").css("font-size","x-small");
     }
 }
 
-function set_switch(room_no, sw_no, sw_name, fhem_hs_dev, fhem_dev) {
-    var sw_st = 0;
-    var sw_sw = 0;
-    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
-//        alert(data);
-        if ( data == "on" || data == "set_on" ) { sw_st = 1; } else { sw_st = 0; }
-        $.get(basedir+'getfhem.php',{geraet: fhem_hs_dev, eigenschaft: "state" }, function(data) {
-//            alert(data);
-            if ( data == "auto" ) sw_sw = "A";
-            if ( data == "ein" ) sw_sw = "1";
-            if ( data == "aus" ) sw_sw = "0";
-//            alert("ST:" + sw_st + " SW:" + sw_sw);
-            $("#r"+room_no+"d"+sw_no+"s2i").attr("src", "/content/schalter.php?st="+sw_st+"&sw="+sw_sw);
+/*****************************************************************
+ * Aufruf ist teilweise abhängig von dem Typ (dev_typ):
+ * Einheitlicher Teil:
+ * room_no = Raum Nummer; dev_no = Geräte Nummer; dev_typ = Geräte Typ; dev_name = Beschriftung; fhem_dev = FHEM Device für den aktuellen Wert
+ *
+ * Die weiteren Parameter (p1 bis p6) sind abhängig vom Geräte Typ.
+ *
+ * Geräte Typ Shalter     (SW): p1 = Hauptschalterdevice p2 ... p6 = ""
+ * Heizungsthermostat     (HT): p1 ... p6 = ""
+ * Generisches Diagramm   (DG): p1 = Einheit; p2 = Datenbank; p3 = Sensorno; p4 = Zeitspanne (1d, 1m, 3m, 1y); p5 = Legende; p6 = Diagrammtyp
+ * Solar                  (SO): p1 = Datenbank; p2 = Sensor1; p3 = Sensor2; p4 = Sensor3; p5 ... p6 = ""
+ * Ohne Pulldown          (--): p1 = Einheit; p2 ... p6 = ""
+ ****************************************************************/
+function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4, p5, p6) {
+    var value = " ";
+    $("#r" + room_no + "d" + dev_no).append("<div class='dev_l' id='r" + room_no + "d" + dev_no + "l'>" + dev_name + "</div>")
+                                    .append("<div class='dev_v' id='r" + room_no + "d" + dev_no + "v'></div>")
+                                    .append("<div class='dev_p' id='r" + room_no + "d" + dev_no + "p'></div>")
+                                    .show();
+    $("#r" + room_no + "d" + dev_no + "p").append("<img id='r"+ room_no + "d" + dev_no + "ba' src='"+arrow_up+"' width='100%' height='100%' />");
+    if (dev_name.length > 7) $("#r" + room_no + "d" + dev_no + "l").css("font-size","small");
+    if (dev_name.length > 10) $("#r" + room_no + "d" + dev_no + "l").css("font-size","x-small");
+    if (dev_name.length > 14) $("#r" + room_no + "d" + dev_no + "l").css("font-size","xx-small");
+//-----Anzeige in Devicefeld-------
+//######### HT ############
+    if (dev_typ.localeCompare("HT") == 0) {
+      $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "mode" }, function(data) {
+        var mode;
+        if (data.localeCompare("manual") == 0) {
+          mode = "man.";
+        } else {
+          mode = "auto";
+        }
+        value = "(" + mode + ") ";
+        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature" }, function(data) {
+          value = value + parseInt(data*10)/10+" &deg;C";
+          show_val(room_no, dev_no, value, 7, 12, 16);
         });
+      });
+    }
+//######### SW ############
+    if (dev_typ.localeCompare("SW") == 0) {
+      $.get(basedir+'getfhem.php',{geraet: p1, eigenschaft: "state" }, function(data) {
+        if (data == 0) { value = "(aus) "; } else { value = "("+data+") "; }
+        if (data == 1) { value = "(ein) "; }
+        if (data == 2) { value = "(auto) "; }
+        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+          if (data == 0) { value = value + "aus"; }
+          if (data == 1) { value = value + "ein"; }
+          show_val(room_no, dev_no, value, 7, 15, 20);
+        });
+      });
+    }
+//######## DG Diagramm generisch ###########
+    if (dev_typ.localeCompare("DG") == 0) {
+      $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+        const temp = Math.round(data * 10) / 10;
+        value = temp + " " + p1;
+        show_val(room_no, dev_no, value, 11, 15, 22);
+      });
+    }
+//######## -- Kein Diagramm ###########
+    if (dev_typ.localeCompare("--") == 0) {
+      $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+        const temp = Math.round(data * 10) / 10;
+        value = temp + " " + p1;
+        show_val(room_no, dev_no, value, 12, 15, 20);
+      });
+      $("#r"+room_no+"d"+dev_no+"p").hide();
+      $("#r"+room_no+"d"+dev_no+"l").css("width","100%");
+      $("#r"+room_no+"d"+dev_no+"v").css("width","100%");
+      $("#r"+room_no+"d"+dev_no).css("border-right","1px solid #a80329");
+      if (window.innerWidth > 800 && dev_name.length < 15) $("#r" + room_no + "d" + dev_no + "l").css("font-size","medium");
+    }
+//####### SOL Spezialdiagramm für Balkonkraftwerk ##########
+    if (dev_typ.localeCompare("SO") == 0) {
+      $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+        const temp = Math.round(data * 10) / 10;
+        value = temp + " W";
+        show_val(room_no, dev_no, value, 7, 12, 16);
+      });
+    }
+//####### ENDE ############
+//-----Ende Anzeige in Devicefeld-------
+    $("#r" + room_no + "d" + dev_no + "p").click(function() {
+        if ( ! ($("#r" + room_no + "x").html() == 0 || $("#r" + room_no + "x").html() == dev_no) ) {
+            alert("Grafik geöffnet, bitte schliessen");
+        } else {
+            if ($("#r" + room_no + "a").is(':hidden')) {
+                $("#r" + room_no + "x").html(dev_no);
+                $("#r" + room_no + "a").show();
+//-----Anzeige im externen Detailfeld-------
+//######## DG Liniendiagramm generisch ###########
+                if (dev_typ.localeCompare("DG") == 0) {
+                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dia'></div>");
+                    $("#r" + room_no + "dia").html("<img src='/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+p4+"&graph="+p6+"&sensor1legend="+p5+"'>");
+                    $("#r" + room_no + "a1").show();
+                }
+//####### Heizung #############
+                if (dev_typ.localeCompare("HT") == 0) {
+                    $("#r" + room_no + "a").html("<div id='r"+room_no+"ht'></div>");
+                    //Ein Label und das Reglerfeld hinzufügen
+                    $("#r"+room_no+"ht").append("<div class='dev_ht_label' id='r"+room_no+"htl'>"+dev_name+"</div>")
+                                        .append("<div class='dev_ht' id='r"+room_no+"hts'></div>");
+                    //Das Reglerfeld hat 3 Divs: Regler; Auto/Man. Umschalter; Bestätigungsbutton
+                    $("#r"+room_no+"hts").append("<div class='dev_ht_temp' id='r"+room_no+"hts1'></div>")
+                                         .append("<div class='dev_ht_am' id='r"+room_no+"hts2'></div>")
+                                         .append("<div class='dev_ht_ok' id='r"+room_no+"hts3'></div>");
+                    //Der Regler für die Temperatur
+                    $("#r"+room_no+"hts1").append("<input id='r"+room_no+"hts1s' min='5' max='22' step='0.5' data-highlight='true' data-role='slider' />");
+                    $("#r"+room_no+"hts1s").slider();
+                    //Der Umschalter auto/man.
+                    $("#r"+room_no+"hts2").append("<select name='room"+room_no+"hts2s' id='r"+room_no+"hts2s' data-role='slider'><option value='auto'>Auto</option><option value='manual'>Man.</option></select>");
+                    $("#r"+room_no+"hts2s").slider();
+                    //Der OK Schalter
+                    $("#r"+room_no+"hts3").append("<input type='button' id='r"+room_no+"hts3s' value='Wert setzen' />");
+                    $("#r"+room_no+"hts3s").buttonMarkup({ theme: "a" });
+                    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature" }, function(data) {
+                        $("#r"+room_no+"hts1s").val(data).slider("refresh");
+                    });
+                    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "mode" }, function(data) {
+                        $("#r"+room_no+"hts2s").val(data).slider("refresh");
+                    });
+                    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "valveposition" }, function(data) {
+                        $("#r"+room_no+"htl").append("  Ventil: "+data);
+                    });
+                    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "temperature" }, function(data) {
+                        $("#r"+room_no+"htl").append("   Temperatur: "+data);
+                    });
+                    $("#r"+room_no+"hts3s").click(function(){
+                        mytemp=$("#r"+room_no+"hts1s").val();
+                        mymode=$("#r"+room_no+"hts2s").val();
+                        if ( mymode == "auto" ) {
+                            $.get(basedir+'setfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature", wert: mymode, wert1: mytemp }, function(data) {
+                                alert(data);
+                            });
+                        } else {
+                            $.get(basedir+'setfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature", wert: mytemp }, function(data) {
+                                alert(data);
+                            });
+                        }
+                    });
+                }
+//####### Schalter #############
+                if (dev_typ.localeCompare("SW") == 0) {
+                    $("#r" + room_no + "a").html("<div class='dev_sw' id='r"+room_no+"sw'></div>");
+                    //Ein Label und das Schalterfeld hinzufügen
+                    $("#r"+room_no+"sw").append("<div class='dev_sw_label' id='r"+room_no+"swl'>"+dev_name+"</div>")
+                                        .append("<div class='dev_sw_switch' id='r"+room_no+"sws'></div>");
+                    $("#r" + room_no + "sws").append("<div id='r" + room_no + "sws0' class='dev_sw_box dev_sw_box0'></div>")
+                                             .append("<div id='r" + room_no + "sws1' class='dev_sw_box dev_sw_box1'></div>")
+                                             .append("<div id='r" + room_no + "sws2' class='dev_sw_box dev_sw_box2'></div>")
+                                             .append("<div id='r" + room_no + "sws3' class='dev_sw_box dev_sw_box3'></div>");
+                    $("#r" + room_no + "sws0").append("<button type='button' id='r" + room_no + "sws0b' class='stateicon'>X</button>");
+                    $("#r" + room_no + "sws1").append("<button type='button' id='r" + room_no + "sws1b' class='button_akt'>Aus</button>");
+                    $("#r" + room_no + "sws2").append("<button type='button' id='r" + room_no + "sws2b' class='button_akt'>Auto</button>");
+                    $("#r" + room_no + "sws3").append("<button type='button' id='r" + room_no + "sws3b' class='button_akt'>Ein</button>");
+                    //Abfrage des Hauptschalters und Einstellung der Schalter
+                    device_switch_get_state(room_no, dev_no, p1, fhem_dev);
+                    //Click Funktionen
+                    $("#r" + room_no + "sws1b").click(function(){
+                        device_switch_click_func(room_no, dev_no, p1, fhem_dev, "aus");
+                    });
+                    $("#r" + room_no + "sws2b").click(function(){
+                        device_switch_click_func(room_no, dev_no, p1, fhem_dev, "auto");
+                    });
+                    $("#r" + room_no + "sws3b").click(function(){
+                        device_switch_click_func(room_no, dev_no, p1, fhem_dev, "ein");
+                    });
+                }
+//####### SOL Spezialdiagramm für Balkonkraftwerk ##########
+                if (dev_typ.localeCompare("SO") == 0) {
+                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dia'></div>");
+                    $("#r" + room_no + "dia").html("<img src='/content/diagramm.php?database="+p1+"&sensor1="+p2+"&sensor1color=F3E03B&sensor1legend=PV_Ges Watt&sensor1a="+p3+"&sensor1acolor=D3E03B&sensor1alegend=PV2&sensor1b="+p4+"&sensor1bcolor=A3E03B&sensor1blegend=PV3&sizex="+w+"&sizey=370'>");
+                    $("#r" + room_no + "a1").show();
+                }
+//####### ENDE ############
+//-----Ende Anzeige in Detailfeld-------
+                $("#r" + room_no + "d" + dev_no + "ba").attr("src", arrow_down);
+            } else {
+                $("#r" + room_no + "x").html(0);
+                $("#r" + room_no + "a").hide();
+                $("#r" + room_no + "a1").hide();
+                $("#r" + room_no + "d" + dev_no + "ba").attr("src", arrow_up);
+            }
+        }
     });
+    if ( window.innerWidth < 600 ) {
+        if ( dev_no < 5 ) {
+            $("#r" + room_no + "d" + dev_no).css("border-bottom","1px solid #a80329");
+        } else {
+            $("#r" + room_no + "d").css("height","80px");
+            $("#r" + room_no + "d" + dev_no).css("top","40px").css("border-bottom","1px solid #a80329").css("border-top","1px solid #a80329");
+        }
+    }
 }
