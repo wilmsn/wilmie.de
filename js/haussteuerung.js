@@ -6,11 +6,11 @@ var w = screen.width;
 var devwidth = "25%"
 
 function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
-    var value;
+    var result;
     $.get(basedir+'getfhem.php',{geraet: fhem_HS_dev, eigenschaft: "state" }, function(data) {
-        if (data == 0) { value = "(aus) "; } else { value = "("+data+") "; }
-        if (data == 1) { value = "(ein) "; }
-        if (data == 2) { value = "(auto) "; }
+        if (data == 0) { result = "(aus) "; } else { result = "("+data+") "; }
+        if (data == 1) { result = "(ein) "; }
+        if (data == 2) { result = "(auto) "; }
         switch (data) {
             case "aus":
                 $("#r" + room_no + "sws1b").css("background-color", "#a80329");
@@ -28,23 +28,24 @@ function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
                 $("#r" + room_no + "sws3b").css("background-color", "#a80329");
             break;
         }
-    });
-	$.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
-        if (data == 0) { value = value + "aus"; }
-        if (data == 1) { value = value + "ein"; }
-        $("#r"+room_no+"d"+dev_no+"v").html(value);
-	    switch(data) {
-            case "1":
-            case "on":
-                $("#r"+room_no+"sws0b").css("background-color", "yellow"); //.css("color","black");
-            break;
-            case "0":
-            case "off":
-                $("#r"+room_no+"sws0b").css("background-color", "black").css("color","white");
-            break;
-            default:
-                $("#r"+room_no+"sws0b").append("-"+data);
-        }
+        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+            if (data == 0) { result += "aus"; }
+            if (data == 1) { result += "ein"; }
+            $("#r"+room_no+"d"+dev_no+"v").html(result);
+            switch(data) {
+                case "1":
+                case "on":
+                    $("#r"+room_no+"sws0b").css("background-color", "yellow"); //.css("color","black");
+                break;
+                case "0":
+                case "off":
+                    $("#r"+room_no+"sws0b").css("background-color", "black").css("color","white");
+                break;
+                default:
+                    $("#r"+room_no+"sws0b").append("-"+data);
+            }
+            show_sw_val(fhem_dev, fhem_HS_dev, room_no, dev_no );
+        });
 	});
 }
 
@@ -63,11 +64,49 @@ function haus(titel) {
   $("#haus").html("<div class='haus_head'>" + titel + "</div>");
 }
 
-function show_val(room_no, dev_no, value, lev1, lev2, lev3) {
-    $("#r"+room_no+"d"+dev_no+"v").html(value);
-    if (value.length > lev1) $("#r" + room_no + "d" + dev_no + "v").css("font-size","small");
-    if (value.length > lev2) $("#r" + room_no + "d" + dev_no + "v").css("font-size","x-small");
-    if (value.length > lev3) $("#r" + room_no + "d" + dev_no + "v").css("font-size","xx-small");
+function show_val(room_no, dev_no, result, lev1, lev2, lev3) {
+    $("#r"+room_no+"d"+dev_no+"v").html(result);
+    if ( window.innerWidth < 600 ) {
+        if (result.length > lev1 - 5) $("#r" + room_no + "d" + dev_no + "v").css("font-size","small");
+        if (result.length > lev2 - 5) $("#r" + room_no + "d" + dev_no + "v").css("font-size","x-small");
+        if (result.length > lev3 - 5) $("#r" + room_no + "d" + dev_no + "v").css("font-size","xx-small");
+    } else {
+        if (result.length > lev1) $("#r" + room_no + "d" + dev_no + "v").css("font-size","small");
+        if (result.length > lev2) $("#r" + room_no + "d" + dev_no + "v").css("font-size","x-small");
+        if (result.length > lev3) $("#r" + room_no + "d" + dev_no + "v").css("font-size","xx-small");
+    }
+}
+
+function show_ht_val(fhem_dev, room_no, dev_no ) {
+    var result;
+    var mode;
+    $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "mode" }, function(data) {
+        if (data.localeCompare("manual") == 0) {
+            mode = "man.";
+        } else {
+            mode = "auto";
+        }
+        result = "(" + mode + ") ";
+        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature" }, function(data) {
+            result += parseInt(data*10)/10+" &deg;C";
+            show_val(room_no, dev_no, result, 17, 22, 27);
+        });
+      });
+
+}
+
+function show_sw_val(fhem_dev, fhem_HS_dev, room_no, dev_no ) {
+    var result;
+    $.get(basedir+'getfhem.php',{geraet: fhem_HS_dev, eigenschaft: "state" }, function(data) {
+        if (data == 0) { result = "(aus) "; } else { result = "("+data+") "; }
+        if (data == 1) { result = "(ein) "; }
+        if (data == 2) { result = "(auto) "; }
+        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+            if (data == 0) { result += "aus"; }
+            if (data == 1) { result += "ein"; }
+            show_val(room_no, dev_no, result, 15, 20, 25);
+        });
+    });
 }
 
 /*******************************************************************************
@@ -137,66 +176,54 @@ function add_room( room_no, room_name ) {
  *
  * Die weiteren Parameter (p1 bis p6) sind abhängig vom Geräte Typ.
  *
- * Geräte Typ Shalter     (SW): p1 = Hauptschalterdevice p2 ... p6 = ""
- * Heizungsthermostat     (HT): p1 ... p6 = ""
- * Generisches Diagramm   (DG): p1 = Einheit; p2 = Datenbank; p3 = Sensorno; p4 = Zeitspanne (1d, 1m, 3m, 1y); p5 = Legende; p6 = Diagrammtyp
- * Solar                  (SO): p1 = Datenbank; p2 = Sensor1; p3 = Sensor2; p4 = Sensor3; p5 ... p6 = ""
- * Ohne Pulldown          (--): p1 = Einheit; p2 ... p6 = ""
+ * Geräte Typ Shalter     (SW): p1 = Hauptschalterdevice p2 ... p7 = ""
+ * Heizungsthermostat     (HT): p1 ... p7 = ""
+ * Generisches Diagramm   (DG): p1 = Einheit; p2 = Datenbank; p3 = Sensorno; p4 = Zeitspanne (1d, 1m, 3m, 1y); p5 = Legende; p6 = Diagrammtyp; p7 = Nachkommastellen
+ * Solar                  (SO): p1 = Datenbank; p2 = Sensor1; p3 = Sensor2; p4 = Sensor3; p5 ... p7 = ""
+ * Ohne Pulldown          (--): p1 = Einheit; p2 ... p7 = ""
  ****************************************************************/
-function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4, p5, p6) {
-    var value = " ";
+function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4, p5, p6, p7) {
+    var result = " ";
+    var value  = 0;
     $("#r" + room_no + "d" + dev_no).append("<div class='dev_l' id='r" + room_no + "d" + dev_no + "l'>" + dev_name + "</div>")
                                     .append("<div class='dev_v' id='r" + room_no + "d" + dev_no + "v'></div>")
                                     .append("<div class='dev_p' id='r" + room_no + "d" + dev_no + "p'></div>")
                                     .show();
     $("#r" + room_no + "d" + dev_no + "p").append("<img id='r"+ room_no + "d" + dev_no + "ba' src='"+arrow_up+"' width='100%' height='100%' />");
-    if (dev_name.length > 7) $("#r" + room_no + "d" + dev_no + "l").css("font-size","small");
-    if (dev_name.length > 10) $("#r" + room_no + "d" + dev_no + "l").css("font-size","x-small");
-    if (dev_name.length > 14) $("#r" + room_no + "d" + dev_no + "l").css("font-size","xx-small");
+    if ( window.innerWidth < 600 ) {
+        if (dev_name.length > 10) $("#r" + room_no + "d" + dev_no + "l").css("font-size","small");
+        if (dev_name.length > 15) $("#r" + room_no + "d" + dev_no + "l").css("font-size","x-small");
+        if (dev_name.length > 20) $("#r" + room_no + "d" + dev_no + "l").css("font-size","xx-small");
+    } else {
+        if (dev_name.length > 15) $("#r" + room_no + "d" + dev_no + "l").css("font-size","small");
+        if (dev_name.length > 20) $("#r" + room_no + "d" + dev_no + "l").css("font-size","x-small");
+        if (dev_name.length > 25) $("#r" + room_no + "d" + dev_no + "l").css("font-size","xx-small");
+    }
 //-----Anzeige in Devicefeld-------
 //######### HT ############
     if (dev_typ.localeCompare("HT") == 0) {
-      $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "mode" }, function(data) {
-        var mode;
-        if (data.localeCompare("manual") == 0) {
-          mode = "man.";
-        } else {
-          mode = "auto";
-        }
-        value = "(" + mode + ") ";
-        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature" }, function(data) {
-          value = value + parseInt(data*10)/10+" &deg;C";
-          show_val(room_no, dev_no, value, 7, 12, 16);
-        });
-      });
+        show_ht_val(fhem_dev, room_no, dev_no );
     }
 //######### SW ############
     if (dev_typ.localeCompare("SW") == 0) {
-      $.get(basedir+'getfhem.php',{geraet: p1, eigenschaft: "state" }, function(data) {
-        if (data == 0) { value = "(aus) "; } else { value = "("+data+") "; }
-        if (data == 1) { value = "(ein) "; }
-        if (data == 2) { value = "(auto) "; }
-        $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
-          if (data == 0) { value = value + "aus"; }
-          if (data == 1) { value = value + "ein"; }
-          show_val(room_no, dev_no, value, 7, 15, 20);
-        });
-      });
+        show_sw_val(fhem_dev, p1, room_no, dev_no );
     }
 //######## DG Diagramm generisch ###########
     if (dev_typ.localeCompare("DG") == 0) {
       $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
-        const temp = Math.round(data * 10) / 10;
-        value = temp + " " + p1;
-        show_val(room_no, dev_no, value, 11, 15, 22);
+        if ( p7 == 0 ) value = Math.round(data);
+        if ( p7 == 1 ) value = Math.round(data * 10) / 10;
+        if ( p7 == 2 ) value = Math.round(data * 100) / 100;
+        result = value + " " + p1;
+        show_val(room_no, dev_no, result, 15, 20, 25);
       });
     }
 //######## -- Kein Diagramm ###########
     if (dev_typ.localeCompare("--") == 0) {
       $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
         const temp = Math.round(data * 10) / 10;
-        value = temp + " " + p1;
-        show_val(room_no, dev_no, value, 12, 15, 20);
+        result = temp + " " + p1;
+        show_val(room_no, dev_no, result, 15, 20, 25);
       });
       $("#r"+room_no+"d"+dev_no+"p").hide();
       $("#r"+room_no+"d"+dev_no+"l").css("width","100%");
@@ -208,8 +235,8 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
     if (dev_typ.localeCompare("SO") == 0) {
       $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
         const temp = Math.round(data * 10) / 10;
-        value = temp + " W";
-        show_val(room_no, dev_no, value, 7, 12, 16);
+        result = temp + " W";
+        show_val(room_no, dev_no, result, 15, 20, 25);
       });
     }
 //####### ENDE ############
@@ -242,7 +269,7 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
                     $("#r"+room_no+"hts1").append("<input id='r"+room_no+"hts1s' min='5' max='22' step='0.5' data-highlight='true' data-role='slider' />");
                     $("#r"+room_no+"hts1s").slider();
                     //Der Umschalter auto/man.
-                    $("#r"+room_no+"hts2").append("<select name='room"+room_no+"hts2s' id='r"+room_no+"hts2s' data-role='slider'><option value='auto'>Auto</option><option value='manual'>Man.</option></select>");
+                    $("#r"+room_no+"hts2").append("<select name='r"+room_no+"hts2s' id='r"+room_no+"hts2s' data-role='slider'><option value='auto'>Auto</option><option value='manual'>Man.</option></select>");
                     $("#r"+room_no+"hts2s").slider();
                     //Der OK Schalter
                     $("#r"+room_no+"hts3").append("<input type='button' id='r"+room_no+"hts3s' value='Wert setzen' />");
@@ -265,13 +292,21 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
                         if ( mymode == "auto" ) {
                             $.get(basedir+'setfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature", wert: mymode, wert1: mytemp }, function(data) {
                                 alert(data);
+                                show_ht_val(fhem_dev, room_no, dev_no );
                             });
                         } else {
                             $.get(basedir+'setfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature", wert: mytemp }, function(data) {
                                 alert(data);
+                                show_ht_val(fhem_dev, room_no, dev_no );
                             });
                         }
                     });
+                    if ( window.innerWidth < 600 ) {
+                        $("#r"+room_no+"hts").css("height","100px");
+                        $("#r"+room_no+"hts1").css("width","100%");
+                        $("#r"+room_no+"hts2").css("top","50px").css("left","10%");
+                        $("#r"+room_no+"hts3").css("top","40px").css("left","60%");
+                    }
                 }
 //####### Schalter #############
                 if (dev_typ.localeCompare("SW") == 0) {
