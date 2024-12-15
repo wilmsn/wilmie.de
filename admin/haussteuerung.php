@@ -36,7 +36,7 @@ $(document).ready(function() {
   add_device(4, 6, "DG", "Temp",            "Wohnzimmer_Temp",  "&deg;C", "datahub", "24", "1d", "Temperatur", "line", "1");
   add_room(5, "Kueche");
   add_device(5, 1, "HT", "Hzg_gr",          "HT_Kueche1",   "", "", "", "", "", "", "");
-  add_device(5, 2, "HT", "Hand_Hzg",        "HT_Kueche2",   "", "", "", "", "", "", "");
+  add_device(5, 2, "HT", "Hzg_Handtuch",    "HT_Kueche2",   "", "", "", "", "", "", "");
   add_device(5, 3, "DG", "Temp",            "Kueche_Temp",  "&deg;C", "rf24hub", "131", "1d", "Temperatur", "line", "1");
   add_device(5, 4, "DG", "Batt",            "N103_Ubatt",   "Volt",   "rf24hub", "140", "3m", "Spannung",   "line", "2");
   add_room(6, "Bastelzimmer");
