@@ -1,0 +1,207 @@
+.haus {
+    position: relative;
+    width: calc(100% - 6px);
+    border: 3px solid #a80329;
+    text-align: center;
+}
+
+.haus_head {
+    position: relative;
+    text-align: center;
+}
+
+.room {
+    position: relative;
+    text-align: center;
+    border-top: 1px solid #a80329;
+    background-color: #666666;
+    color: white;
+}
+
+.room_head {
+    position: relative;
+    text-align: center;
+    border-bottom: 1px solid rgb(168, 3, 41);
+}
+
+.room_dev {
+    position: relative;
+    text-align: center;
+    height: 40px;
+}
+
+.room_dia {
+    position: relative;
+    text-align: center;
+    background-color: white;
+    color: black;
+}
+
+.dev {
+  position: absolute;
+  width: 12.5%;
+  height: 40px;
+  text-align: center;
+}
+
+.dev_1 {
+  left: 0%;
+}
+
+.dev_2 {
+  left: 12.5%;
+}
+
+.dev_3 {
+  left: 25%;
+}
+
+.dev_4 {
+  left: 37.5%;
+}
+
+.dev_5 {
+  left: 50%;
+}
+
+.dev_6 {
+  left: 62.5%;
+}
+
+.dev_7 {
+  left: 75%;
+}
+
+.dev_8 {
+  left: 87.5%;
+}
+
+.dev_p {
+  position: absolute;
+  border-left: 1px solid rgb(168, 3, 41);
+  border-right: 1px solid rgb(168, 3, 41);
+  left: 85%;
+  height: 100%;
+}
+
+.dev_l {
+  position: absolute;
+/*  width: 120px;*/
+  width: 85%;
+/*  border-top: 1px solid rgb(168, 3, 41);*/
+}
+
+.dev_v {
+  position: absolute;
+  top: 20px;
+  width: 85%;
+  border-top: 1px solid rgb(168, 3, 41);
+}
+
+.dev_ht {
+    background-color: #aaaaaa;
+    position: relative;
+    height: 50px;
+    width: 100%;
+}
+
+.dev_ht_label {
+    background-color: #aaaaaa;
+}
+
+.dev_ht_temp {
+    position: absolute;
+    background-color: #cccccc;
+    top: 0px;
+    left: 0%;
+    width: 70%;
+}
+.dev_ht_ok {
+    position: absolute;
+    top: -5px;
+    left: 85%;
+    width: 15%;
+}
+.dev_ht_am {
+    position: absolute;
+    top: 0px;
+    left: 70%;
+    width: 10%;
+}
+
+.dev_sw {
+    position: relative;
+    background-color: #aaaaaa;
+    width: 100%;
+    height: 80px;
+    text-align: left;
+}
+
+.dev_sw_label {
+    height: 20px;
+    text-align: center;
+}
+
+.dev_sw_switch {
+    height: 60px;
+}
+
+.dev_sw_box {
+    position: absolute;
+    top: 30px;
+    height: 60px;
+    text-align: center;
+}
+
+.dev_sw_box0 {
+    left: 0px;
+    width: 10%;
+}
+
+.dev_sw_box1 {
+    left: 10%;
+    width: 30%;
+}
+
+.dev_sw_box2 {
+    left: 40%;
+    width: 30%;
+}
+
+.dev_sw_box3 {
+    left: 70%;
+    width: 30%;
+}
+
+.button_akt {
+   -webkit-border-radius: 10px;
+   -moz-border-radius: 10px;
+   border-radius: 10px;
+   color: #000000;
+   font-size: 20px;
+   font-weight: 500;
+   padding: 2px;
+   box-shadow: 1px 1px 20px 0px #000000;
+   -webkit-box-shadow: 1px 1px 20px 0px #000000;
+   -moz-box-shadow: 1px 1px 20px 0px #000000;
+   border: solid #a80329 2px;
+   text-decoration: none;
+   display: inline-block;
+   width: 70%;
+   cursor: pointer;
+}
+
+.stateicon {
+    -moz-border-radius:30px;
+    -webkit-border-radius:30px;
+    border-radius:30px;
+    border:2px solid #a80329;
+    display:inline-block;
+    cursor:pointer;
+    color:#000000;
+    font-family:Arial;
+    font-size:17px;
+    padding:6px 10px;
+    text-decoration:none;
+    cursor: default;
+}
