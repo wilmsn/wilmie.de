@@ -1,1 +1,1 @@
-/daten/web/wiki
+../wiki80
