@@ -2,152 +2,44 @@
 $instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
-$db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
+
+function set_pas_bg ( $in ) {
+  if ( strncmp($in,"y",1) === 0 ) {
+    echo "but_color_help1";
+  } else {
+    echo "but_color1";
+  }
+}
+
+function set_akt_bg ( $in ) {
+  if ( strncmp($in,"y",1) === 0 ) {
+    echo "but_color_help2";
+  } else {
+    echo "but_color2";
+  }
+}
+
+//$www_db = new PDO("mysql:host=$db_www_server;dbname=$db_www_db", $db_www_user, $db_www_pass);
+$rf24_db = new mysqli($db_rf24_server, $db_rf24_user, $db_rf24_pass, $db_rf24_db);
 $mobile_browser = is_mobile_browser(); 
-if ( isset( $batt1_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt1_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt1_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat1=$row['value'];
-} else {
-    $bat1=0;
+$bat_name = array();
+$bat_val = array();
+$bat_min = array();
+$bat_max = array();
+$bat_sens = array();
+$bat_nh = array();
+$stmt = "select bat_name, c.sensor_id, dia_min, dia_max, last_value, need_help from node a, battery b, sensor c, sensor_im d
+         where a.battery_id = b.battery_id and a.node_id = c.node_id and bat_channel = c.channel and c.sensor_id = d.sensor_id and bat_mon = 'y'
+         order by bat_order";
+foreach ( $rf24_db->query($stmt) as $row )  {
+  array_push($bat_name,$row['bat_name']);
+  array_push($bat_sens,$row['sensor_id']);
+  array_push($bat_min,$row['dia_min']);
+  array_push($bat_max,$row['dia_max']);
+  array_push($bat_val,$row['last_value']);
+  array_push($bat_nh,$row['need_help']);
 }
-if ( isset( $batt2_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt2_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt2_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat2=$row['value'];
-} else {
-    $bat2=0;
-}
-if ( isset( $batt3_name ) ) {
-   $stmt = "select value from sensordata where sensor_id = ".$batt3_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt3_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat3=$row['value'];
-} else {
-    $bat3=0;
-}
-if ( isset( $batt4_name ) ) {
-   $stmt = "select value from sensordata where sensor_id = ".$batt4_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt4_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat4=$row['value'];
-} else {
-    $bat4=0;
-}
-if ( isset( $batt5_name ) ) {
-   $stmt = "select value from sensordata where sensor_id = ".$batt5_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt5_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat5=$row['value'];
-} else {
-    $bat5=0;
-}
-if ( isset( $batt6_name ) ) {
-   $stmt = "select value from sensordata where sensor_id = ".$batt6_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt6_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat6=$row['value'];
-} else {
-    $bat6=0;
-}
-if ( isset( $batt7_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt7_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt7_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat7=$row['value'];
-} else {
-    $bat7=0;
-}
-if ( isset( $batt8_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt8_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt8_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat8=$row['value'];
-} else {
-    $bat8=0;
-}
-if ( isset( $batt9_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt9_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt9_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat9=$row['value'];
-} else {
-    $bat9=0;
-}
-if ( isset( $batt10_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt10_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt10_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat10=$row['value'];
-} else {
-    $bat10=0;
-}
-if ( isset( $batt11_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt11_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt11_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat11=$row['value'];
-} else {
-    $bat11=0;
-}
-if ( isset( $batt12_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt12_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt12_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat12=$row['value'];
-} else {
-    $bat12=0;
-}
-if ( isset( $batt13_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt13_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt13_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat13=$row['value'];
-} else {
-    $bat13=0;
-}
-if ( isset( $batt14_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt14_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt14_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat14=$row['value'];
-} else {
-    $bat14=0;
-}
-if ( isset( $batt15_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt15_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt15_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat15=$row['value'];
-} else {
-    $bat15=0;
-}
-if ( isset( $batt16_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt16_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt16_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat16=$row['value'];
-} else {
-    $bat16=0;
-}
-if ( isset( $batt17_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt17_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt17_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat17=$row['value'];
-} else {
-    $bat17=0;
-}
-if ( isset( $batt18_name ) ) {
-    $stmt = "select value from sensordata where sensor_id = ".$batt18_sensor." and utime = (select max(utime) from sensordata where sensor_id = ".$batt18_sensor.")";
-    $results = $db->query($stmt);
-    $row = $results->fetch_assoc();
-    $bat18=$row['value'];
-} else {
-    $bat18=0;
-}
+
 ?>
 <html>
   <head>
@@ -169,8 +61,6 @@ if ( isset( $batt18_name ) ) {
     left: 5px;
 }
 
-    
-    
 <?php
 if($mobile_browser) { 
 ?>
@@ -367,8 +257,21 @@ var d = new Date();
 var n = d.getTime();
 var but_color2 = '#DDDDDD';
 var but_color1 = '#AAAAAA';
-var but_color_low = '#AAAA00';
+var but_color_help1 = '#AAAA00';
+var but_color_help2 = '#FFFF00';
 var but_color_down = '#AA0000';
+const but_col1 = new Array(<?php set_pas_bg($bat_nh[0]); ?>, <?php set_pas_bg($bat_nh[1]); ?>, <?php set_pas_bg($bat_nh[2]); ?>,
+                           <?php set_pas_bg($bat_nh[3]); ?>, <?php set_pas_bg($bat_nh[4]); ?>, <?php set_pas_bg($bat_nh[5]); ?>,
+                           <?php set_pas_bg($bat_nh[6]); ?>, <?php set_pas_bg($bat_nh[7]); ?>, <?php set_pas_bg($bat_nh[8]); ?>,
+                           <?php set_pas_bg($bat_nh[9]); ?>, <?php set_pas_bg($bat_nh[10]); ?>, <?php set_pas_bg($bat_nh[11]); ?>,
+                           <?php set_pas_bg($bat_nh[12]); ?>, <?php set_pas_bg($bat_nh[13]); ?>, <?php set_pas_bg($bat_nh[14]); ?>,
+                           <?php set_pas_bg($bat_nh[15]); ?>, <?php set_pas_bg($bat_nh[16]); ?>, <?php set_pas_bg($bat_nh[17]); ?>);
+const but_col2 = new Array(<?php set_akt_bg($bat_nh[0]); ?>, <?php set_akt_bg($bat_nh[1]); ?>, <?php set_akt_bg($bat_nh[2]); ?>,
+                           <?php set_akt_bg($bat_nh[3]); ?>, <?php set_akt_bg($bat_nh[4]); ?>, <?php set_akt_bg($bat_nh[5]); ?>,
+                           <?php set_akt_bg($bat_nh[6]); ?>, <?php set_akt_bg($bat_nh[7]); ?>, <?php set_akt_bg($bat_nh[8]); ?>,
+                           <?php set_akt_bg($bat_nh[9]); ?>, <?php set_akt_bg($bat_nh[10]); ?>, <?php set_akt_bg($bat_nh[11]); ?>,
+                           <?php set_akt_bg($bat_nh[12]); ?>, <?php set_akt_bg($bat_nh[13]); ?>, <?php set_akt_bg($bat_nh[14]); ?>,
+                           <?php set_akt_bg($bat_nh[15]); ?>, <?php set_akt_bg($bat_nh[16]); ?>, <?php set_akt_bg($bat_nh[17]); ?>);
 
 for ( let i=0; i<18; i++ ) {
   display.push( new SegmentDisplay("display"+i) );
@@ -379,53 +282,36 @@ for ( let i=0; i<18; i++ ) {
   display[i].digitWidth      = 10;
   display[i].draw();
 }
-  display[0].setValue('<?php print $bat1; ?>');
-  display[1].setValue('<?php print $bat2; ?>');
-  display[2].setValue('<?php print $bat3; ?>');
-  display[3].setValue('<?php print $bat4; ?>');
-  display[4].setValue('<?php print $bat5; ?>');
-  display[5].setValue('<?php print $bat6; ?>');
-  display[6].setValue('<?php print $bat7; ?>');
-  display[7].setValue('<?php print $bat8; ?>');
-  display[8].setValue('<?php print $bat9; ?>');
-  display[9].setValue('<?php print $bat10; ?>');
-  display[10].setValue('<?php print $bat11; ?>');
-  display[11].setValue('<?php print $bat12; ?>');
-  display[12].setValue('<?php print $bat13; ?>');
-  display[13].setValue('<?php print $bat14; ?>');
-  display[14].setValue('<?php print $bat15; ?>');
-  display[15].setValue('<?php print $bat16; ?>');
-  display[16].setValue('<?php print $bat17; ?>');
-  display[17].setValue('<?php print $bat18; ?>');
+display[0].setValue('<?php if(isset($bat_val[0]))  print $bat_val[0]; ?>');
+display[1].setValue('<?php if(isset($bat_val[1]))  print $bat_val[1]; ?>');
+display[2].setValue('<?php if(isset($bat_val[2]))  print $bat_val[2]; ?>');
+display[3].setValue('<?php if(isset($bat_val[3]))  print $bat_val[3]; ?>');
+display[4].setValue('<?php if(isset($bat_val[4]))  print $bat_val[4]; ?>');
+display[5].setValue('<?php if(isset($bat_val[5]))  print $bat_val[5]; ?>');
+display[6].setValue('<?php if(isset($bat_val[6]))  print $bat_val[6]; ?>');
+display[7].setValue('<?php if(isset($bat_val[7]))  print $bat_val[7]; ?>');
+display[8].setValue('<?php if(isset($bat_val[8]))  print $bat_val[8]; ?>');
+display[9].setValue('<?php if(isset($bat_val[9]))  print $bat_val[9]; ?>');
+display[10].setValue('<?php if(isset($bat_val[10]))  print $bat_val[10]; ?>');
+display[11].setValue('<?php if(isset($bat_val[11]))  print $bat_val[11]; ?>');
+display[12].setValue('<?php if(isset($bat_val[12]))  print $bat_val[12]; ?>');
+display[13].setValue('<?php if(isset($bat_val[13]))  print $bat_val[13]; ?>');
+display[14].setValue('<?php if(isset($bat_val[14]))  print $bat_val[14]; ?>');
+display[15].setValue('<?php if(isset($bat_val[15]))  print $bat_val[15]; ?>');
+display[16].setValue('<?php if(isset($bat_val[16]))  print $bat_val[16]; ?>');
+display[17].setValue('<?php if(isset($bat_val[17]))  print $bat_val[17]; ?>');
 
   
-function reset_batt() {
-    $('#batt1').css('backgroundColor', but_color1);
-    $('#batt2').css('backgroundColor', but_color1);
-    $('#batt3').css('backgroundColor', but_color1);
-    $('#batt4').css('backgroundColor', but_color1);
-    $('#batt5').css('backgroundColor', but_color1);
-    $('#batt6').css('backgroundColor', but_color1);
-/*    if ( <?php print $bat7; ?> < <?php print $bat7_umin; ?> ) {
-    $('#batt7').css('backgroundColor', but_color_warn);
-    } else { */
-    $('#batt7').css('backgroundColor', but_color1);
-/*    }    */
-    $('#batt8').css('backgroundColor', but_color1);
-    $('#batt9').css('backgroundColor', but_color1);
-    $('#batt10').css('backgroundColor', but_color1);
-    $('#batt11').css('backgroundColor', but_color1);
-    $('#batt12').css('backgroundColor', but_color1);
-    $('#batt13').css('backgroundColor', but_color1);
-    $('#batt14').css('backgroundColor', but_color1);
-    $('#batt15').css('backgroundColor', but_color1);
-    $('#batt16').css('backgroundColor', but_color1);
-    $('#batt17').css('backgroundColor', but_color1);
-    $('#batt18').css('backgroundColor', but_color1);
-    for ( let i=0; i<18; i++ ) {
-        display[i].colorOff = but_color1;
-        display[i].draw();
-    }
+function reset_batt(akt_but) {
+  for ( let i=0; i<18; i++ ) {
+    $('#batt'+String(i+1)).css('backgroundColor', but_col1[i]);
+    display[i].colorOff = but_col1[i];
+    display[i].draw();
+  }
+  $('#batt'+String(akt_but+1)).css('backgroundColor', but_col2[akt_but]);
+  display[akt_but].colorOff = but_col2[akt_but];
+  display[akt_but].draw();
+  set_divs();
 }
 
 function reset_range() {
@@ -520,219 +406,147 @@ $(window).resize(function() {
 });
 
 $("#batt1").click(function(){
-    $('#batt_sensor').html('<?php print $batt1_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt1_name; ?>');  
-    reset_batt();
-    $('#batt1').css('backgroundColor', but_color2);
-    display[0].colorOff = but_color2;
-    display[0].draw();
-    $('#batt_umin').html('<?php print $batt1_umin; ?>');
-    $('#batt_umax').html('<?php print $batt1_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[0])) print $bat_sens[0]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[0])) print $bat_name[0]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[0])) print  $bat_min[0]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[0])) print  $bat_max[0]; ?>');
+    reset_batt(0);
 });
 
 $("#batt2").click(function(){
-    $('#batt_sensor').html('<?php print $batt2_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt2_name; ?>');  
-    reset_batt();
-    $('#batt2').css('backgroundColor', but_color2);
-    display[1].colorOff = but_color2;
-    display[1].draw();
-    $('#batt_umin').html('<?php print $batt2_umin; ?>');
-    $('#batt_umax').html('<?php print $batt2_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[1])) print $bat_sens[1]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[1])) print $bat_name[1]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[1])) print  $bat_min[1]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[1])) print  $bat_max[1]; ?>');
+    reset_batt(1);
 });
 
 $("#batt3").click(function(){
-    $('#batt_sensor').html('<?php print $batt3_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt3_name; ?>');  
-    reset_batt();
-    $('#batt3').css('backgroundColor', but_color2);
-    display[2].colorOff = but_color2;
-    display[2].draw();
-    $('#batt_umin').html('<?php print $batt3_umin; ?>');
-    $('#batt_umax').html('<?php print $batt3_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[2])) print $bat_sens[2]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[2])) print $bat_name[2]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[2])) print  $bat_min[2]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[2])) print  $bat_max[2]; ?>');
+    reset_batt(2);
 });
 
 $("#batt4").click(function(){
-    $('#batt_sensor').html('<?php print $batt4_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt4_name; ?>');  
-    reset_batt();
-    $('#batt4').css('backgroundColor', but_color2);
-    display[3].colorOff = but_color2;
-    display[3].draw();
-    $('#batt_umin').html('<?php print $batt4_umin; ?>');
-    $('#batt_umax').html('<?php print $batt4_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[3])) print $bat_sens[3]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[3])) print $bat_name[3]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[3])) print  $bat_min[3]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[3])) print  $bat_max[3]; ?>');
+    reset_batt(3);
 });
 
 $("#batt5").click(function(){
-    $('#batt_sensor').html('<?php print $batt5_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt5_name; ?>');  
-    reset_batt();
-    $('#batt5').css('backgroundColor', but_color2);
-    display[4].colorOff = but_color2;
-    display[4].draw();
-    $('#batt_umin').html('<?php print $batt5_umin; ?>');
-    $('#batt_umax').html('<?php print $batt5_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[4])) print $bat_sens[4]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[4])) print $bat_name[4]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[4])) print  $bat_min[4]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[4])) print  $bat_max[4]; ?>');
+    reset_batt(4);
 });
 
 $("#batt6").click(function(){
-    $('#batt_sensor').html('<?php print $batt6_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt6_name; ?>');  
-    reset_batt();
-    $('#batt6').css('backgroundColor', but_color2);
-    display[5].colorOff = but_color2;
-    display[5].draw();
-    $('#batt_umin').html('<?php print $batt6_umin; ?>');
-    $('#batt_umax').html('<?php print $batt6_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[5])) print $bat_sens[5]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[5])) print $bat_name[5]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[5])) print  $bat_min[5]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[5])) print  $bat_max[5]; ?>');
+    reset_batt(5);
 });
 
 $("#batt7").click(function(){
-    $('#batt_sensor').html('<?php print $batt7_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt7_name; ?>');  
-    reset_batt();
-    $('#batt7').css('backgroundColor', but_color2);
-    display[6].colorOff = but_color2;
-    display[6].draw();
-    $('#batt_umin').html('<?php print $batt7_umin; ?>');
-    $('#batt_umax').html('<?php print $batt7_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[6])) print $bat_sens[6]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[6])) print $bat_name[6]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[6])) print  $bat_min[6]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[6])) print  $bat_max[6]; ?>');
+    reset_batt(6);
 });
 
 $("#batt8").click(function(){
-    $('#batt_sensor').html('<?php print $batt8_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt8_name; ?>');  
-    reset_batt();
-    $('#batt8').css('backgroundColor', but_color2);
-    display[7].colorOff = but_color2;
-    display[7].draw();
-    $('#batt_umin').html('<?php print $batt8_umin; ?>');
-    $('#batt_umax').html('<?php print $batt8_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[7])) print $bat_sens[7]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[7])) print $bat_name[7]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[7])) print  $bat_min[7]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[7])) print  $bat_max[7]; ?>');
+    reset_batt(7);
 });
 
 $("#batt9").click(function(){
-    $('#batt_sensor').html('<?php print $batt9_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt9_name; ?>');  
-    reset_batt();
-    $('#batt9').css('backgroundColor', but_color2);
-    display[8].colorOff = but_color2;
-    display[8].draw();
-    $('#batt_umin').html('<?php print $batt9_umin; ?>');
-    $('#batt_umax').html('<?php print $batt9_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[8])) print $bat_sens[8]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[8])) print $bat_name[8]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[8])) print  $bat_min[8]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[8])) print  $bat_max[8]; ?>');
+    reset_batt(8);
 });
 
 $("#batt10").click(function(){
-    $('#batt_sensor').html('<?php print $batt10_sensor; ?>');  
-    $('#batt_name').html('<?php print $batt10_name; ?>');  
-    reset_batt();
-    $('#batt10').css('backgroundColor', but_color2);
-    display[9].colorOff = but_color2;
-    display[9].draw();
-    $('#batt_umin').html('<?php print $batt10_umin; ?>');
-    $('#batt_umax').html('<?php print $batt10_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[9])) print $bat_sens[9]; ?>');
+    $('#batt_name').html('<?php   if(isset($bat_name[9])) print $bat_name[9]; ?>');
+    $('#batt_umin').html('<?php   if(isset( $bat_min[9])) print  $bat_min[9]; ?>');
+    $('#batt_umax').html('<?php   if(isset( $bat_max[9])) print  $bat_max[9]; ?>');
+    reset_batt(9);
 });
 
 $("#batt11").click(function(){
-    $('#batt_sensor').html('<?php print $batt11_sensor; ?>');
-    $('#batt_name').html('<?php print $batt11_name; ?>');
-    reset_batt();
-    $('#batt11').css('backgroundColor', but_color2);
-    display[10].colorOff = but_color2;
-    display[10].draw();
-    $('#batt_umin').html('<?php print $batt11_umin; ?>');
-    $('#batt_umax').html('<?php print $batt11_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[10])) print $bat_sens[10]; ?>');
+    $('#batt_name').html('<?php if(isset($bat_name[10])) print $bat_name[10]; ?>');
+    $('#batt_umin').html('<?php if(isset($bat_min[10])) print $bat_min[10]; ?>');
+    $('#batt_umax').html('<?php if(isset($bat_max[10])) print $bat_max[10]; ?>');
+    reset_batt(10);
 });
 
 $("#batt12").click(function(){
-    $('#batt_sensor').html('<?php print $batt12_sensor; ?>');
-    $('#batt_name').html('<?php print $batt12_name; ?>');
-    reset_batt();
-    $('#batt12').css('backgroundColor', but_color2);
-    display[11].colorOff = but_color2;
-    display[11].draw();
-    $('#batt_umin').html('<?php print $batt12_umin; ?>');
-    $('#batt_umax').html('<?php print $batt12_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[11])) print $bat_sens[11]; ?>');
+    $('#batt_name').html('<?php if(isset($bat_name[11])) print $bat_name[11]; ?>');
+    $('#batt_umin').html('<?php if(isset($bat_min[11])) print $bat_min[11]; ?>');
+    $('#batt_umax').html('<?php if(isset($bat_max[11])) print $bat_max[11]; ?>');
+    reset_batt(11);
 });
 
 $("#batt13").click(function(){
-    $('#batt_sensor').html('<?php print $batt13_sensor; ?>');
-    $('#batt_name').html('<?php print $batt13_name; ?>');
-    reset_batt();
-    $('#batt13').css('backgroundColor', but_color2);
-    display[12].colorOff = but_color2;
-    display[12].draw();
-    $('#batt_umin').html('<?php print $batt13_umin; ?>');
-    $('#batt_umax').html('<?php print $batt13_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[12])) print $bat_sens[12]; ?>');
+    $('#batt_name').html('<?php if(isset($bat_name[12])) print $bat_name[12]; ?>');
+    $('#batt_umin').html('<?php if(isset($bat_min[12])) print $bat_min[12]; ?>');
+    $('#batt_umax').html('<?php if(isset($bat_max[12])) print $bat_max[12]; ?>');
+    reset_batt(12);
 });
 
 $("#batt14").click(function(){
-    $('#batt_sensor').html('<?php print $batt14_sensor; ?>');
-    $('#batt_name').html('<?php print $batt14_name; ?>');
-    reset_batt();
-    $('#batt14').css('backgroundColor', but_color2);
-    display[13].colorOff = but_color2;
-    display[13].draw();
-    $('#batt_umin').html('<?php print $batt14_umin; ?>');
-    $('#batt_umax').html('<?php print $batt14_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[13])) print $bat_sens[13]; ?>');
+    $('#batt_name').html('<?php if(isset($bat_name[13])) print $bat_name[13]; ?>');
+    $('#batt_umin').html('<?php if(isset($bat_min[13])) print $bat_min[13]; ?>');
+    $('#batt_umax').html('<?php if(isset($bat_max[13])) print $bat_max[13]; ?>');
+    reset_batt(13);
 });
 
 $("#batt15").click(function(){
-    $('#batt_sensor').html('<?php print $batt15_sensor; ?>');
-    $('#batt_name').html('<?php print $batt15_name; ?>');
-    reset_batt();
-    $('#batt15').css('backgroundColor', but_color2);
-    display[14].colorOff = but_color2;
-    display[14].draw();
-    $('#batt_umin').html('<?php print $batt15_umin; ?>');
-    $('#batt_umax').html('<?php print $batt15_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[14])) print $bat_sens[14]; ?>');
+    $('#batt_name').html('<?php if(isset($bat_name[14])) print $bat_name[14]; ?>');
+    $('#batt_umin').html('<?php if(isset($bat_min[14])) print $bat_min[14]; ?>');
+    $('#batt_umax').html('<?php if(isset($bat_max[14])) print $bat_max[14]; ?>');
+    reset_batt(14);
 });
 
 $("#batt16").click(function(){
-    $('#batt_sensor').html('<?php print $batt16_sensor; ?>');
-    $('#batt_name').html('<?php print $batt16_name; ?>');
-    reset_batt();
-    $('#batt16').css('backgroundColor', but_color2);
-    display[15].colorOff = but_color2;
-    display[15].draw();
-    $('#batt_umin').html('<?php print $batt16_umin; ?>');
-    $('#batt_umax').html('<?php print $batt16_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[15])) print $bat_sens[15]; ?>');
+    $('#batt_name').html('<?php if(isset($bat_name[15])) print $bat_name[15]; ?>');
+    $('#batt_umin').html('<?php if(isset($bat_min[15])) print $bat_min[15]; ?>');
+    $('#batt_umax').html('<?php if(isset($bat_max[15])) print $bat_max[15]; ?>');
+    reset_batt(15);
 });
 
 $("#batt17").click(function(){
-    $('#batt_sensor').html('<?php print $batt17_sensor; ?>');
-    $('#batt_name').html('<?php print $batt17_name; ?>');
-    reset_batt();
-    $('#batt17').css('backgroundColor', but_color2);
-    display[16].colorOff = but_color2;
-    display[16].draw();
-    $('#batt_umin').html('<?php print $batt17_umin; ?>');
-    $('#batt_umax').html('<?php print $batt17_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[16])) print $bat_sens[16]; ?>');
+    $('#batt_name').html('<?php if(isset($bat_name[16])) print $bat_name[16]; ?>');
+    $('#batt_umin').html('<?php if(isset($bat_min[16])) print $bat_min[16]; ?>');
+    $('#batt_umax').html('<?php if(isset($bat_max[16])) print $bat_max[16]; ?>');
+    reset_batt(16);
 });
 
 $("#batt18").click(function(){
-    $('#batt_sensor').html('<?php print $batt18_sensor; ?>');
-    $('#batt_name').html('<?php print $batt18_name; ?>');
-    reset_batt();
-    $('#batt18').css('backgroundColor', but_color2);
-    display[17].colorOff = but_color2;
-    display[17].draw();
-    $('#batt_umin').html('<?php print $batt18_umin; ?>');
-    $('#batt_umax').html('<?php print $batt18_umax; ?>');
-    set_divs();
+    $('#batt_sensor').html('<?php if(isset($bat_sens[17])) print $bat_sens[17]; ?>');
+    $('#batt_name').html('<?php if(isset($bat_name[17])) print $bat_name[17]; ?>');
+    $('#batt_umin').html('<?php if(isset($bat_min[17])) print $bat_min[17]; ?>');
+    $('#batt_umax').html('<?php if(isset($bat_max[17])) print $bat_max[17]; ?>');
+    reset_batt(17);
 });
 
 $("#range_1d").click(function(){
@@ -784,9 +598,9 @@ $("#range_5y").click(function(){
     set_divs();
 });
 
-$('#batt_sensor').html('<?php print $batt1_sensor; ?>');  
+$('#batt_sensor').html('<?php print $bat_sens[0]; ?>');
 $('#batt_sensor').hide();  
-$('#batt_name').html('<?php print $batt1_name; ?>');  
+$('#batt_name').html('<?php print $bat_name[0]; ?>');
 $('#batt_name').hide();  
 $('#batt_range').html('1d');  
 $('#batt_range').hide();  
@@ -795,35 +609,31 @@ $('#batt_umin').hide();
 $('#batt_umax').html('1d');  
 $('#batt_umax').hide();  
 
-<?php if ( ! isset( $batt1_name ) ) print "$('#batt1').hide();"; ?>
-<?php if ( ! isset( $batt2_name ) ) print "$('#batt2').hide();"; ?>
-<?php if ( ! isset( $batt3_name ) ) print "$('#batt3').hide();"; ?>
-<?php if ( ! isset( $batt4_name ) ) print "$('#batt4').hide();"; ?>
-<?php if ( ! isset( $batt5_name ) ) print "$('#batt5').hide();"; ?>
-<?php if ( ! isset( $batt6_name ) ) print "$('#batt6').hide();"; ?>
-<?php if ( ! isset( $batt7_name ) ) print "$('#batt7').hide();"; ?>
-<?php if ( ! isset( $batt8_name ) ) print "$('#batt8').hide();"; ?>
-<?php if ( ! isset( $batt9_name ) ) print "$('#batt9').hide();"; ?>
-<?php if ( ! isset( $batt10_name ) ) print "$('#batt10').hide();"; ?>
-<?php if ( ! isset( $batt11_name ) ) print "$('#batt11').hide();"; ?>
-<?php if ( ! isset( $batt12_name ) ) print "$('#batt12').hide();"; ?>
-<?php if ( ! isset( $batt13_name ) ) print "$('#batt13').hide();"; ?>
-<?php if ( ! isset( $batt14_name ) ) print "$('#batt14').hide();"; ?>
-<?php if ( ! isset( $batt15_name ) ) print "$('#batt15').hide();"; ?>
-<?php if ( ! isset( $batt16_name ) ) print "$('#batt16').hide();"; ?>
-<?php if ( ! isset( $batt17_name ) ) print "$('#batt17').hide();"; ?>
-<?php if ( ! isset( $batt18_name ) ) print "$('#batt18').hide();"; ?>
+<?php if ( ! isset( $bat_name[0] ) ) print "$('#batt1').hide();"; ?>
+<?php if ( ! isset( $bat_name[1] ) ) print "$('#batt2').hide();"; ?>
+<?php if ( ! isset( $bat_name[2] ) ) print "$('#batt3').hide();"; ?>
+<?php if ( ! isset( $bat_name[3] ) ) print "$('#batt4').hide();"; ?>
+<?php if ( ! isset( $bat_name[4] ) ) print "$('#batt5').hide();"; ?>
+<?php if ( ! isset( $bat_name[5] ) ) print "$('#batt6').hide();"; ?>
+<?php if ( ! isset( $bat_name[6] ) ) print "$('#batt7').hide();"; ?>
+<?php if ( ! isset( $bat_name[7] ) ) print "$('#batt8').hide();"; ?>
+<?php if ( ! isset( $bat_name[8] ) ) print "$('#batt9').hide();"; ?>
+<?php if ( ! isset( $bat_name[9] ) ) print "$('#batt10').hide();"; ?>
+<?php if ( ! isset( $bat_name[10] ) ) print "$('#batt11').hide();"; ?>
+<?php if ( ! isset( $bat_name[11] ) ) print "$('#batt12').hide();"; ?>
+<?php if ( ! isset( $bat_name[12] ) ) print "$('#batt13').hide();"; ?>
+<?php if ( ! isset( $bat_name[13] ) ) print "$('#batt14').hide();"; ?>
+<?php if ( ! isset( $bat_name[14] ) ) print "$('#batt15').hide();"; ?>
+<?php if ( ! isset( $bat_name[15] ) ) print "$('#batt16').hide();"; ?>
+<?php if ( ! isset( $bat_name[16] ) ) print "$('#batt17').hide();"; ?>
+<?php if ( ! isset( $bat_name[17] ) ) print "$('#batt18').hide();"; ?>
 
 
-reset_batt();
+reset_batt(0);
 reset_range();
 $('#range_1d').css('backgroundColor', but_color2);
-$('#batt1').css('backgroundColor', but_color2);
-display[0].colorOff = but_color2;
-display[0].draw();
-$('#batt_umin').html('<?php print $batt1_umin; ?>');
-$('#batt_umax').html('<?php print $batt1_umax; ?>');
-set_divs();
+$('#batt_umin').html('<?php print $bat_min[0]; ?>');
+$('#batt_umax').html('<?php print $bat_max[0]; ?>');
 
 </script>	
 <meta http-equiv="expires" content="0">
@@ -832,7 +642,7 @@ set_divs();
 
 <div id='batt1'>
 <div class='batt_text'>
-<?php if(isset($batt1_name)) print $batt1_name; ?>
+<?php if(isset($bat_name[0])) print $bat_name[0]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display0" width="90" height="45"></canvas>
@@ -840,7 +650,7 @@ set_divs();
 </div>
 <div id='batt2'>
 <div class='batt_text'>
-<?php if(isset($batt2_name)) print $batt2_name; ?>
+<?php if(isset($bat_name[1])) print $bat_name[1]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display1" width="90" height="45"></canvas>
@@ -848,7 +658,7 @@ set_divs();
 </div>
 <div id='batt3'>
 <div class='batt_text'>
-<?php if(isset($batt3_name)) print $batt3_name; ?>
+<?php if(isset($bat_name[2])) print $bat_name[2]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display2" width="90" height="45"></canvas>
@@ -856,7 +666,7 @@ set_divs();
 </div>
 <div id='batt4'>
 <div class='batt_text'>
-<?php if(isset($batt4_name)) print $batt4_name; ?>
+<?php if(isset($bat_name[3])) print $bat_name[3]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display3" width="90" height="45"></canvas>
@@ -864,7 +674,7 @@ set_divs();
 </div>
 <div id='batt5'>
 <div class='batt_text'>
-<?php if(isset($batt5_name)) print $batt5_name; ?>
+<?php if(isset($bat_name[4])) print $bat_name[4]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display4" width="90" height="45"></canvas>
@@ -872,7 +682,7 @@ set_divs();
 </div>
 <div id='batt6'>
 <div class='batt_text'>
-<?php if(isset($batt6_name)) print $batt6_name; ?>
+<?php if(isset($bat_name[5])) print $bat_name[5]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display5" width="90" height="45"></canvas>
@@ -880,7 +690,7 @@ set_divs();
 </div>
 <div id='batt7'>
 <div class='batt_text'>
-<?php if(isset($batt7_name)) print $batt7_name; ?>
+<?php if(isset($bat_name[6])) print $bat_name[6]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display6" width="90" height="45"></canvas>
@@ -888,7 +698,7 @@ set_divs();
 </div>
 <div id='batt8'>
 <div class='batt_text'>
-<?php if(isset($batt8_name)) print $batt8_name; ?>
+<?php if(isset($bat_name[7])) print $bat_name[7]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display7" width="90" height="45"></canvas>
@@ -896,7 +706,7 @@ set_divs();
 </div>
 <div id='batt9'>
 <div class='batt_text'>
-<?php if(isset($batt9_name)) print $batt9_name; ?>
+<?php if(isset($bat_name[8])) print $bat_name[8]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display8" width="90" height="45"></canvas>
@@ -904,7 +714,7 @@ set_divs();
 </div>
 <div id='batt10'>
 <div class='batt_text'>
-<?php if(isset($batt10_name)) print $batt10_name; ?>
+<?php if(isset($bat_name[9])) print $bat_name[9]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display9" width="90" height="45"></canvas>
@@ -912,7 +722,7 @@ set_divs();
 </div>
 <div id='batt11'>
 <div class='batt_text'>
-<?php if(isset($batt11_name)) print $batt11_name; ?>
+<?php if(isset($bat_name[10])) print $bat_name[10]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display10" width="90" height="45"></canvas>
@@ -920,7 +730,7 @@ set_divs();
 </div>
 <div id='batt12'>
 <div class='batt_text'>
-<?php if(isset($batt12_name)) print $batt12_name; ?>
+<?php if(isset($bat_name[11])) print $bat_name[11]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display11" width="90" height="45"></canvas>
@@ -928,7 +738,7 @@ set_divs();
 </div>
 <div id='batt13'>
 <div class='batt_text'>
-<?php if(isset($batt13_name)) print $batt13_name; ?>
+<?php if(isset($bat_name[12])) print $bat_name[12]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display12" width="90" height="45"></canvas>
@@ -936,7 +746,7 @@ set_divs();
 </div>
 <div id='batt14'>
 <div class='batt_text'>
-<?php if(isset($batt14_name)) print $batt14_name; ?>
+<?php if(isset($bat_name[13])) print $bat_name[13]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display13" width="90" height="45"></canvas>
@@ -944,7 +754,7 @@ set_divs();
 </div>
 <div id='batt15'>
 <div class='batt_text'>
-<?php if(isset($batt15_name)) print $batt15_name; ?>
+<?php if(isset($bat_name[14])) print $bat_name[14]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display14" width="90" height="45"></canvas>
@@ -952,7 +762,7 @@ set_divs();
 </div>
 <div id='batt16'>
 <div class='batt_text'>
-<?php if(isset($batt16_name)) print $batt16_name; ?>
+<?php if(isset($bat_name[15])) print $bat_name[15]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display15" width="90" height="45"></canvas>
@@ -960,7 +770,7 @@ set_divs();
 </div>
 <div id='batt17'>
 <div class='batt_text'>
-<?php if(isset($batt17_name)) print $batt17_name; ?>
+<?php if(isset($bat_name[16])) print $bat_name[16]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display16" width="90" height="45"></canvas>
@@ -968,7 +778,7 @@ set_divs();
 </div>
 <div id='batt18'>
 <div class='batt_text'>
-<?php if(isset($batt18_name)) print $batt18_name; ?>
+<?php if(isset($bat_name[17])) print $bat_name[17]; ?>
 </div>
 <div class='div_canvas'>
 <canvas id="display17" width="90" height="45"></canvas>
