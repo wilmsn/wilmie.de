@@ -2,6 +2,23 @@
 $instance="test";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
+
+function set_pas_bg ( $in ) {
+  if ( strncmp($in,"y",1) === 0 ) {
+    echo "but_color_help1";
+  } else {
+    echo "but_color1";
+  }
+}
+
+function set_akt_bg ( $in ) {
+  if ( strncmp($in,"y",1) === 0 ) {
+    echo "but_color_help2";
+  } else {
+    echo "but_color2";
+  }
+}
+
 //$www_db = new PDO("mysql:host=$db_www_server;dbname=$db_www_db", $db_www_user, $db_www_pass);
 $rf24_db = new mysqli($db_rf24_server, $db_rf24_user, $db_rf24_pass, $db_rf24_db);
 $mobile_browser = is_mobile_browser(); 
@@ -10,7 +27,8 @@ $bat_val = array();
 $bat_min = array();
 $bat_max = array();
 $bat_sens = array();
-$stmt = "select bat_name, c.sensor_id, dia_min, dia_max, last_value from node a, battery b, sensor c, sensor_im d
+$bat_nh = array();
+$stmt = "select bat_name, c.sensor_id, dia_min, dia_max, last_value, need_help from node a, battery b, sensor c, sensor_im d
          where a.battery_id = b.battery_id and a.node_id = c.node_id and bat_channel = c.channel and c.sensor_id = d.sensor_id and bat_mon = 'y'
          order by bat_order";
 foreach ( $rf24_db->query($stmt) as $row )  {
@@ -19,6 +37,7 @@ foreach ( $rf24_db->query($stmt) as $row )  {
   array_push($bat_min,$row['dia_min']);
   array_push($bat_max,$row['dia_max']);
   array_push($bat_val,$row['last_value']);
+  array_push($bat_nh,$row['need_help']);
 }
 
 ?>
@@ -238,8 +257,21 @@ var d = new Date();
 var n = d.getTime();
 var but_color2 = '#DDDDDD';
 var but_color1 = '#AAAAAA';
-var but_color_low = '#AAAA00';
+var but_color_help1 = '#AAAA00';
+var but_color_help2 = '#FFFF00';
 var but_color_down = '#AA0000';
+const but_col1 = new Array(<?php set_pas_bg($bat_nh[0]); ?>, <?php set_pas_bg($bat_nh[1]); ?>, <?php set_pas_bg($bat_nh[2]); ?>,
+                           <?php set_pas_bg($bat_nh[3]); ?>, <?php set_pas_bg($bat_nh[4]); ?>, <?php set_pas_bg($bat_nh[5]); ?>,
+                           <?php set_pas_bg($bat_nh[6]); ?>, <?php set_pas_bg($bat_nh[7]); ?>, <?php set_pas_bg($bat_nh[8]); ?>,
+                           <?php set_pas_bg($bat_nh[9]); ?>, <?php set_pas_bg($bat_nh[10]); ?>, <?php set_pas_bg($bat_nh[11]); ?>,
+                           <?php set_pas_bg($bat_nh[12]); ?>, <?php set_pas_bg($bat_nh[13]); ?>, <?php set_pas_bg($bat_nh[14]); ?>,
+                           <?php set_pas_bg($bat_nh[15]); ?>, <?php set_pas_bg($bat_nh[16]); ?>, <?php set_pas_bg($bat_nh[17]); ?>);
+const but_col2 = new Array(<?php set_akt_bg($bat_nh[0]); ?>, <?php set_akt_bg($bat_nh[1]); ?>, <?php set_akt_bg($bat_nh[2]); ?>,
+                           <?php set_akt_bg($bat_nh[3]); ?>, <?php set_akt_bg($bat_nh[4]); ?>, <?php set_akt_bg($bat_nh[5]); ?>,
+                           <?php set_akt_bg($bat_nh[6]); ?>, <?php set_akt_bg($bat_nh[7]); ?>, <?php set_akt_bg($bat_nh[8]); ?>,
+                           <?php set_akt_bg($bat_nh[9]); ?>, <?php set_akt_bg($bat_nh[10]); ?>, <?php set_akt_bg($bat_nh[11]); ?>,
+                           <?php set_akt_bg($bat_nh[12]); ?>, <?php set_akt_bg($bat_nh[13]); ?>, <?php set_akt_bg($bat_nh[14]); ?>,
+                           <?php set_akt_bg($bat_nh[15]); ?>, <?php set_akt_bg($bat_nh[16]); ?>, <?php set_akt_bg($bat_nh[17]); ?>);
 
 for ( let i=0; i<18; i++ ) {
   display.push( new SegmentDisplay("display"+i) );
@@ -270,29 +302,16 @@ display[16].setValue('<?php if(isset($bat_val[16]))  print $bat_val[16]; ?>');
 display[17].setValue('<?php if(isset($bat_val[17]))  print $bat_val[17]; ?>');
 
   
-function reset_batt() {
-    $('#batt1').css('backgroundColor', but_color1);
-    $('#batt2').css('backgroundColor', but_color1);
-    $('#batt3').css('backgroundColor', but_color1);
-    $('#batt4').css('backgroundColor', but_color1);
-    $('#batt5').css('backgroundColor', but_color1);
-    $('#batt6').css('backgroundColor', but_color1);
-    $('#batt7').css('backgroundColor', but_color1);
-    $('#batt8').css('backgroundColor', but_color1);
-    $('#batt9').css('backgroundColor', but_color1);
-    $('#batt10').css('backgroundColor', but_color1);
-    $('#batt11').css('backgroundColor', but_color1);
-    $('#batt12').css('backgroundColor', but_color1);
-    $('#batt13').css('backgroundColor', but_color1);
-    $('#batt14').css('backgroundColor', but_color1);
-    $('#batt15').css('backgroundColor', but_color1);
-    $('#batt16').css('backgroundColor', but_color1);
-    $('#batt17').css('backgroundColor', but_color1);
-    $('#batt18').css('backgroundColor', but_color1);
-    for ( let i=0; i<18; i++ ) {
-        display[i].colorOff = but_color1;
-        display[i].draw();
-    }
+function reset_batt(akt_but) {
+  for ( let i=0; i<18; i++ ) {
+    $('#batt'+String(i+1)).css('backgroundColor', but_col1[i]);
+    display[i].colorOff = but_col1[i];
+    display[i].draw();
+  }
+  $('#batt'+String(akt_but+1)).css('backgroundColor', but_col2[akt_but]);
+  display[akt_but].colorOff = but_col2[akt_but];
+  display[akt_but].draw();
+  set_divs();
 }
 
 function reset_range() {
@@ -391,11 +410,7 @@ $("#batt1").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[0])) print $bat_name[0]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[0])) print  $bat_min[0]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[0])) print  $bat_max[0]; ?>');
-    reset_batt();
-    $('#batt1').css('backgroundColor', but_color2);
-    display[0].colorOff = but_color2;
-    display[0].draw();
-    set_divs();
+    reset_batt(0);
 });
 
 $("#batt2").click(function(){
@@ -403,11 +418,7 @@ $("#batt2").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[1])) print $bat_name[1]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[1])) print  $bat_min[1]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[1])) print  $bat_max[1]; ?>');
-    reset_batt();
-    $('#batt2').css('backgroundColor', but_color2);
-    display[1].colorOff = but_color2;
-    display[1].draw();
-    set_divs();
+    reset_batt(1);
 });
 
 $("#batt3").click(function(){
@@ -415,11 +426,7 @@ $("#batt3").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[2])) print $bat_name[2]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[2])) print  $bat_min[2]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[2])) print  $bat_max[2]; ?>');
-    reset_batt();
-    $('#batt3').css('backgroundColor', but_color2);
-    display[2].colorOff = but_color2;
-    display[2].draw();
-    set_divs();
+    reset_batt(2);
 });
 
 $("#batt4").click(function(){
@@ -427,11 +434,7 @@ $("#batt4").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[3])) print $bat_name[3]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[3])) print  $bat_min[3]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[3])) print  $bat_max[3]; ?>');
-    reset_batt();
-    $('#batt4').css('backgroundColor', but_color2);
-    display[3].colorOff = but_color2;
-    display[3].draw();
-    set_divs();
+    reset_batt(3);
 });
 
 $("#batt5").click(function(){
@@ -439,11 +442,7 @@ $("#batt5").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[4])) print $bat_name[4]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[4])) print  $bat_min[4]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[4])) print  $bat_max[4]; ?>');
-    reset_batt();
-    $('#batt5').css('backgroundColor', but_color2);
-    display[4].colorOff = but_color2;
-    display[4].draw();
-    set_divs();
+    reset_batt(4);
 });
 
 $("#batt6").click(function(){
@@ -451,11 +450,7 @@ $("#batt6").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[5])) print $bat_name[5]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[5])) print  $bat_min[5]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[5])) print  $bat_max[5]; ?>');
-    reset_batt();
-    $('#batt6').css('backgroundColor', but_color2);
-    display[5].colorOff = but_color2;
-    display[5].draw();
-    set_divs();
+    reset_batt(5);
 });
 
 $("#batt7").click(function(){
@@ -463,11 +458,7 @@ $("#batt7").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[6])) print $bat_name[6]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[6])) print  $bat_min[6]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[6])) print  $bat_max[6]; ?>');
-    reset_batt();
-    $('#batt7').css('backgroundColor', but_color2);
-    display[6].colorOff = but_color2;
-    display[6].draw();
-    set_divs();
+    reset_batt(6);
 });
 
 $("#batt8").click(function(){
@@ -475,11 +466,7 @@ $("#batt8").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[7])) print $bat_name[7]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[7])) print  $bat_min[7]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[7])) print  $bat_max[7]; ?>');
-    reset_batt();
-    $('#batt8').css('backgroundColor', but_color2);
-    display[7].colorOff = but_color2;
-    display[7].draw();
-    set_divs();
+    reset_batt(7);
 });
 
 $("#batt9").click(function(){
@@ -487,11 +474,7 @@ $("#batt9").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[8])) print $bat_name[8]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[8])) print  $bat_min[8]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[8])) print  $bat_max[8]; ?>');
-    reset_batt();
-    $('#batt9').css('backgroundColor', but_color2);
-    display[8].colorOff = but_color2;
-    display[8].draw();
-    set_divs();
+    reset_batt(8);
 });
 
 $("#batt10").click(function(){
@@ -499,11 +482,7 @@ $("#batt10").click(function(){
     $('#batt_name').html('<?php   if(isset($bat_name[9])) print $bat_name[9]; ?>');
     $('#batt_umin').html('<?php   if(isset( $bat_min[9])) print  $bat_min[9]; ?>');
     $('#batt_umax').html('<?php   if(isset( $bat_max[9])) print  $bat_max[9]; ?>');
-    reset_batt();
-    $('#batt10').css('backgroundColor', but_color2);
-    display[9].colorOff = but_color2;
-    display[9].draw();
-    set_divs();
+    reset_batt(9);
 });
 
 $("#batt11").click(function(){
@@ -511,11 +490,7 @@ $("#batt11").click(function(){
     $('#batt_name').html('<?php if(isset($bat_name[10])) print $bat_name[10]; ?>');
     $('#batt_umin').html('<?php if(isset($bat_min[10])) print $bat_min[10]; ?>');
     $('#batt_umax').html('<?php if(isset($bat_max[10])) print $bat_max[10]; ?>');
-    reset_batt();
-    $('#batt11').css('backgroundColor', but_color2);
-    display[10].colorOff = but_color2;
-    display[10].draw();
-    set_divs();
+    reset_batt(10);
 });
 
 $("#batt12").click(function(){
@@ -523,11 +498,7 @@ $("#batt12").click(function(){
     $('#batt_name').html('<?php if(isset($bat_name[11])) print $bat_name[11]; ?>');
     $('#batt_umin').html('<?php if(isset($bat_min[11])) print $bat_min[11]; ?>');
     $('#batt_umax').html('<?php if(isset($bat_max[11])) print $bat_max[11]; ?>');
-    reset_batt();
-    $('#batt12').css('backgroundColor', but_color2);
-    display[11].colorOff = but_color2;
-    display[11].draw();
-    set_divs();
+    reset_batt(11);
 });
 
 $("#batt13").click(function(){
@@ -535,11 +506,7 @@ $("#batt13").click(function(){
     $('#batt_name').html('<?php if(isset($bat_name[12])) print $bat_name[12]; ?>');
     $('#batt_umin').html('<?php if(isset($bat_min[12])) print $bat_min[12]; ?>');
     $('#batt_umax').html('<?php if(isset($bat_max[12])) print $bat_max[12]; ?>');
-    reset_batt();
-    $('#batt13').css('backgroundColor', but_color2);
-    display[12].colorOff = but_color2;
-    display[12].draw();
-    set_divs();
+    reset_batt(12);
 });
 
 $("#batt14").click(function(){
@@ -547,11 +514,7 @@ $("#batt14").click(function(){
     $('#batt_name').html('<?php if(isset($bat_name[13])) print $bat_name[13]; ?>');
     $('#batt_umin').html('<?php if(isset($bat_min[13])) print $bat_min[13]; ?>');
     $('#batt_umax').html('<?php if(isset($bat_max[13])) print $bat_max[13]; ?>');
-    reset_batt();
-    $('#batt14').css('backgroundColor', but_color2);
-    display[13].colorOff = but_color2;
-    display[13].draw();
-    set_divs();
+    reset_batt(13);
 });
 
 $("#batt15").click(function(){
@@ -559,11 +522,7 @@ $("#batt15").click(function(){
     $('#batt_name').html('<?php if(isset($bat_name[14])) print $bat_name[14]; ?>');
     $('#batt_umin').html('<?php if(isset($bat_min[14])) print $bat_min[14]; ?>');
     $('#batt_umax').html('<?php if(isset($bat_max[14])) print $bat_max[14]; ?>');
-    reset_batt();
-    $('#batt15').css('backgroundColor', but_color2);
-    display[14].colorOff = but_color2;
-    display[14].draw();
-    set_divs();
+    reset_batt(14);
 });
 
 $("#batt16").click(function(){
@@ -571,11 +530,7 @@ $("#batt16").click(function(){
     $('#batt_name').html('<?php if(isset($bat_name[15])) print $bat_name[15]; ?>');
     $('#batt_umin').html('<?php if(isset($bat_min[15])) print $bat_min[15]; ?>');
     $('#batt_umax').html('<?php if(isset($bat_max[15])) print $bat_max[15]; ?>');
-    reset_batt();
-    $('#batt16').css('backgroundColor', but_color2);
-    display[15].colorOff = but_color2;
-    display[15].draw();
-    set_divs();
+    reset_batt(15);
 });
 
 $("#batt17").click(function(){
@@ -583,11 +538,7 @@ $("#batt17").click(function(){
     $('#batt_name').html('<?php if(isset($bat_name[16])) print $bat_name[16]; ?>');
     $('#batt_umin').html('<?php if(isset($bat_min[16])) print $bat_min[16]; ?>');
     $('#batt_umax').html('<?php if(isset($bat_max[16])) print $bat_max[16]; ?>');
-    reset_batt();
-    $('#batt17').css('backgroundColor', but_color2);
-    display[16].colorOff = but_color2;
-    display[16].draw();
-    set_divs();
+    reset_batt(16);
 });
 
 $("#batt18").click(function(){
@@ -595,11 +546,7 @@ $("#batt18").click(function(){
     $('#batt_name').html('<?php if(isset($bat_name[17])) print $bat_name[17]; ?>');
     $('#batt_umin').html('<?php if(isset($bat_min[17])) print $bat_min[17]; ?>');
     $('#batt_umax').html('<?php if(isset($bat_max[17])) print $bat_max[17]; ?>');
-    reset_batt();
-    $('#batt18').css('backgroundColor', but_color2);
-    display[17].colorOff = but_color2;
-    display[17].draw();
-    set_divs();
+    reset_batt(17);
 });
 
 $("#range_1d").click(function(){
@@ -682,15 +629,11 @@ $('#batt_umax').hide();
 <?php if ( ! isset( $bat_name[17] ) ) print "$('#batt18').hide();"; ?>
 
 
-reset_batt();
+reset_batt(0);
 reset_range();
 $('#range_1d').css('backgroundColor', but_color2);
-$('#batt1').css('backgroundColor', but_color2);
-display[0].colorOff = but_color2;
-display[0].draw();
 $('#batt_umin').html('<?php print $bat_min[0]; ?>');
 $('#batt_umax').html('<?php print $bat_max[0]; ?>');
-set_divs();
 
 </script>	
 <meta http-equiv="expires" content="0">
