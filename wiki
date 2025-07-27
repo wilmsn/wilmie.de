@@ -1,1 +1,1 @@
-/daten/web/wiki
+/daten/web/mediawiki-1.43.0/
