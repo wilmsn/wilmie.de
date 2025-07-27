@@ -3,7 +3,7 @@ $instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
 //$db_dh = new mysqli($db_dh_server, $db_dh_user, $db_dh_pass, $db_dh_db);
-$db_sh = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
+$db_rf24 = new mysqli($db_rf24_server, $db_rf24_user, $db_rf24_pass, $db_rf24_db);
 $mobile_browser = is_mobile_browser(); 
 ?>
 <html>
@@ -464,28 +464,28 @@ $(document).ready(function() {
 </div>
 <div id='wetter1a'><center><div class='label'>Temperatur:</div><div class='wert'>
 <?php
-  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_temp_sensor);
+  $results = $db_rf24->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_temp_sensor);
   $row = $results->fetch_assoc();
   echo number_format($row['last_value'],1, ",", ".");
 ?>
  C</b></center></div>
 <div id='wetter1b'><center><div class='label'>Luftdruck:</div><div class='wert'>
 <?php
-  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_pres_sensor);
+  $results = $db_rf24->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_pres_sensor);
   $row = $results->fetch_assoc();
   echo number_format($row['last_value'],0, ",", ".");
 ?>
  hPa</b></center></div>
 <div id='wetter1c'><center><div class='label'>rel. Luftfeuchte:</div><div class='wert'>
 <?php
-  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_humi_sensor);
+  $results = $db_rf24->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_humi_sensor);
   $row = $results->fetch_assoc();
   echo number_format($row['last_value'],1, ",", ".");
 ?>
  &#37;</div></center></div>
 <div id='wetter1d'><center><div class='label'>Solarzelle:</div><div class='wert'>
 <?php
-  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_sol_sensor);
+  $results = $db_rf24->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_sol_sensor);
   $row = $results->fetch_assoc();
   echo number_format($row['last_value'],1, ",", ".");
 ?>
@@ -510,6 +510,6 @@ $(document).ready(function() {
 </div>
 <?php
 //$db_dh->close();
-$db_sh->close(); 
+$db_rf24->close(); 
 ?>
 

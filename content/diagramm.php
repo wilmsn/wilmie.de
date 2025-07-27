@@ -268,7 +268,7 @@ switch ($range) {
     break;
     default:
 	$label_date_format = '%d.%m.%y %H:%i'; 
-	$label_2 = " Uhrzeit ->"; 
+	if ($sizey > 100) $label_2 = " Uhrzeit ->";
 	$diagramtime = 86400;
 	$table = $sensordata_tab;
 	$minData = 5;
@@ -328,7 +328,8 @@ $starttime = mk_starttime($offset, $range);
 			}
 	}
 
-$stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime." order by utime asc";
+$stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < (".$starttime." + ".$diagramtime.") order by utime asc";
+error_log($stmt);
 $results = $db->query($stmt);
 $last_utime=0;
 $minTickPos=array();
@@ -410,7 +411,11 @@ $graph = new Graph($sizex, $sizey);
 if ($hasSecondGrah) {
     $graph->SetMargin(50,50,0,0);
 } else {
-    $graph->SetMargin(50,20,0,0);
+    if ($sizey > 100) {
+        $graph->SetMargin(50,20,0,0);
+    } else {
+        $graph->SetMargin(30,20,0,0);
+    }
 }
 $graph->title->Set($label_1);
 
@@ -436,7 +441,10 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
     } else {
         $ydataMin=min($ydata);
         $ydataMax=max($ydata);
-        if ($ydataMax > 0) {
+        if ( $y2dataMin >= 0 && $y2dataMax <= 1.1) {
+            $y2scaleMin = 0;
+            $y2scaleMax = 1.1;
+        } else if ($ydataMax > 0) {
             if ($ydataMax-$ydataMin > 5 ) {
                 if ($ydataMin > 0) {
                     $yscaleMin=floor($ydataMin/10)*10;
@@ -583,7 +591,11 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
     $graph->xaxis->title->Set($label_2); 
     $graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
     $graph->xaxis->SetTitleMargin(10);
-    $graph->legend->SetAbsPos(80,20,'left','top');
+    if ($sizey > 100) {
+      $graph->legend->SetAbsPos(80,20,'left','top');
+    } else {
+      $graph->legend->SetAbsPos(20,2,'left','top');
+    }
     $graph->legend->SetFrameWeight(2);
     $graph->legend->SetShadow();
     $graph->legend->SetColor('darkgreen');
