@@ -4,8 +4,13 @@ var getfhem = "/admin/getfhem.php";
 var needhelp = "/img/gefahrenstelle_20x20.jpg"
 var w = screen.width;
 var devwidth = "25%"
+var but_color2 = '#DDDDDD';
+var but_color1 = '#AAAAAA';
+var room_no;
+var dev_no;
 
-function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
+
+function device_switch_get_state(this_room, this_dev, fhem_HS_dev, fhem_dev) {
     var result;
     $.get(basedir+'getfhem.php',{geraet: fhem_HS_dev, eigenschaft: "state" }, function(data) {
         if (data == 0) { result = "(aus) "; } else { result = "("+data+") "; }
@@ -13,48 +18,48 @@ function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
         if (data == 2) { result = "(auto) "; }
         switch (data) {
             case "aus":
-                $("#r" + room_no + "sws1b").css("background-color", "#a80329");
-                $("#r" + room_no + "sws2b").css("background-color", "grey");
-                $("#r" + room_no + "sws3b").css("background-color", "grey");
+                $("#r" + this_room + "sws1b").css("background-color", "#a80329");
+                $("#r" + this_room + "sws2b").css("background-color", "grey");
+                $("#r" + this_room + "sws3b").css("background-color", "grey");
             break;
             case "auto":
-                $("#r" + room_no + "sws1b").css("background-color", "grey");
-                $("#r" + room_no + "sws2b").css("background-color", "#a80329");
-                $("#r" + room_no + "sws3b").css("background-color", "grey");
+                $("#r" + this_room + "sws1b").css("background-color", "grey");
+                $("#r" + this_room + "sws2b").css("background-color", "#a80329");
+                $("#r" + this_room + "sws3b").css("background-color", "grey");
             break;
             case "ein":
-                $("#r" + room_no + "sws1b").css("background-color", "grey");
-                $("#r" + room_no + "sws2b").css("background-color", "grey");
-                $("#r" + room_no + "sws3b").css("background-color", "#a80329");
+                $("#r" + this_room + "sws1b").css("background-color", "grey");
+                $("#r" + this_room + "sws2b").css("background-color", "grey");
+                $("#r" + this_room + "sws3b").css("background-color", "#a80329");
             break;
         }
         $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
             if (data == 0) { result += "aus"; }
             if (data == 1) { result += "ein"; }
-            $("#r"+room_no+"d"+dev_no+"v").html(result);
+            $("#r" + this_room + "d" + this_dev + "v").html(result);
             switch(data) {
                 case "1":
                 case "on":
-                    $("#r"+room_no+"sws0b").css("background-color", "yellow"); //.css("color","black");
+                    $("#r" + this_room + "sws0b").css("background-color", "yellow"); //.css("color","black");
                 break;
                 case "0":
                 case "off":
-                    $("#r"+room_no+"sws0b").css("background-color", "black").css("color","white");
+                    $("#r" + this_room + "sws0b").css("background-color", "black").css("color","white");
                 break;
                 default:
-                    $("#r"+room_no+"sws0b").append("-"+data);
+                    $("#r" + this_room + "sws0b").append("-"+data);
             }
-            show_sw_val(fhem_dev, fhem_HS_dev, room_no, dev_no );
+            show_sw_val(fhem_dev, fhem_HS_dev, this_room, this_dev );
         });
 	});
 }
 
-function device_switch_click_func(room_no, dev_no, fhem_HS_dev, fhem_dev, dev_state) {
+function device_switch_click_func(this_room, this_dev, fhem_HS_dev, fhem_dev, dev_state) {
     $.get(basedir+'setfhem.php',{geraet: fhem_HS_dev, eigenschaft: " ", wert: dev_state }, function(data) {
         setTimeout(function() {
-            device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev);
+            device_switch_get_state(this_room, this_dev, fhem_HS_dev, fhem_dev);
         }, 5000);
-            device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev);
+            device_switch_get_state(this_room, this_dev, fhem_HS_dev, fhem_dev);
     });
 }
 
@@ -62,22 +67,25 @@ function haus(titel) {
   // Parameter:
   // titel = Die Ueberschrift in der ersten Zeile (zentriert)
   $("#haus").html("<div class='haus_head'>" + titel + "</div>");
+  room_no = 0;
+  dev_no = 0;
 }
 
-function show_val(room_no, dev_no, result, lev1, lev2, lev3) {
-    $("#r"+room_no+"d"+dev_no+"v").html(result);
+function show_val(this_room, this_dev, result, lev1, lev2, lev3) {
+    alert("room:"+this_room+" dev:"+this_dev+" result:"+result);
+    $("#r" + this_room + "d" + this_dev + "v").html(result);
     if ( window.innerWidth < 600 ) {
-        if (result.length > lev1 - 5) $("#r" + room_no + "d" + dev_no + "v").css("font-size","small");
-        if (result.length > lev2 - 5) $("#r" + room_no + "d" + dev_no + "v").css("font-size","x-small");
-        if (result.length > lev3 - 5) $("#r" + room_no + "d" + dev_no + "v").css("font-size","xx-small");
+        if (result.length > lev1 - 5) $("#r" + this_room + "d" + this_dev + "v").css("font-size","small");
+        if (result.length > lev2 - 5) $("#r" + this_room + "d" + this_dev + "v").css("font-size","x-small");
+        if (result.length > lev3 - 5) $("#r" + this_room + "d" + this_dev + "v").css("font-size","xx-small");
     } else {
-        if (result.length > lev1) $("#r" + room_no + "d" + dev_no + "v").css("font-size","small");
-        if (result.length > lev2) $("#r" + room_no + "d" + dev_no + "v").css("font-size","x-small");
-        if (result.length > lev3) $("#r" + room_no + "d" + dev_no + "v").css("font-size","xx-small");
+        if (result.length > lev1) $("#r" + this_room + "d" + this_dev + "v").css("font-size","small");
+        if (result.length > lev2) $("#r" + this_room + "d" + this_dev + "v").css("font-size","x-small");
+        if (result.length > lev3) $("#r" + this_room + "d" + this_dev + "v").css("font-size","xx-small");
     }
 }
 
-function show_ht_val(fhem_dev, room_no, dev_no ) {
+function show_ht_val(fhem_dev, this_room, this_dev ) {
     var result;
     var mode;
     $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "mode" }, function(data) {
@@ -89,13 +97,13 @@ function show_ht_val(fhem_dev, room_no, dev_no ) {
         result = "(" + mode + ") ";
         $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "desiredTemperature" }, function(data) {
             result += parseInt(data*10)/10+" &deg;C";
-            show_val(room_no, dev_no, result, 17, 22, 27);
+            show_val(this_room, this_dev, result, 17, 22, 27);
         });
       });
 
 }
 
-function show_sw_val(fhem_dev, fhem_HS_dev, room_no, dev_no ) {
+function show_sw_val(fhem_dev, fhem_HS_dev, this_room, this_dev ) {
     var result;
     $.get(basedir+'getfhem.php',{geraet: fhem_HS_dev, eigenschaft: "state" }, function(data) {
         if (data == 0) { result = "(aus) "; } else { result = "("+data+") "; }
@@ -104,7 +112,7 @@ function show_sw_val(fhem_dev, fhem_HS_dev, room_no, dev_no ) {
         $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
             if (data == 0) { result += "aus"; }
             if (data == 1) { result += "ein"; }
-            show_val(room_no, dev_no, result, 15, 20, 25);
+            show_val(this_room, this_dev, result, 15, 20, 25);
         });
     });
 }
@@ -119,7 +127,9 @@ function show_sw_val(fhem_dev, fhem_HS_dev, room_no, dev_no ) {
  * r<X>d    => Ein Wrapper für die Devices
  * r<X>d<Y> => 10 Platzhalter für Devices
  *******************************************************************************/
-function add_room( room_no, room_name ) {
+function add_room(room_name ) {
+    room_no++;
+    dev_no=1;
     $("#haus").append("<div class='room' id='r" + room_no + "'></div>");
     $("#r" + room_no).append("<div class='room_head' id='r" + room_no + "h'></div>"+
                               "<div class='room_dev' id='r" + room_no + "d'></div>"+
@@ -172,9 +182,9 @@ function add_room( room_no, room_name ) {
 /*****************************************************************
  * Aufruf ist teilweise abhängig von dem Typ (dev_typ):
  * Einheitlicher Teil:
- * room_no = Raum Nummer; dev_no = Geräte Nummer; dev_typ = Geräte Typ; dev_name = Beschriftung; fhem_dev = FHEM Device für den aktuellen Wert
+ * dev_typ = Geräte Typ; dev_name = Beschriftung; fhem_dev = FHEM Device für den aktuellen Wert
  *
- * Die weiteren Parameter (p1 bis p6) sind abhängig vom Geräte Typ.
+ * Die weiteren Parameter (p1 bis p7) sind abhängig vom Geräte Typ.
  *
  * Geräte Typ Shalter     (SW): p1 = Hauptschalterdevice p2 = SensorID p3 ... p7 = ""
  * Heizungsthermostat     (HT): p1 ... p7 = ""
@@ -182,14 +192,15 @@ function add_room( room_no, room_name ) {
  * Solar                  (SO): p1 = Datenbank; p2 = Sensor1; p3 = Sensor2; p4 = Sensor3; p5 ... p7 = ""
  * Ohne Pulldown          (--): p1 = Einheit; p2 = Dezimalstellen p3 ... p7 = ""
  ****************************************************************/
-function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4, p5, p6, p7) {
+function add_device(dev_typ, dev_name, fhem_dev, p1, p2, p3, p4, p5, p6, p7) {
     var result = " ";
     var value  = 0;
+//    alert(room_no+":"+dev_no);
     $("#r" + room_no + "d" + dev_no).append("<div class='dev_l' id='r" + room_no + "d" + dev_no + "l'>" + dev_name + "</div>")
                                     .append("<div class='dev_v' id='r" + room_no + "d" + dev_no + "v'></div>")
                                     .append("<div class='dev_p' id='r" + room_no + "d" + dev_no + "p'></div>")
                                     .show();
-    $("#r" + room_no + "d" + dev_no + "p").append("<img id='r"+ room_no + "d" + dev_no + "ba' src='"+arrow_up+"' width='100%' height='100%' />");
+    $("#r" + room_no + "d" + dev_no + "p").append("<img id='r" + room_no + "d" + dev_no + "ba' src='" + arrow_up + "' width='100%' height='100%' />");
     if ( window.innerWidth < 600 ) {
         if (dev_name.length > 10) $("#r" + room_no + "d" + dev_no + "l").css("font-size","small");
         if (dev_name.length > 15) $("#r" + room_no + "d" + dev_no + "l").css("font-size","x-small");
@@ -215,6 +226,7 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
         if ( p7 == 1 ) value = Math.round(data * 10) / 10;
         if ( p7 == 2 ) value = Math.round(data * 100) / 100;
         result = value + " " + p1;
+//        alert(result);
         show_val(room_no, dev_no, result, 15, 20, 25);
       });
     }
@@ -233,14 +245,6 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
       $("#r"+room_no+"d"+dev_no).css("border-right","1px solid #a80329");
       if (window.innerWidth > 800 && dev_name.length < 15) $("#r" + room_no + "d" + dev_no + "l").css("font-size","medium");
     }
-//####### SOL Spezialdiagramm für Balkonkraftwerk ##########
-    if (dev_typ.localeCompare("SO") == 0) {
-      $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
-        const temp = Math.round(data * 10) / 10;
-        result = temp + " W";
-        show_val(room_no, dev_no, result, 15, 20, 25);
-      });
-    }
 //####### ENDE ############
 //-----Ende Anzeige in Devicefeld-------
     $("#r" + room_no + "d" + dev_no + "p").click(function() {
@@ -253,9 +257,102 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
 //-----Anzeige im externen Detailfeld-------
 //######## DG Liniendiagramm generisch ###########
                 if (dev_typ.localeCompare("DG") == 0) {
-                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dia'></div>");
-                    $("#r" + room_no + "dia").html("<img src='/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+p4+"&graph="+p6+"&sensor1legend="+p5+"'>");
+                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dx'></div><div id='r"+room_no+"ds' style='height:70px;'></div>");
+                    $("#r" + room_no + "ds").append("<div id='r" + room_no + "_nav1' class='nav nav1'>Diagramm<br>1 Tag</div>")
+                                            .append("<div id='r" + room_no + "_nav2' class='nav nav2'>Diagramm<br>1 Monat</div>")
+                                            .append("<div id='r" + room_no + "_nav3' class='nav nav3'>Diagramm<br>1 Jahr</div>")
+                                            .append("<div id='r" + room_no + "_nav4' class='nav nav4'>Diagramm<br>10 Jahre</div>")
+                                            .append("<div id='r" + room_no + "_nav5' class='nav nav5'><img src='/img/arrow_left.gif' height='50' width='50'></div>")
+                                            .append("<div id='r" + room_no + "_nav6' class='nav nav6'><img id='r" + room_no + "_nav6_img' src='/img/arrow_right_e.gif' height='50' width='50'></div>")
+                                            .append("<div id='r" + room_no + "_buf1' style='display:none;'></div>")
+                                            .append("<div id='r" + room_no + "_buf2' style='display:none;'></div>")
+                                            .css("background-color","#aaaaaa");
+                    if (p4.localeCompare("1m") == 0) {
+                        $("#r" + room_no + "_nav1").css("display","none");
+                    }
+                    if ((p4.localeCompare("3m") == 0) || (p4.localeCompare("1y") == 0)) {
+                        $("#r" + room_no + "_nav1").css("display","none");
+                        $("#r" + room_no + "_nav2").css("display","none");
+                    }
+                    $("#r" + room_no + "dx").html("<img id='r" + room_no + "dia' src='/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+p4+"&graph="+p6+"&sensor1legend="+p5+"'>");
                     $("#r" + room_no + "a1").show();
+                    $("#r" + room_no + "_buf1").html(p4);
+                    $("#r" + room_no + "_buf2").html("0");
+                    $("#r" + room_no + "_nav1").click(function(){
+                        $("#r" + room_no + "_buf1").html("1d");
+                        $("#r" + room_no + "_buf2").html("0");
+                        $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p5+"");
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav2").click(function(){
+                        $("#r" + room_no + "_buf1").html("1m");
+                        $("#r" + room_no + "_buf2").html("0");
+                        $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range=1m&graph="+p6+"&sensor1legend="+p5+"");
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav3").click(function(){
+                        $("#r" + room_no + "_buf1").html("1y");
+                        $("#r" + room_no + "_buf2").html("0");
+                        $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range=1y&graph="+p6+"&sensor1legend="+p5+"");
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav4").click(function(){
+                        $("#r" + room_no + "_buf1").html("10y");
+                        $("#r" + room_no + "_buf2").html("0");
+                        $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range=10y&graph="+p6+"&sensor1legend="+p5+"");
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav5").click(function(){
+                        var offset=parseInt($("#r" + room_no + "_buf2").html()) +1;
+                        var ts=$("#r" + room_no + "_buf1").html();
+                        $("#r" + room_no + "_nav6_img").attr("src","/img/arrow_right.gif");
+                        $("#r" + room_no + "_buf2").html(offset);
+                        if ( ts.localeCompare("1d") == 0 ) {
+                            $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p5+"");
+                        } else {
+                            $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph="+p6+"&sensor1legend="+p5+"");
+                       }
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav6").click(function(){
+                        if (parseInt($("#r" + room_no + "_buf2").html()) > 0) {
+                            var offset=parseInt($("#r" + room_no + "_buf2").html()) -1;
+                            var ts=$("#r" + room_no + "_buf1").html();
+                            $("#r" + room_no + "_buf2").html(offset);
+                            if ( ts.localeCompare("1d") == 0 ) {
+                                $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p5+"");
+                            } else {
+                                $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph="+p6+"&sensor1legend="+p5+"");
+                            }
+                        } else {
+                            $("#r" + room_no + "_nav6_img").attr("src","/img/arrow_right_e.gif");
+                        }
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    if ( window.innerWidth < 600 ) {
+                        $("#r" + room_no + "ds").css("height","130px");
+                        $("#r" + room_no + "_nav4").removeClass("nav4").addClass("nav4_mobile");
+                        $("#r" + room_no + "_nav5").removeClass("nav5").addClass("nav5_mobile");
+                        $("#r" + room_no + "_nav6").removeClass("nav6").addClass("nav6_mobile");
+                    }
                 }
 //####### Heizung #############
                 if (dev_typ.localeCompare("HT") == 0) {
@@ -327,9 +424,9 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
                     $("#r" + room_no + "sws2").append("<button type='button' id='r" + room_no + "sws2b' class='button_akt'>Auto</button>");
                     $("#r" + room_no + "sws3").append("<button type='button' id='r" + room_no + "sws3b' class='button_akt'>Ein</button>");
                     //Diagrammfeld aufbauen
-                    //$("#r" + room_no + "swd").append("<div>Test Text</div>");
-                    $("#r" + room_no + "swd").html("<img src='/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=100&range=1d&graph=bar&sensor1color=#000000&sensor1legend=Zustand'>");
-                    //$("#r" + room_no + "swd").show();
+                    if (p2.length > 0) {
+                        $("#r" + room_no + "swd").html("<img src='/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=100&range=1d&graph=bar&sensor1color=#000000'>");
+                    }
                     //Abfrage des Hauptschalters und Einstellung der Schalter
                     device_switch_get_state(room_no, dev_no, p1, fhem_dev);
                     //Click Funktionen
@@ -342,12 +439,6 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
                     $("#r" + room_no + "sws3b").click(function(){
                         device_switch_click_func(room_no, dev_no, p1, fhem_dev, "1");
                     });
-                }
-//####### SOL Spezialdiagramm für Balkonkraftwerk ##########
-                if (dev_typ.localeCompare("SO") == 0) {
-                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dia'></div>");
-                    $("#r" + room_no + "dia").html("<img src='/content/diagramm.php?database="+p1+"&sensor1="+p2+"&sensor1color=F3E03B&sensor1legend=PV_Ges Watt&sensor1a="+p3+"&sensor1acolor=D3E03B&sensor1alegend=PV2&sensor1b="+p4+"&sensor1bcolor=A3E03B&sensor1blegend=PV3&sizex="+w+"&sizey=370'>");
-                    $("#r" + room_no + "a1").show();
                 }
 //####### ENDE ############
 //-----Ende Anzeige in Detailfeld-------
@@ -368,4 +459,5 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
             $("#r" + room_no + "d" + dev_no).css("top","40px").css("border-bottom","1px solid #a80329").css("border-top","1px solid #a80329");
         }
     }
+    dev_no++;
 }
