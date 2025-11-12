@@ -4,6 +4,9 @@ var getfhem = "/admin/getfhem.php";
 var needhelp = "/img/gefahrenstelle_20x20.jpg"
 var w = screen.width;
 var devwidth = "25%"
+var but_color2 = '#DDDDDD';
+var but_color1 = '#AAAAAA';
+
 
 function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
     var result;
@@ -233,14 +236,6 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
       $("#r"+room_no+"d"+dev_no).css("border-right","1px solid #a80329");
       if (window.innerWidth > 800 && dev_name.length < 15) $("#r" + room_no + "d" + dev_no + "l").css("font-size","medium");
     }
-//####### SOL Spezialdiagramm für Balkonkraftwerk ##########
-    if (dev_typ.localeCompare("SO") == 0) {
-      $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
-        const temp = Math.round(data * 10) / 10;
-        result = temp + " W";
-        show_val(room_no, dev_no, result, 15, 20, 25);
-      });
-    }
 //####### ENDE ############
 //-----Ende Anzeige in Devicefeld-------
     $("#r" + room_no + "d" + dev_no + "p").click(function() {
@@ -253,9 +248,102 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
 //-----Anzeige im externen Detailfeld-------
 //######## DG Liniendiagramm generisch ###########
                 if (dev_typ.localeCompare("DG") == 0) {
-                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dia'></div>");
-                    $("#r" + room_no + "dia").html("<img src='/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+p4+"&graph="+p6+"&sensor1legend="+p5+"'>");
+                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dx'></div><div id='r"+room_no+"ds' style='height:70px;'></div>");
+                    $("#r" + room_no + "ds").append("<div id='r" + room_no + "_nav1' class='nav nav1'>Diagramm<br>1 Tag</div>")
+                                            .append("<div id='r" + room_no + "_nav2' class='nav nav2'>Diagramm<br>1 Monat</div>")
+                                            .append("<div id='r" + room_no + "_nav3' class='nav nav3'>Diagramm<br>1 Jahr</div>")
+                                            .append("<div id='r" + room_no + "_nav4' class='nav nav4'>Diagramm<br>10 Jahre</div>")
+                                            .append("<div id='r" + room_no + "_nav5' class='nav nav5'><img src='/img/arrow_left.gif' height='50' width='50'></div>")
+                                            .append("<div id='r" + room_no + "_nav6' class='nav nav6'><img id='r" + room_no + "_nav6_img' src='/img/arrow_right_e.gif' height='50' width='50'></div>")
+                                            .append("<div id='r" + room_no + "_buf1' style='display:none;'></div>")
+                                            .append("<div id='r" + room_no + "_buf2' style='display:none;'></div>")
+                                            .css("background-color","#aaaaaa");
+                    if (p4.localeCompare("1m") == 0) {
+                        $("#r" + room_no + "_nav1").css("display","none");
+                    }
+                    if ((p4.localeCompare("3m") == 0) || (p4.localeCompare("1y") == 0)) {
+                        $("#r" + room_no + "_nav1").css("display","none");
+                        $("#r" + room_no + "_nav2").css("display","none");
+                    }
+                    $("#r" + room_no + "dx").html("<img id='r" + room_no + "dia' src='/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+p4+"&graph="+p6+"&sensor1legend="+p5+"'>");
                     $("#r" + room_no + "a1").show();
+                    $("#r" + room_no + "_buf1").html(p4);
+                    $("#r" + room_no + "_buf2").html("0");
+                    $("#r" + room_no + "_nav1").click(function(){
+                        $("#r" + room_no + "_buf1").html("1d");
+                        $("#r" + room_no + "_buf2").html("0");
+                        $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p5+"");
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav2").click(function(){
+                        $("#r" + room_no + "_buf1").html("1m");
+                        $("#r" + room_no + "_buf2").html("0");
+                        $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range=1m&graph="+p6+"&sensor1legend="+p5+"");
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav3").click(function(){
+                        $("#r" + room_no + "_buf1").html("1y");
+                        $("#r" + room_no + "_buf2").html("0");
+                        $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range=1y&graph="+p6+"&sensor1legend="+p5+"");
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav4").click(function(){
+                        $("#r" + room_no + "_buf1").html("10y");
+                        $("#r" + room_no + "_buf2").html("0");
+                        $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range=10y&graph="+p6+"&sensor1legend="+p5+"");
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav5").click(function(){
+                        var offset=parseInt($("#r" + room_no + "_buf2").html()) +1;
+                        var ts=$("#r" + room_no + "_buf1").html();
+                        $("#r" + room_no + "_nav6_img").attr("src","/img/arrow_right.gif");
+                        $("#r" + room_no + "_buf2").html(offset);
+                        if ( ts.localeCompare("1d") == 0 ) {
+                            $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p5+"");
+                        } else {
+                            $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph="+p6+"&sensor1legend="+p5+"");
+                       }
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    $("#r" + room_no + "_nav6").click(function(){
+                        if (parseInt($("#r" + room_no + "_buf2").html()) > 0) {
+                            var offset=parseInt($("#r" + room_no + "_buf2").html()) -1;
+                            var ts=$("#r" + room_no + "_buf1").html();
+                            $("#r" + room_no + "_buf2").html(offset);
+                            if ( ts.localeCompare("1d") == 0 ) {
+                                $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p5+"");
+                            } else {
+                                $("#r" + room_no + "dia").attr("src","/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph="+p6+"&sensor1legend="+p5+"");
+                            }
+                        } else {
+                            $("#r" + room_no + "_nav6_img").attr("src","/img/arrow_right_e.gif");
+                        }
+                    }).on( "mouseover", function() {
+                        $(this).css("background-color", but_color1);
+                    }).on( "mouseout", function() {
+                        $(this).css("background-color", but_color2);
+                    }).css("cursor","pointer");
+                    if ( window.innerWidth < 600 ) {
+                        $("#r" + room_no + "ds").css("height","130px");
+                        $("#r" + room_no + "_nav4").removeClass("nav4").addClass("nav4_mobile");
+                        $("#r" + room_no + "_nav5").removeClass("nav5").addClass("nav5_mobile");
+                        $("#r" + room_no + "_nav6").removeClass("nav6").addClass("nav6_mobile");
+                    }
                 }
 //####### Heizung #############
                 if (dev_typ.localeCompare("HT") == 0) {
@@ -327,9 +415,9 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
                     $("#r" + room_no + "sws2").append("<button type='button' id='r" + room_no + "sws2b' class='button_akt'>Auto</button>");
                     $("#r" + room_no + "sws3").append("<button type='button' id='r" + room_no + "sws3b' class='button_akt'>Ein</button>");
                     //Diagrammfeld aufbauen
-                    //$("#r" + room_no + "swd").append("<div>Test Text</div>");
-                    $("#r" + room_no + "swd").html("<img src='/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=100&range=1d&graph=bar&sensor1color=#000000&sensor1legend=Zustand'>");
-                    //$("#r" + room_no + "swd").show();
+                    if (p2.length > 0) {
+                        $("#r" + room_no + "swd").html("<img src='/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=100&range=1d&graph=bar&sensor1color=#000000'>");
+                    }
                     //Abfrage des Hauptschalters und Einstellung der Schalter
                     device_switch_get_state(room_no, dev_no, p1, fhem_dev);
                     //Click Funktionen
@@ -342,12 +430,6 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
                     $("#r" + room_no + "sws3b").click(function(){
                         device_switch_click_func(room_no, dev_no, p1, fhem_dev, "1");
                     });
-                }
-//####### SOL Spezialdiagramm für Balkonkraftwerk ##########
-                if (dev_typ.localeCompare("SO") == 0) {
-                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dia'></div>");
-                    $("#r" + room_no + "dia").html("<img src='/content/diagramm.php?database="+p1+"&sensor1="+p2+"&sensor1color=F3E03B&sensor1legend=PV_Ges Watt&sensor1a="+p3+"&sensor1acolor=D3E03B&sensor1alegend=PV2&sensor1b="+p4+"&sensor1bcolor=A3E03B&sensor1blegend=PV3&sizex="+w+"&sizey=370'>");
-                    $("#r" + room_no + "a1").show();
                 }
 //####### ENDE ############
 //-----Ende Anzeige in Detailfeld-------

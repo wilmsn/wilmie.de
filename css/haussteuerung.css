@@ -205,3 +205,56 @@
     text-decoration:none;
     cursor: default;
 }
+
+.nav {
+  position: absolute;
+  border: #000000 solid 1px;
+  background-color: #dddddd;
+  text-align: center;
+  height: 50px;
+  margin-top: 10px;
+}
+
+.nav1 {
+  left: 10px;
+  width: 100px;
+}
+
+.nav2 {
+  left: 120px;
+  width: 100px;
+}
+
+.nav3 {
+  left: 230px;
+  width: 100px;
+  }
+
+.nav4 {
+  left: 350px;
+  width: 100px;
+}
+
+.nav5 {
+  left: 1030px;
+}
+
+.nav6 {
+  left: 1100px;
+}
+
+.nav4_mobile {
+  left: 10px;
+  width: 100px;
+  margin-top: 70px;
+}
+
+.nav5_mobile {
+  left: 170px;
+  margin-top: 70px;
+}
+
+.nav6_mobile {
+  left: 230px;
+  margin-top: 70px;
+}

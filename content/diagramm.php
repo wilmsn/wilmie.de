@@ -180,6 +180,9 @@ if (isset($_GET["sensor1a"])) {
 }
 if (isset($_GET["sensor1alegend"])) {
     $sensor1alegend = $_GET["sensor1alegend"];
+    $hassensor1legend = true;
+} else {
+    $hassensor1legend = false;
 }
 if (isset($_GET["sensor1b"])) {
     $sensor1b = $_GET["sensor1b"];
@@ -559,7 +562,9 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
     }
     if ( $gtype == "bar" ) {
         $bar = new BarPlot($ydata,$xdata);
-        $bar->SetLegend($sensor1legend);
+        if ( $hassensor1legend ) {
+          $bar->SetLegend($sensor1legend);
+        }
         $bar->SetWidth(5);
         $graph->Add($bar);
         $bar->SetColor($sensor1color);
