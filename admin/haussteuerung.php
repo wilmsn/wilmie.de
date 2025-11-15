@@ -6,6 +6,7 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
+
   haus("Haussteuerung");
   add_room("Draussen");
   add_device("DG", "Temp",            "Aussen_Temp",                   "&deg;C",              "datahub",  "1",   "1d", "Temperatur", "line", "1");
@@ -21,10 +22,12 @@ $(document).ready(function() {
   add_device("DG", "Akku Ladung",     "Solaranlage_Batt_Proz",          "%",                  "datahub",  "1056", "1d", "Ladestand", "line", "1");
   add_device("DG", "Akku Charge",     "Solaranlage_Batt_Charge",        "W",                  "datahub",  "1051", "1d", "Laden/Entladen", "line", "1");
   add_device("--", "Ladezyklen",      "Solaranlage_Ladezyklen",         "",                     "0",        "",     "",   "",          "",     "");
-/*  add_room("Balkonkraftwerk");
+  add_room("Balkonkraftwerk");
   add_device("DG", "Aktuell",         "Balkonkraftwerk_cur",            "W",                  "datahub",  "1010", "1d", "Erzeugung", "line", "1");
   add_device("DG", "Tag",             "Balkonkraftwerk_ds",             "KWh",                "datahub",  "1011", "1m", "KWh/Tag",   "bar",  "1");
   add_device("DG", "Total",           "Balkonkraftwerk_tot",            "KWh",                "datahub",  "1012", "1y", "KWh/Tag",   "bar",  "0");
+//  add_room("Strom");
+
   add_room("Gas");
   add_device("DG", "Gas akt.",        "GasVerbrauch_KW_aktuell",        "KW",                 "datahub", "1004", "1d", "Gasverbrauch", "line", "0");
   add_device("DG", "Gas Tag",         "GasVerbrauch_KWH_Tag",           "KWh",                "datahub", "1003", "1m", "Gasverbrauch", "bar",  "0");
@@ -41,7 +44,7 @@ $(document).ready(function() {
   add_device("DG", "Temp",            "Wohnzimmer_Temp",                "&deg;C",              "datahub", "24",   "1d", "Temperatur",   "line", "1");
   add_device("HT", "Hzg_gr",          "HT_Wohnzimmer1",                 "",                    "",        "",     "",   "",             "",     "" );
   add_device("HT", "Hzg_kl",          "HT_Wohnzimmer2",                 "",                    "",        "",     "",   "",             "",     "" );
-  add_device("SW", "Licht",           "wohnzimmerlicht_",               "HS_WohnzimmerLicht",  "",        "",     "",   "",             "",     "" );
+  add_device("SW", "Licht",           "WohnzimmerLicht",                "HS_WohnzimmerLicht",  "",        "",     "",   "",             "",     "" );
   add_device("SW", "Display",         "WohnzimmerDisplay",              "HS_WohnzimmerNode",   "",        "",     "",   "",             "",     "" );
   add_device("SW", "Schranklicht",    "Steckdose1_",                    "HS_Steckdose1",       "",        "",     "",   "",             "",     "" );
   add_room("Kueche");
@@ -56,7 +59,7 @@ $(document).ready(function() {
   add_room("Flur");
   add_device("DG", "Temp",            "Flur_Temp",                      "&deg;C",              "datahub", "23",   "1d", "Temperatur",   "line", "1");
   add_device("SW", "Treppenhaus",     "TreppenhausLicht_",              "HS_TreppenhausLicht", "",        "",     "",   "",             "",     "" );
-  add_device("SW", "Flurlicht",       "FlurLicht_",                     "HS_FlurLicht",        "501",     "",     "",   "",             "",     "" );
+  add_device("SW", "Flurlicht",       "FlurLicht",                      "HS_FlurLicht",        "501",     "",     "",   "",             "",     "" );
   add_room("Schlafzimmer");
   add_device("DG", "Temp",            "Schlafzimmer_Temp",              "&deg;C",             "datahub", "26",   "1d", "Temperatur",   "line", "1");
   add_device("DG", "Batt",            "N102_Ubatt",                     "Volt",               "datahub", "5005",  "3m", "Spannung",     "line", "2");
@@ -76,7 +79,6 @@ $(document).ready(function() {
   add_device("DG", "Batt",           "N108_Ubatt",                     "Volt",                "datahub", "5011",  "3m", "Spannung",     "line", "2");
   add_room("MW_Kueche");
   add_device("HT", "Heizung",        "HT_MW_Kueche",                   "",                    "",        "",     "",   "",             "",     "" );
-*/
 });
 
 </script>
