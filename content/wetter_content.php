@@ -241,7 +241,6 @@ $( "#wetter_dia" ).on( "swipeleft", swipeleftHandler );
 $( "#wetter_dia" ).on( "swiperight", swiperightHandler );
 
 function set_divs() {
-//    alert($('#wetter_t1').html());
 	var d = new Date();
 	var n = d.getTime();
 	var w = screen.width;
@@ -317,17 +316,6 @@ function set_divs() {
 		mycolor='00FFFF';
 		mylegend='rel. Luftfeuchte';
 		mydatabase='rf24hub';
-        break;
-    case "1d":
-		$('#wetter1a').css('backgroundColor', but_color1);
-		$('#wetter1b').css('backgroundColor', but_color1);
-		$('#wetter1c').css('backgroundColor', but_color1);
-		$('#wetter1d').css('backgroundColor', but_color2);
-		$('#wetter3').css('backgroundColor', but_color1);
-		mycolor='FFFF00';
-		mylegend='Solarzelle';
-		mydatabase='rf24hub';
-		add_param ='&ymin=0&ymax=110';
         break;
     case "3":
 		$('#wetter1a').css('backgroundColor', but_color1);
@@ -416,13 +404,7 @@ $("#wetter1c").click(function(){
   $('#wetter_t3').html('<?php echo $wetter_humi_sensor; ?>')
   $('#wetter_t4').html('0')
   set_divs();
-});  
-$("#wetter1d").click(function(){
-  $('#wetter_t2').html('1d')
-  $('#wetter_t3').html('<?php echo $wetter_sol_sensor; ?>')
-  $('#wetter_t4').html('0')
-  set_divs();
-});  
+});
 $("#wetter3").click(function(){
   $('#wetter_t2').html('3')
   $('#wetter_t3').html('<?php echo $wetter_ubat_sensor; ?>')
@@ -483,13 +465,6 @@ $(document).ready(function() {
   echo number_format($row['last_value'],1, ",", ".");
 ?>
  &#37;</div></center></div>
-<div id='wetter1d'><center><div class='label'>Solarzelle:</div><div class='wert'>
-<?php
-  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_sol_sensor);
-  $row = $results->fetch_assoc();
-  echo number_format($row['last_value'],1, ",", ".");
-?>
- &percnt;</div></center></div>
 <div id='wetter4'><img id='wetter_dia' /></div>
 <div id='wetter_s1'>Diagramm<br>1 Tag</div>
 <div id='wetter_s2'>Diagramm<br>1 Monat</div>
