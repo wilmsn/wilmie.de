@@ -4,9 +4,12 @@ var getfhem = "/admin/getfhem.php";
 var needhelp = "/img/gefahrenstelle_20x20.jpg"
 var w = screen.width;
 var devwidth = "25%"
+<<<<<<< HEAD
 var but_color2 = '#DDDDDD';
 var but_color1 = '#AAAAAA';
 
+=======
+>>>>>>> www_test
 
 function device_switch_get_state(room_no, dev_no, fhem_HS_dev, fhem_dev) {
     var result;
@@ -113,7 +116,11 @@ function show_sw_val(fhem_dev, fhem_HS_dev, room_no, dev_no ) {
 }
 
 /*******************************************************************************
+<<<<<<< HEAD
  * Im Raum werden folgende Felder angelegt:
+=======
+ * Im Raum werden folgende Felder angeegt:
+>>>>>>> www_test
  * r<X>     => Der Raum
  * r<X>h    => Eine Kofzeile zur Beschriftung
  * r<X>x    => Ein verstecktes Feld, hier wird eingetragen ob (>1) und welches device ein Diagramm geöffnet hat
@@ -179,11 +186,19 @@ function add_room( room_no, room_name ) {
  *
  * Die weiteren Parameter (p1 bis p6) sind abhängig vom Geräte Typ.
  *
+<<<<<<< HEAD
  * Geräte Typ Shalter     (SW): p1 = Hauptschalterdevice p2 = SensorID p3 ... p7 = ""
  * Heizungsthermostat     (HT): p1 ... p7 = ""
  * Generisches Diagramm   (DG): p1 = Einheit; p2 = Datenbank; p3 = Sensorno; p4 = Zeitspanne (1d, 1m, 3m, 1y); p5 = Legende; p6 = Diagrammtyp; p7 = Nachkommastellen
  * Solar                  (SO): p1 = Datenbank; p2 = Sensor1; p3 = Sensor2; p4 = Sensor3; p5 ... p7 = ""
  * Ohne Pulldown          (--): p1 = Einheit; p2 = Dezimalstellen p3 ... p7 = ""
+=======
+ * Geräte Typ Shalter     (SW): p1 = Hauptschalterdevice p2 ... p7 = ""
+ * Heizungsthermostat     (HT): p1 ... p7 = ""
+ * Generisches Diagramm   (DG): p1 = Einheit; p2 = Datenbank; p3 = Sensorno; p4 = Zeitspanne (1d, 1m, 3m, 1y); p5 = Legende; p6 = Diagrammtyp; p7 = Nachkommastellen
+ * Solar                  (SO): p1 = Datenbank; p2 = Sensor1; p3 = Sensor2; p4 = Sensor3; p5 ... p7 = ""
+ * Ohne Pulldown          (--): p1 = Einheit; p2 ... p7 = ""
+>>>>>>> www_test
  ****************************************************************/
 function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4, p5, p6, p7) {
     var result = " ";
@@ -224,10 +239,15 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
 //######## -- Kein Diagramm ###########
     if (dev_typ.localeCompare("--") == 0) {
       $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+<<<<<<< HEAD
         if ( p2 == 0 ) value = Math.round(data);
         if ( p2 == 1 ) value = Math.round(data * 10) / 10;
         if ( p2 == 2 ) value = Math.round(data * 100) / 100;
         result = value + " " + p1;
+=======
+        const temp = Math.round(data * 10) / 10;
+        result = temp + " " + p1;
+>>>>>>> www_test
         show_val(room_no, dev_no, result, 15, 20, 25);
       });
       $("#r"+room_no+"d"+dev_no+"p").hide();
@@ -236,6 +256,17 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
       $("#r"+room_no+"d"+dev_no).css("border-right","1px solid #a80329");
       if (window.innerWidth > 800 && dev_name.length < 15) $("#r" + room_no + "d" + dev_no + "l").css("font-size","medium");
     }
+<<<<<<< HEAD
+=======
+//####### SOL Spezialdiagramm für Balkonkraftwerk ##########
+    if (dev_typ.localeCompare("SO") == 0) {
+      $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
+        const temp = Math.round(data * 10) / 10;
+        result = temp + " W";
+        show_val(room_no, dev_no, result, 15, 20, 25);
+      });
+    }
+>>>>>>> www_test
 //####### ENDE ############
 //-----Ende Anzeige in Devicefeld-------
     $("#r" + room_no + "d" + dev_no + "p").click(function() {
@@ -248,6 +279,7 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
 //-----Anzeige im externen Detailfeld-------
 //######## DG Liniendiagramm generisch ###########
                 if (dev_typ.localeCompare("DG") == 0) {
+<<<<<<< HEAD
                     $("#r" + room_no + "a").html("<div id='r"+room_no+"dx'></div><div id='r"+room_no+"ds' style='height:70px;'></div>");
                     $("#r" + room_no + "ds").append("<div id='r" + room_no + "_nav1' class='nav nav1'>Diagramm<br>1 Tag</div>")
                                             .append("<div id='r" + room_no + "_nav2' class='nav nav2'>Diagramm<br>1 Monat</div>")
@@ -344,6 +376,11 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
                         $("#r" + room_no + "_nav5").removeClass("nav5").addClass("nav5_mobile");
                         $("#r" + room_no + "_nav6").removeClass("nav6").addClass("nav6_mobile");
                     }
+=======
+                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dia'></div>");
+                    $("#r" + room_no + "dia").html("<img src='/content/diagramm.php?database="+p2+"&sensor1="+p3+"&sizex="+w+"&sizey=370&range="+p4+"&graph="+p6+"&sensor1legend="+p5+"'>");
+                    $("#r" + room_no + "a1").show();
+>>>>>>> www_test
                 }
 //####### Heizung #############
                 if (dev_typ.localeCompare("HT") == 0) {
@@ -401,11 +438,17 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
 //####### Schalter #############
                 if (dev_typ.localeCompare("SW") == 0) {
                     $("#r" + room_no + "a").html("<div class='dev_sw' id='r"+room_no+"sw'></div>");
+<<<<<<< HEAD
                     //Ein Label, das Schalterfeld und ein Diagrammfeld hinzufügen
                     $("#r"+room_no+"sw").append("<div class='dev_sw_label' id='r"+room_no+"swl'>"+dev_name+"</div>")
                                         .append("<div class='dev_sw_switch' id='r"+room_no+"sws'></div>")
                                         .append("<div class='dev_sw_dia' id='r"+room_no+"swd'></div>");
                     //Das Schalterfeld aufbauen
+=======
+                    //Ein Label und das Schalterfeld hinzufügen
+                    $("#r"+room_no+"sw").append("<div class='dev_sw_label' id='r"+room_no+"swl'>"+dev_name+"</div>")
+                                        .append("<div class='dev_sw_switch' id='r"+room_no+"sws'></div>");
+>>>>>>> www_test
                     $("#r" + room_no + "sws").append("<div id='r" + room_no + "sws0' class='dev_sw_box dev_sw_box0'></div>")
                                              .append("<div id='r" + room_no + "sws1' class='dev_sw_box dev_sw_box1'></div>")
                                              .append("<div id='r" + room_no + "sws2' class='dev_sw_box dev_sw_box2'></div>")
@@ -414,14 +457,18 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
                     $("#r" + room_no + "sws1").append("<button type='button' id='r" + room_no + "sws1b' class='button_akt'>Aus</button>");
                     $("#r" + room_no + "sws2").append("<button type='button' id='r" + room_no + "sws2b' class='button_akt'>Auto</button>");
                     $("#r" + room_no + "sws3").append("<button type='button' id='r" + room_no + "sws3b' class='button_akt'>Ein</button>");
+<<<<<<< HEAD
                     //Diagrammfeld aufbauen
                     if (p2.length > 0) {
                         $("#r" + room_no + "swd").html("<img src='/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=100&range=1d&graph=bar&sensor1color=#000000'>");
                     }
+=======
+>>>>>>> www_test
                     //Abfrage des Hauptschalters und Einstellung der Schalter
                     device_switch_get_state(room_no, dev_no, p1, fhem_dev);
                     //Click Funktionen
                     $("#r" + room_no + "sws1b").click(function(){
+<<<<<<< HEAD
                         device_switch_click_func(room_no, dev_no, p1, fhem_dev, "0");
                     });
                     $("#r" + room_no + "sws2b").click(function(){
@@ -431,6 +478,23 @@ function add_device(room_no, dev_no, dev_typ, dev_name, fhem_dev, p1, p2, p3, p4
                         device_switch_click_func(room_no, dev_no, p1, fhem_dev, "1");
                     });
                 }
+=======
+                        device_switch_click_func(room_no, dev_no, p1, fhem_dev, "aus");
+                    });
+                    $("#r" + room_no + "sws2b").click(function(){
+                        device_switch_click_func(room_no, dev_no, p1, fhem_dev, "auto");
+                    });
+                    $("#r" + room_no + "sws3b").click(function(){
+                        device_switch_click_func(room_no, dev_no, p1, fhem_dev, "ein");
+                    });
+                }
+//####### SOL Spezialdiagramm für Balkonkraftwerk ##########
+                if (dev_typ.localeCompare("SO") == 0) {
+                    $("#r" + room_no + "a").html("<div id='r"+room_no+"dia'></div>");
+                    $("#r" + room_no + "dia").html("<img src='/content/diagramm.php?database="+p1+"&sensor1="+p2+"&sensor1color=F3E03B&sensor1legend=PV_Ges Watt&sensor1a="+p3+"&sensor1acolor=D3E03B&sensor1alegend=PV2&sensor1b="+p4+"&sensor1bcolor=A3E03B&sensor1blegend=PV3&sizex="+w+"&sizey=370'>");
+                    $("#r" + room_no + "a1").show();
+                }
+>>>>>>> www_test
 //####### ENDE ############
 //-----Ende Anzeige in Detailfeld-------
                 $("#r" + room_no + "d" + dev_no + "ba").attr("src", arrow_down);
