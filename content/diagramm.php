@@ -266,7 +266,7 @@ switch ($range) {
 	$label_2 = ' Kalendertag ->';
 	$diagramtime = 2678400;
     if ( $gtype == "line" )	$table = $sensordata_tab;
-    if ( $gtype == "bar" )	$table = $sensordata_agg_tab;
+    if ( $gtype == "bar" || $gtype == "rbar" )	$table = $sensordata_agg_tab;
 	$minData = 20;
     break;
     default:
@@ -330,8 +330,11 @@ $starttime = mk_starttime($offset, $range);
                 $label_1 = 'Verlauf am '.date("d.m.Y", $starttime); 
 			}
 	}
-
-$stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < (".$starttime." + ".$diagramtime.") order by utime asc";
+if ( $gtype == "rbar" ) {
+  $stmt = " select min(value) as lval, max(value) as hval, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) as ut from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < (".$starttime." + ".$diagramtime.") group by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) order by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) asc";
+} else {
+  $stmt = " select value, utime as ut from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < (".$starttime." + ".$diagramtime.") order by utime asc";
+}
 error_log($stmt);
 $results = $db->query($stmt);
 $last_utime=0;
@@ -339,17 +342,22 @@ $minTickPos=array();
 $tickPos=array();
 $firstOfHour=0;
 while ($row = $results->fetch_assoc()) {
+if ( $gtype == "rbar" ) {
+	$ydata[]=$row['hval'];
+	$ydata1[]=$row['lval'];
+} else {
 	$ydata[]=$row['value'];
-	$xdata[]=$row['utime'];
+}
+	$xdata[]=$row['ut'];
 	if ($range == '1d') {
-	    if ( count($minTickPos) == 0 ) { $minTickPos[] = $row['utime']; }
-            if ( $last_utime > 0 and date('H',$row['utime']) <> date('H',$last_utime) ) {
-                $tickPos[]=$row['utime'];
+	    if ( count($minTickPos) == 0 ) { $minTickPos[] = $row['ut']; }
+            if ( $last_utime > 0 and date('H',$row['ut']) <> date('H',$last_utime) ) {
+                $tickPos[]=$row['ut'];
                 $firstOfHour=1;
             } else {
                 $firstOfHour=0;
             }
-        $last_utime=$row['utime'];
+        $last_utime=$row['ut'];
    }
 }
 $results->close();
@@ -376,11 +384,12 @@ if ($hasSensor1b) {
     $results->close();
 }
 
-if ( $gtype == "bar" ) {
+if ( $gtype == "bar" || $gtype == "rbar" ) {
   $max_utime = max($xdata);
   if ($range == "1m") {
     array_push($xdata, $max_utime + 24*60*60);
     array_push($ydata, 0);
+    if ( $gtype == "rbar" ) array_push($ydata1, 0);
   }
 }
 
@@ -442,18 +451,27 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
     if ( $ymin_set and $ymax_set ) {
         $graph->SetScale('intlin',$ymin,$ymax,min($xdata),max($xdata));
     } else {
-        $ydataMin=min($ydata);
+        if ( $gtype == "rbar" ) {
+            $ydataMin=min($ydata1);
+        } else {
+            $ydataMin=min($ydata);
+        }
         $ydataMax=max($ydata);
-        if ( $y2dataMin >= 0 && $y2dataMax <= 1.1) {
-            $y2scaleMin = 0;
-            $y2scaleMax = 1.1;
-        } else if ($ydataMax > 0) {
+        $yscaleMin=$ydataMin;
+        $yscaleMax=$ydataMax;
+//  TODO Überarbeiten
+//        if ( $y2dataMin >= 0 && $y2dataMax <= 1.1) {
+//            $y2scaleMin = 0;
+//            $y2scaleMax = 1.1;
+//        } else
+          if ($ydataMax > 0) {
             if ($ydataMax-$ydataMin > 5 ) {
-                if ($ydataMin > 0) {
+//  TODO Überarbeiten
+//                if ($ydataMin > 0) {
                     $yscaleMin=floor($ydataMin/10)*10;
-                } else {
-                    $yscaleMin=floor($ydataMin/10)*10;
-                }
+//                } else {
+//                    $yscaleMin=floor($ydataMin/10)*10;
+//                }
                 if ($ydataMax > 0) {
                     $yscaleMax=ceil($ydataMax/10)*10;
                 } else {
@@ -568,6 +586,21 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
         $bar->SetWidth(5);
         $graph->Add($bar);
         $bar->SetColor($sensor1color);
+    }
+    if ( $gtype == "rbar" ) {
+        $bar = new BarPlot($ydata1,$xdata);
+        $bar1 = new BarPlot($ydata,$xdata);
+        if ( $hassensor1legend ) {
+          $bar->SetLegend($sensor1legend);
+        }
+        $bar1->SetWidth(5);
+        $graph->Add($bar1);
+        $bar1->SetColor($sensor1color);
+        $bar1->SetFillColor($sensor1color);
+        $bar->SetWidth(5);
+        $graph->Add($bar);
+        $bar->SetFillColor("white");
+        $bar->SetColor("white");
     }
 //    $graph->yaxis->SetColor("red");
     $graph->yaxis->title->Set($einheit);

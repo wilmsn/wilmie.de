@@ -243,6 +243,28 @@
   left: 1100px;
 }
 
+.hist {
+  position: absolute;
+  border: #000000 solid 1px;
+  background-color: #dddddd;
+  text-align: center;
+  height: 43px;
+  width: 34%;
+  margin-top: 1px;
+}
+
+.hist_d {
+  left: 0%;
+}
+
+.hist_m {
+  left: 34%;
+}
+
+.hist_y {
+  left: 66%;
+}
+
 .nav4_mobile {
   left: 10px;
   width: 100px;
