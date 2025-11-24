@@ -1,9 +1,9 @@
 <?php
-$instance="intern";
+$instance="test";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
 //$db_dh = new mysqli($db_dh_server, $db_dh_user, $db_dh_pass, $db_dh_db);
-$db_rf24 = new mysqli($db_rf24_server, $db_rf24_user, $db_rf24_pass, $db_rf24_db);
+$db_sh = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $db_sh_db);
 $mobile_browser = is_mobile_browser(); 
 ?>
 <html>
@@ -241,7 +241,6 @@ $( "#wetter_dia" ).on( "swipeleft", swipeleftHandler );
 $( "#wetter_dia" ).on( "swiperight", swiperightHandler );
 
 function set_divs() {
-//    alert($('#wetter_t1').html());
 	var d = new Date();
 	var n = d.getTime();
 	var w = screen.width;
@@ -317,17 +316,6 @@ function set_divs() {
 		mycolor='00FFFF';
 		mylegend='rel. Luftfeuchte';
 		mydatabase='rf24hub';
-        break;
-    case "1d":
-		$('#wetter1a').css('backgroundColor', but_color1);
-		$('#wetter1b').css('backgroundColor', but_color1);
-		$('#wetter1c').css('backgroundColor', but_color1);
-		$('#wetter1d').css('backgroundColor', but_color2);
-		$('#wetter3').css('backgroundColor', but_color1);
-		mycolor='FFFF00';
-		mylegend='Solarzelle';
-		mydatabase='rf24hub';
-		add_param ='&ymin=0&ymax=110';
         break;
     case "3":
 		$('#wetter1a').css('backgroundColor', but_color1);
@@ -416,13 +404,7 @@ $("#wetter1c").click(function(){
   $('#wetter_t3').html('<?php echo $wetter_humi_sensor; ?>')
   $('#wetter_t4').html('0')
   set_divs();
-});  
-$("#wetter1d").click(function(){
-  $('#wetter_t2').html('1d')
-  $('#wetter_t3').html('<?php echo $wetter_sol_sensor; ?>')
-  $('#wetter_t4').html('0')
-  set_divs();
-});  
+});
 $("#wetter3").click(function(){
   $('#wetter_t2').html('3')
   $('#wetter_t3').html('<?php echo $wetter_ubat_sensor; ?>')
@@ -464,32 +446,25 @@ $(document).ready(function() {
 </div>
 <div id='wetter1a'><center><div class='label'>Temperatur:</div><div class='wert'>
 <?php
-  $results = $db_rf24->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_temp_sensor);
+  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_temp_sensor);
   $row = $results->fetch_assoc();
   echo number_format($row['last_value'],1, ",", ".");
 ?>
  C</b></center></div>
 <div id='wetter1b'><center><div class='label'>Luftdruck:</div><div class='wert'>
 <?php
-  $results = $db_rf24->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_pres_sensor);
+  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_pres_sensor);
   $row = $results->fetch_assoc();
   echo number_format($row['last_value'],0, ",", ".");
 ?>
  hPa</b></center></div>
 <div id='wetter1c'><center><div class='label'>rel. Luftfeuchte:</div><div class='wert'>
 <?php
-  $results = $db_rf24->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_humi_sensor);
+  $results = $db_sh->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_humi_sensor);
   $row = $results->fetch_assoc();
   echo number_format($row['last_value'],1, ",", ".");
 ?>
  &#37;</div></center></div>
-<div id='wetter1d'><center><div class='label'>Solarzelle:</div><div class='wert'>
-<?php
-  $results = $db_rf24->query("SELECT last_value FROM sensor_im where sensor_id = ".$wetter_sol_sensor);
-  $row = $results->fetch_assoc();
-  echo number_format($row['last_value'],1, ",", ".");
-?>
- &percnt;</div></center></div>
 <div id='wetter4'><img id='wetter_dia' /></div>
 <div id='wetter_s1'>Diagramm<br>1 Tag</div>
 <div id='wetter_s2'>Diagramm<br>1 Monat</div>
@@ -510,6 +485,6 @@ $(document).ready(function() {
 </div>
 <?php
 //$db_dh->close();
-$db_rf24->close(); 
+$db_sh->close(); 
 ?>
 
