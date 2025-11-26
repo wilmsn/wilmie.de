@@ -535,7 +535,7 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
           $("#r" + my_room + "sws2").append("<button type='button' id='r" + my_room + "sws2b' class='button_akt'>Auto</button>");
           $("#r" + my_room + "sws3").append("<button type='button' id='r" + my_room + "sws3b' class='button_akt'>Ein</button>");
           //Diagrammfeld aufbauen
-          if (p2.length > 0) {
+          if (parseInt(p2) > 0) {
             $("#r" + my_room + "swd").html("<img src='/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=100&range=1d&graph=bar&sensor1color=#000000'>");
           }
           //Abfrage des Hauptschalters und Einstellung der Schalter
