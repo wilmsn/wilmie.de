@@ -4,8 +4,10 @@ var getfhem = "/admin/getfhem.php";
 var needhelp = "/img/gefahrenstelle_20x20.jpg"
 var w = screen.width;
 var devwidth = "25%"
-var but_color2 = '#DDDDDD';
-var but_color1 = '#AAAAAA';
+var but_color_old;
+var but_active = '#AAAAAA';
+var but_passive = '#DDDDDD';
+var but_handover = '#BBBBBB';
 var room_no = 0;
 var dev_no = 0;
 
@@ -284,6 +286,54 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
             $("#r" + my_room + "dh").append("<div id='r"+my_room+"dh1' class='hist hist_d'>Tag</div>")
                                     .append("<div id='r"+my_room+"dh2' class='hist hist_m'>Monat</div>")
                                     .append("<div id='r"+my_room+"dh3' class='hist hist_y'>Jahr</div>");
+            $("#r" + my_room + "dh1").click(function(){
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?database=datahub&sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p6+"");
+              $("#r" + my_room + "dh1").css("background",but_active)
+              $("#r" + my_room + "dh2").css("background",but_passive)
+              $("#r" + my_room + "dh3").css("background",but_passive)
+              $("#r" + my_room + "_nav1").css("background",but_active)
+              $("#r" + my_room + "_nav2").css("background",but_passive)
+              $("#r" + my_room + "_nav3").css("background",but_passive)
+              $("#r" + my_room + "_nav4").css("background",but_passive)
+              but_color_old = but_active;
+            }).on( "mouseover", function() {
+              but_color_old = $(this).css("background-color");
+              $(this).css("background-color", but_handover);
+            }).on( "mouseout", function() {
+              $(this).css("background-color", but_color_old);
+            }).css("cursor","pointer");
+            $("#r" + my_room + "dh2").click(function(){
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=370&range=1m&graph=bar&sensor1legend="+p6+"");
+              $("#r" + my_room + "dh1").css("background",but_passive)
+              $("#r" + my_room + "dh2").css("background",but_active)
+              $("#r" + my_room + "dh3").css("background",but_passive)
+              $("#r" + my_room + "_nav1").css("background",but_passive)
+              $("#r" + my_room + "_nav2").css("background",but_active)
+              $("#r" + my_room + "_nav3").css("background",but_passive)
+              $("#r" + my_room + "_nav4").css("background",but_passive)
+              but_color_old = but_active;
+            }).on( "mouseover", function() {
+              but_color_old = $(this).css("background-color");
+              $(this).css("background-color", but_handover);
+            }).on( "mouseout", function() {
+              $(this).css("background-color", but_color_old);
+            }).css("cursor","pointer");
+            $("#r" + my_room + "dh3").click(function(){
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=370&range=1y&graph=bar&sensor1legend="+p6+"");
+              $("#r" + my_room + "dh1").css("background",but_passive)
+              $("#r" + my_room + "dh2").css("background",but_passive)
+              $("#r" + my_room + "dh3").css("background",but_active)
+              $("#r" + my_room + "_nav1").css("background",but_passive)
+              $("#r" + my_room + "_nav2").css("background",but_passive)
+              $("#r" + my_room + "_nav3").css("background",but_active)
+              $("#r" + my_room + "_nav4").css("background",but_passive)
+              but_color_old = but_active;
+            }).on( "mouseover", function() {
+              but_color_old = $(this).css("background-color");
+              $(this).css("background-color", but_handover);
+            }).on( "mouseout", function() {
+              $(this).css("background-color", but_color_old);
+            }).css("cursor","pointer");
             $.get(basedir+'getfhem.php',{geraet: p3, eigenschaft: "state" }, function(data) {
               value = Math.round(data * 10) / 10;
               $("#r"+my_room+"dh1").html("Tag:<br>"+value+" KWh");
@@ -318,9 +368,18 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
             $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?database=datahub&sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p3+"'>");
           }
 // Ende: Initiales Diagramm
+// Initiale Schalterfarben
+          $("#r" + my_room + "dh1").css("background",but_active)
+          $("#r" + my_room + "dh2").css("background",but_passive)
+          $("#r" + my_room + "dh3").css("background",but_passive)
+          $("#r" + my_room + "_nav1").css("background",but_active)
+          $("#r" + my_room + "_nav2").css("background",but_passive)
+          $("#r" + my_room + "_nav3").css("background",but_passive)
+          $("#r" + my_room + "_nav4").css("background",but_passive)
           $("#r" + my_room + "a1").show();
           $("#r" + my_room + "_buf1").html("1d");
           $("#r" + my_room + "_buf2").html("0");
+// ENDE Initiale Schalterfarben
           $("#r" + my_room + "_nav1").click(function(){
             $("#r" + my_room + "_buf1").html("1d");
             $("#r" + my_room + "_buf2").html("0");
@@ -335,10 +394,21 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
                 $("#r" + my_room + "dia").attr("src","/content/diagramm.php?database=datahub&sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p3+"");
             }
 // Ende: Diagramm nach Klick auf den "1 Tag" Button
+// Schalterfarben 1 Tag
+            $("#r" + my_room + "dh1").css("background",but_active)
+            $("#r" + my_room + "dh2").css("background",but_passive)
+            $("#r" + my_room + "dh3").css("background",but_passive)
+            $("#r" + my_room + "_nav1").css("background",but_active)
+            $("#r" + my_room + "_nav2").css("background",but_passive)
+            $("#r" + my_room + "_nav3").css("background",but_passive)
+            $("#r" + my_room + "_nav4").css("background",but_passive)
+            but_color_old = but_active;
+// Ende: Schalterfarben 1 Tag
           }).on( "mouseover", function() {
-            $(this).css("background-color", but_color1);
+            but_color_old = $(this).css("background");
+            $(this).css("background", but_handover);
           }).on( "mouseout", function() {
-            $(this).css("background-color", but_color2);
+            $(this).css("background", but_color_old);
           }).css("cursor","pointer");
           $("#r" + my_room + "_nav2").click(function(){
             $("#r" + my_room + "_buf1").html("1m");
@@ -354,10 +424,21 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
               $("#r" + my_room + "dia").attr("src","/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=370&range=1m&graph="+p5+"&sensor1legend="+p4+"");
             }
 // Ende: Diagramm nach Klick auf den "1 Monat" Button
+// Schalterfarben 1 Monat
+            $("#r" + my_room + "dh1").css("background",but_passive)
+            $("#r" + my_room + "dh2").css("background",but_active)
+            $("#r" + my_room + "dh3").css("background",but_passive)
+            $("#r" + my_room + "_nav1").css("background",but_passive)
+            $("#r" + my_room + "_nav2").css("background",but_active)
+            $("#r" + my_room + "_nav3").css("background",but_passive)
+            $("#r" + my_room + "_nav4").css("background",but_passive)
+            but_color_old = but_active;
+// Ende: Schalterfarben 1 Monat
           }).on( "mouseover", function() {
-            $(this).css("background-color", but_color1);
+            but_color_old = $(this).css("background-color");
+            $(this).css("background-color", but_handover);
           }).on( "mouseout", function() {
-            $(this).css("background-color", but_color2);
+            $(this).css("background-color", but_color_old);
           }).css("cursor","pointer");
           $("#r" + my_room + "_nav3").click(function(){
             $("#r" + my_room + "_buf1").html("1y");
@@ -371,10 +452,21 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
             if (dev_typ.localeCompare("MD") == 0) {
               $("#r" + my_room + "dia").attr("src","/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=370&range=1y&graph="+p5+"&sensor1legend="+p4+"");
             }
+// Schalterfarben 1 Jahr
+            $("#r" + my_room + "dh1").css("background",but_passive)
+            $("#r" + my_room + "dh2").css("background",but_passive)
+            $("#r" + my_room + "dh3").css("background",but_active)
+            $("#r" + my_room + "_nav1").css("background",but_passive)
+            $("#r" + my_room + "_nav2").css("background",but_passive)
+            $("#r" + my_room + "_nav3").css("background",but_active)
+            $("#r" + my_room + "_nav4").css("background",but_passive)
+            but_color_old = but_active;
+// Ende: Schalterfarben 1 Jahr
           }).on( "mouseover", function() {
-            $(this).css("background-color", but_color1);
+            but_color_old = $(this).css("background-color");
+            $(this).css("background-color", but_handover);
           }).on( "mouseout", function() {
-            $(this).css("background-color", but_color2);
+            $(this).css("background-color", but_color_old);
           }).css("cursor","pointer");
           $("#r" + my_room + "_nav4").click(function(){
             $("#r" + my_room + "_buf1").html("10y");
@@ -388,10 +480,21 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
             if (dev_typ.localeCompare("MD") == 0) {
               $("#r" + my_room + "dia").attr("src","/content/diagramm.php?database=datahub&sensor1="+p2+"&sizex="+w+"&sizey=370&range=10y&graph="+p5+"&sensor1legend="+p4+"");
             }
+// Schalterfarben 10 Jahre
+            $("#r" + my_room + "dh1").css("background",but_passive)
+            $("#r" + my_room + "dh2").css("background",but_passive)
+            $("#r" + my_room + "dh3").css("background",but_passive)
+            $("#r" + my_room + "_nav1").css("background",but_passive)
+            $("#r" + my_room + "_nav2").css("background",but_passive)
+            $("#r" + my_room + "_nav3").css("background",but_passive)
+            $("#r" + my_room + "_nav4").css("background",but_active)
+            but_color_old = but_active;
+// Ende: Schalterfarben 10 Jahre
           }).on( "mouseover", function() {
-            $(this).css("background-color", but_color1);
+            but_color_old = $(this).css("background-color");
+            $(this).css("background-color", but_handover);
           }).on( "mouseout", function() {
-            $(this).css("background-color", but_color2);
+            $(this).css("background-color", but_color_old);
           }).css("cursor","pointer");
           $("#r" + my_room + "_nav5").click(function(){
             var offset=parseInt($("#r" + my_room + "_buf2").html()) +1;
@@ -420,9 +523,10 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
               }
             }
           }).on( "mouseover", function() {
-            $(this).css("background-color", but_color1);
+            but_color_old = $(this).css("background-color");
+            $(this).css("background-color", but_handover);
           }).on( "mouseout", function() {
-            $(this).css("background-color", but_color2);
+            $(this).css("background-color", but_color_old);
           }).css("cursor","pointer");
           $("#r" + my_room + "_nav6").click(function(){
             if (parseInt($("#r" + my_room + "_buf2").html()) > 0) {
@@ -454,9 +558,10 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
               $("#r" + my_room + "_nav6_img").attr("src","/img/arrow_right_e.gif");
             }
           }).on( "mouseover", function() {
-            $(this).css("background-color", but_color1);
+            but_color_old = $(this).css("background-color");
+            $(this).css("background-color", but_handover);
           }).on( "mouseout", function() {
-            $(this).css("background-color", but_color2);
+            $(this).css("background-color", but_color_old);
           }).css("cursor","pointer");
           if ( window.innerWidth < 600 ) {
             $("#r" + my_room + "ds").css("height","130px");
