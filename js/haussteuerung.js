@@ -296,6 +296,8 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
               $("#r" + my_room + "_nav3").css("background",but_passive)
               $("#r" + my_room + "_nav4").css("background",but_passive)
               but_color_old = but_active;
+              $("#r" + my_room + "_buf1").html("1d");
+              $("#r" + my_room + "_buf2").html("0");
             }).on( "mouseover", function() {
               but_color_old = $(this).css("background-color");
               $(this).css("background-color", but_handover);
@@ -312,6 +314,8 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
               $("#r" + my_room + "_nav3").css("background",but_passive)
               $("#r" + my_room + "_nav4").css("background",but_passive)
               but_color_old = but_active;
+              $("#r" + my_room + "_buf1").html("1m");
+              $("#r" + my_room + "_buf2").html("0");
             }).on( "mouseover", function() {
               but_color_old = $(this).css("background-color");
               $(this).css("background-color", but_handover);
@@ -328,6 +332,8 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
               $("#r" + my_room + "_nav3").css("background",but_active)
               $("#r" + my_room + "_nav4").css("background",but_passive)
               but_color_old = but_active;
+              $("#r" + my_room + "_buf1").html("1y");
+              $("#r" + my_room + "_buf2").html("0");
             }).on( "mouseover", function() {
               but_color_old = $(this).css("background-color");
               $(this).css("background-color", but_handover);
