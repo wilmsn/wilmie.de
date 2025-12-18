@@ -17,10 +17,10 @@ $(document).ready(function() {
   add_device("DG", "Schuppentemp", "Schuppen_Temp",                 "&deg;C",   "22",  "1d", "line", "Temperatur", "1");
 
   add_room("Solaranlage");
-  add_device("VD", "PV Anlage",    "Solaranlage_Erzeugung_Aktuell",  "W",       "1050", "1053", "Solaranlage_Erzeugung_Tag", "Solaranlage_Erzeugung_Monat", "Solaranlage_Erzeugung_Jahr");
+  add_device("VD", "PV Anlage",    "Solaranlage_Erzeugung_Aktuell",  "W",       "1050", "1053", "Solaranlage_Erzeugung_Tag", "Solaranlage_Erzeugung_Monat", "Solaranlage_Erzeugung_Jahr", "Stromerzeugung" );
   add_device("MD", "Akku Ladung",  "Solaranlage_Batt_Proz",          "%",       "1056", "1056", "Ladestand", "Ladestand", "rbar");
   add_device("DG", "Akku",         "Solaranlage_Ladezyklen",        "Zyklen",   "1051", "1", "line", "Laden/Entladen", "1");
-  add_device("VD", "Balkon KW",    "Balkonkraftwerk_cur",            "W",       "1010", "1011", "Balkonkraftwerk_Tag", "Balkonkraftwerk_Monat", "Balkonkraftwerk_Jahr");
+  add_device("VD", "Balkon KW",    "Balkonkraftwerk_cur",            "W",       "1010", "1011", "Balkonkraftwerk_Tag", "Balkonkraftwerk_Monat", "Balkonkraftwerk_Jahr", "Stromerzeugung");
 
   add_room("Keller");
   add_device("VD", "Stromverbr.",  "Solaranlage_Local_Load",         "W",       "1052", "1058", "Stromverbrauch_tag", "Stromverbrauch_monat", "Stromverbrauch_jahr", "Stromverbrauch");
