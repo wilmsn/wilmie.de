@@ -157,6 +157,9 @@ if (isset($_GET["sensor1color"])) {
 }
 if (isset($_GET["sensor1legend"])) {
     $sensor1legend = $_GET["sensor1legend"];
+    $hassensor1legend = true;
+} else {
+    $hassensor1legend = false;
 }
 $einheit = set_title($sensor1legend);
 
@@ -180,9 +183,9 @@ if (isset($_GET["sensor1a"])) {
 }
 if (isset($_GET["sensor1alegend"])) {
     $sensor1alegend = $_GET["sensor1alegend"];
-    $hassensor1legend = true;
+    $hassensor1alegend = true;
 } else {
-    $hassensor1legend = false;
+    $hassensor1alegend = false;
 }
 if (isset($_GET["sensor1b"])) {
     $sensor1b = $_GET["sensor1b"];
@@ -191,11 +194,16 @@ if (isset($_GET["sensor1b"])) {
 if (isset($_GET["sensor1blegend"])) {
     $sensor1blegend = $_GET["sensor1blegend"];
 }
-
 if (isset($_GET["sensor2"])) {
     $sensor2 = $_GET["sensor2"];
     $hasSecondGrah = true;
 }
+if (isset($_GET["sum"])) {
+    $show_sum = $_GET["sum"];
+} else {
+    $show_sum = "n";
+}
+
 if ($hasSecondGrah) {
     if (isset($_GET["sensor2legend"])) {
         $sensor2legend = $_GET["sensor2legend"];
@@ -335,7 +343,7 @@ if ( $gtype == "rbar" ) {
 } else {
   $stmt = " select value, utime as ut from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < (".$starttime." + ".$diagramtime.") order by utime asc";
 }
-error_log($stmt);
+#error_log($stmt);
 $results = $db->query($stmt);
 $last_utime=0;
 $minTickPos=array();
@@ -361,6 +369,13 @@ if ( $gtype == "rbar" ) {
    }
 }
 $results->close();
+if ($show_sum == "y") {
+  $stmt = " select sum(value) as mysum from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < (".$starttime." + ".$diagramtime.")";
+#  error_log($stmt);
+  $results = $db->query($stmt);
+  $row = $results->fetch_assoc();
+  $sum = round($row['mysum']*10)/10;
+}
 if ($hasSensor1a) {
     $yadata = array();
     $xadata = array();
@@ -581,7 +596,15 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
     if ( $gtype == "bar" ) {
         $bar = new BarPlot($ydata,$xdata);
         if ( $hassensor1legend ) {
-          $bar->SetLegend($sensor1legend);
+          if ( $show_sum == "y" ) {
+            $bar->SetLegend("Summe: ". $sum . " " . $sensor1legend);
+          } else {
+            $bar->SetLegend($sensor1legend);
+          }
+        } else {
+          if ( $show_sum == "y" ) {
+            $bar->SetLegend("Summe: ". $sum);
+          }
         }
         $bar->SetWidth(5);
         $graph->Add($bar);
