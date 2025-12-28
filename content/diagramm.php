@@ -29,6 +29,8 @@ $sensor2legend = "unbekannt";
 $sensor2color = "#00ffff";
 $y2min_set = false;
 $y2max_set = false;
+$starttime = 0;
+$endtime = 0;
 
 function set_title($input) {
     switch ($input) {
@@ -53,73 +55,96 @@ function set_title($input) {
     return $einheit;
 }
 
-function mk_starttime($my_offset, $my_range) {
+function mk_dia_time($my_offset, $my_range) {
+    function mk_ts_by_year($my_year, $offset, $period) {
+      $erg_year = $my_year - ($offset * $period);
+      return strtotime('1/1/'.$erg_year);
+    }
+    function mk_ts_by_month($my_year, $my_month, $offset, $period) {
+      $my_sum = (($my_year * 12) + $my_month) - ($offset * $period);
+      $erg_year = intdiv($my_sum, 12);
+      $erg_month = $my_sum - ($erg_year * 12);
+      if ($erg_month == 0) {
+          $erg_year--;
+          $erg_month = 12;
+      }
+#      error_log("Sum: ".$my_sum." Year: ".$erg_year." Month: ".$erg_month);
+      return strtotime($erg_month.'/1/'.$erg_year);
+    }
+    global $starttime, $endtime;
     $akttime=time();
-    $year=intval(date("Y",$akttime));
-    $mon=intval(date("n",$akttime));
-    $day=intval(date("d",$akttime)); 
+    $aktyear = gmdate("Y", $akttime);
+    $aktmonth = gmdate("m", $akttime);
+    $aktday = gmdate("d", $akttime);
+    $startyear = $aktyear;
+    $startmonth = $aktmonth;
+    $startday = $aktday;
+    $endyear = $aktyear;
+    $endmonth = $aktmonth;
+    $endday = $aktday;
     if ( $my_offset == 0 ) {
-        switch ($my_range) {
+      $endtime = $akttime;
+      switch ($my_range) {
 		case '10y':
-            $retval = $akttime - (86400*3650);
+            $starttime = $akttime - (86400*3650);
 		break;
         case '5y':
-            $retval = $akttime - (86400*1825);
+            $starttime = $akttime - (86400*1825);
 		break;
 		case '2y':
-            $retval = $akttime - (86400*730);
+            $starttime = $akttime - (86400*730);
 		break;
 		case '1y':
-            $retval = $akttime - (86400*365);
+            $starttime = $akttime - (86400*365);
 		break;
 		case '6m':
-            $retval = $akttime - (86400*180);
-        break;    
+            $starttime = $akttime - (86400*180);
+        break;
 		case '3m':
-            $retval = $akttime - (86400*90);
-        break;    
+            $starttime = $akttime - (86400*90);
+        break;
 		case '1m':
-            $retval = $akttime - (86400*30);
+            $starttime = $akttime - (86400*30);
 		break;
 		default:
-            $retval = $akttime - (86400);
+            $starttime = $akttime - 86400;
         }
     } else {
-        switch ($my_range) {
+      switch ($my_range) {
 		case '10y':
-            $year=$year-($my_offset*10);
-            $retval = mktime(0, 0, 0, 1, 1, $year);
-		break;
+            $starttime = mk_ts_by_year($startyear, $my_offset, 10);
+            $endtime = mk_ts_by_year($startyear, $my_offset -1, 10);
+        break;
         case '5y':
-            $year=$year-($my_offset*5);
-            $retval = mktime(0, 0, 0, 1, 1, $year);
-		break;
+            $starttime = mk_ts_by_year($startyear, $my_offset, 5);
+            $endtime = mk_ts_by_year($startyear, $my_offset -1, 5);
+        break;
 		case '2y':
-            $year=$year-($my_offset*2);
-            $retval = mktime(0, 0, 0, 1, 1, $year);
-		break;
+            $starttime = mk_ts_by_year($startyear, $my_offset, 2);
+            $endtime = mk_ts_by_year($startyear, $my_offset -1, 2);
+        break;
 		case '1y':
-            $year=$year-$my_offset;
-            $retval = mktime(0, 0, 0, 1, 1, $year);
-		break;
+            $starttime = mk_ts_by_year($startyear, $my_offset, 1);
+            $endtime = mk_ts_by_year($startyear, $my_offset -1, 1);
+        break;
 		case '6m':
+            $starttime = mk_ts_by_month($startyear, $startmonth, $my_offset, 6);
+            $endtime = mk_ts_by_month($startyear, $startmonth, $my_offset -1, 6);
+        break;
 		case '3m':
+            $starttime = mk_ts_by_month($startyear, $startmonth, $my_offset, 3);
+            $endtime = mk_ts_by_month($startyear, $startmonth, $my_offset -1, 3);
+        break;
 		case '1m':
-            for($i=$my_offset;$i>0;$i--) {
-                if ($mon > 1) {
-                    $mon--;
-                } else {
-                    $year--;
-                    $mon=12;
-                }
-            }
-            $retval = mktime(0, 0, 0, $mon, 1, $year);
-		break;
-		default:
-            $retval = strtotime(gmdate("Y-m-d", strtotime("- ".$my_offset." days")));
-        }
+            $starttime = mk_ts_by_month($startyear, $startmonth, $my_offset, 1);
+            $endtime = mk_ts_by_month($startyear, $startmonth, $my_offset -1, 1);
+        break;
+        default:
+            $starttime = strtotime($startmonth.'/'.$startday.'/'.$startyear) - ($my_offset * 24 * 60 * 60);
+            $endtime = $starttime + (24 * 60 * 60);
+        break;
+      }
 	}
-	return $retval;
 }	
 
 function  TimeCallbackY( $aVal) {
@@ -230,49 +255,42 @@ switch ($range) {
     case '10y':
 	$label_date_format = '%d.%m.%y'; 
 	$label_2 = ' Kalenderjahr ->';
-	$diagramtime = 315360000;
 	$table = $sensordata_agg_tab;
 	$minData = 100;
     break;
     case '5y':
 	$label_date_format = '%d.%m.%y'; 
 	$label_2 = ' Kalenderjahr ->';
-	$diagramtime = 157680000;
 	$table = $sensordata_agg_tab;
 	$minData = 100;
     break;
     case '2y':
 	$label_date_format = '%d.%m.%y'; 
 	$label_2 = ' Kalendermonat ->';
-	$diagramtime = 63072000;
 	$table = $sensordata_agg_tab;
 	$minData = 100;
     break;
     case '1y':
 	$label_date_format = '%d.%m.%y'; 
 	$label_2 = ' Kalendermonat ->';
-	$diagramtime = 31536000;
 	$table = $sensordata_agg_tab;
 	$minData = 100;
     break;
     case '6m':
 	$label_date_format = '%d.%m.%y'; 
 	$label_2 = ' Kalendermonat ->';
-	$diagramtime = 16070400;
 	$table = $sensordata_agg_tab;
 	$minData = 100;
     break;
     case '3m':
 	$label_date_format = '%d.%m.%y'; 
 	$label_2 = ' Kalendertag ->';
-	$diagramtime = 8035200;
 	$table = $sensordata_agg_tab;
 	$minData = 50;
     break;
     case '1m':
 	$label_date_format = '%d.%m.%y'; 
 	$label_2 = ' Kalendertag ->';
-	$diagramtime = 2678400;
     if ( $gtype == "line" )	$table = $sensordata_tab;
     if ( $gtype == "bar" || $gtype == "rbar" )	$table = $sensordata_agg_tab;
 	$minData = 20;
@@ -280,7 +298,6 @@ switch ($range) {
     default:
 	$label_date_format = '%d.%m.%y %H:%i'; 
 	if ($sizey > 100) $label_2 = " Uhrzeit ->";
-	$diagramtime = 86400;
 	$table = $sensordata_tab;
 	$minData = 5;
 }
@@ -292,7 +309,8 @@ if (strcmp($database,"rf24hub")==0)
      $db = new mysqli($db_sh_server, $db_sh_user, $db_sh_pass, $database);
 if (strcmp($database,"datahub")==0) 
      $db = new mysqli($db_dh_server, $db_dh_user, $db_dh_pass, $database);
-$starttime = mk_starttime($offset, $range);
+#$starttime =
+mk_dia_time($offset, $range);
 #Starttag für Label ermitteln
 	switch ($range) {
 		case '10y':
@@ -339,9 +357,10 @@ $starttime = mk_starttime($offset, $range);
 			}
 	}
 if ( $gtype == "rbar" ) {
-  $stmt = " select min(value) as lval, max(value) as hval, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) as ut from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < (".$starttime." + ".$diagramtime.") group by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) order by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) asc";
+  $stmt = " select min(value) as lval, max(value) as hval, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) as ut from ".$table." where sensor_id = ".$sensor1." and utime >= ".$starttime." and utime < ".$endtime."-10 group by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) order by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) asc";
 } else {
-  $stmt = " select value, utime as ut from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < (".$starttime." + ".$diagramtime.") order by utime asc";
+  $stmt = " select value, utime as ut from ".$table." where sensor_id = ".$sensor1." and utime >= ".$starttime." and utime < ".$endtime."-10 order by utime asc";
+#  error_log($stmt);
 }
 #error_log($stmt);
 $results = $db->query($stmt);
@@ -370,7 +389,7 @@ if ( $gtype == "rbar" ) {
 }
 $results->close();
 if ($show_sum == "y") {
-  $stmt = " select sum(value) as mysum from ".$table." where sensor_id = ".$sensor1." and utime > ".$starttime." and utime < (".$starttime." + ".$diagramtime.")";
+  $stmt = " select sum(value) as mysum from ".$table." where sensor_id = ".$sensor1." and utime >= ".$starttime." and utime < ".$endtime;
 #  error_log($stmt);
   $results = $db->query($stmt);
   $row = $results->fetch_assoc();
@@ -379,7 +398,7 @@ if ($show_sum == "y") {
 if ($hasSensor1a) {
     $yadata = array();
     $xadata = array();
-    $stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1a." and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime." order by utime asc";
+    $stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1a." and utime >= ".$starttime." and utime < ".$endtime."-10 order by utime asc";
     $results = $db->query($stmt);
     while ($row = $results->fetch_assoc()) {
         $yadata[]=$row['value'];
@@ -390,7 +409,7 @@ if ($hasSensor1a) {
 if ($hasSensor1b) {
     $ybdata = array();
     $xbdata = array();
-    $stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1b." and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime." order by utime asc";
+    $stmt = " select value, utime from ".$table." where sensor_id = ".$sensor1b." and utime >= ".$starttime." and utime < ".$endtime."-10 order by utime asc";
     $results = $db->query($stmt);
     while ($row = $results->fetch_assoc()) {
         $ybdata[]=$row['value'];
@@ -411,7 +430,7 @@ if ( $gtype == "bar" || $gtype == "rbar" ) {
 if ($hasSecondGrah) {
   $y2data = array();
   $x2data = array();
-  $stmt = " select value, utime from ".$table." where sensor_id = ".$sensor2." and utime > ".$starttime." and utime < ".$starttime." + ".$diagramtime." order by utime asc";
+  $stmt = " select value, utime from ".$table." where sensor_id = ".$sensor2." and utime >= ".$starttime." and utime < ".$endtime."-10 order by utime asc";
   $results = $db->query($stmt);
   $last_utime2=0;
   $minTickPos2=array();
