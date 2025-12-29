@@ -604,9 +604,9 @@ $('#batt_name').html('<?php print $bat_name[0]; ?>');
 $('#batt_name').hide();  
 $('#batt_range').html('1d');  
 $('#batt_range').hide();  
-$('#batt_umin').html('1d');  
+$('#batt_umin').html('<?php print $bat_min[0]; ?>');
 $('#batt_umin').hide();  
-$('#batt_umax').html('1d');  
+$('#batt_umax').html('<?php print $bat_max[0]; ?>');
 $('#batt_umax').hide();  
 
 <?php if ( ! isset( $bat_name[0] ) ) print "$('#batt1').hide();"; ?>
