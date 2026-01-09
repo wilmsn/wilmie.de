@@ -287,7 +287,7 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
                                     .append("<div id='r"+my_room+"dh2' class='hist hist_m'>Monat</div>")
                                     .append("<div id='r"+my_room+"dh3' class='hist hist_y'>Jahr</div>");
             $("#r" + my_room + "dh1").click(function(){
-              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?database=datahub&sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p6);
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?database=datahub&sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&ymin=0&sensor1legend="+p6);
               $("#r" + my_room + "dh1").css("background",but_active)
               $("#r" + my_room + "dh2").css("background",but_passive)
               $("#r" + my_room + "dh3").css("background",but_passive)
@@ -368,7 +368,7 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
             $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?database=datahub&sensor1="+p1+"&sizex="+w+"&sizey=370&range="+p2+"&graph="+p3+"&sensor1legend="+p4+"'>");
           }
           if (dev_typ.localeCompare("VD") == 0) {
-            $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?database=datahub&sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p6+"'>");
+            $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?database=datahub&sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&ymin=0&graph=line&sensor1legend="+p6+"'>");
           }
           if (dev_typ.localeCompare("MD") == 0) {
             $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?database=datahub&sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p3+"'>");

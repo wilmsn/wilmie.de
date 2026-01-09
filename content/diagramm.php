@@ -482,8 +482,12 @@ if (count($ydata) < $minData and ! $secondGraphOK ) {
     $graph->legend->SetColor('darkred');
     $graph->legend->SetFillColor('lightyellow');
 } else {
-    if ( $ymin_set and $ymax_set ) {
-        $graph->SetScale('intlin',$ymin,$ymax,min($xdata),max($xdata));
+    if ( $ymin_set ) {
+        if ( $ymax_set ) {
+           $graph->SetScale('intlin',$ymin,$ymax,min($xdata),max($xdata));
+        } else {
+           $graph->SetScale('intlin',$ymin,max($ydata),min($xdata),max($xdata));
+        }
     } else {
         if ( $gtype == "rbar" ) {
             $ydataMin=min($ydata1);
