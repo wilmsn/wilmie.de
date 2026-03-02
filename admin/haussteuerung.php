@@ -27,8 +27,8 @@ $(document).ready(function() {
   add_device("VD", "Strom in",     "Stromzaehler_in",               "KWh",      "1094", "1091", "Stromverbrauch_zaehler_tag", "Stromverbrauch_zaehler_monat",  "Stromverbrauch_zaehler_jahr",   "Stromverbrauch", "kWh");
   add_device("VD", "Strom out",    "Stromzaehler_out",             "KWh",       "1095", "1092", "Stromexport_tag", "Stromexport_monat", "Stromexport_jahr", "Stromexport", "kWh" );
   add_device("VD", "Gaszäher",     "GasZaehler",                   "",          "1004", "1003", "GasVerbrauch_KWH_Tag", "GasVerbrauch_Monat", "GasVerbrauch_Jahr", "Gasverbrauch", "kWh");
-  add_device("DG", "Temp",         "Keller_Temp",                  "&deg;C",    "30",   "1d", "Temperatur",   "line", "1");
-  add_device("DG", "Batt",         "N111_Ubatt",                   "Volt",      "5014", "3m", "Spannung",     "line", "2");
+  add_device("DG", "Temp",         "Keller_Temp",                  "&deg;C",    "30",   "1d", "line",    "Temperatur", "1");
+  add_device("DG", "Batt",         "N111_Ubatt",                   "Volt",      "5014", "3m", "line",    "Spannung", "2");
 
   add_room("Wohnzimmer");
   add_device("DG", "Temp",         "Wohnzimmer_Temp",              "&deg;C",    "24",   "1d",   "line", "Temperatur", "1");
