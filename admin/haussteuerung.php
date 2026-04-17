@@ -19,14 +19,14 @@ $(document).ready(function() {
   add_room("Solaranlage");
   add_device("VD", "PV Anlage",    "Solaranlage_Erzeugung_Aktuell",  "W",       "1050", "1053", "Solaranlage_Erzeugung_Tag", "Solaranlage_Erzeugung_Monat", "Solaranlage_Erzeugung_Jahr", "Stromerzeugung", "kWh" );
   add_device("MD", "Akku Ladung",  "Solaranlage_Batt_Proz",          "%",       "1056", "1056", "Ladestand", "Ladestand", "rbar");
-  add_device("DG", "Akku",         "Solaranlage_Ladezyklen",        "Zyklen",   "1051", "1", "line", "Laden/Entladen", "1");
+  add_device("DG", "Akku",         "Solaranlage_Ladezyklen",        "Zyk.",   "1051", "1", "line", "Laden/Entladen", "1");
   add_device("VD", "Balkon KW",    "Balkonkraftwerk_cur",            "W",       "1010", "1011", "Balkonkraftwerk_Tag", "Balkonkraftwerk_Monat", "Balkonkraftwerk_Jahr", "Stromerzeugung", "kWh");
 
   add_room("Keller");
   add_device("VD", "Stromverbr.",  "Solaranlage_Local_Load",         "W",       "1052", "1058", "Stromverbrauch_tag", "Stromverbrauch_monat", "Stromverbrauch_jahr", "Stromverbrauch", "kWh");
-  add_device("VD", "Strom in",     "Stromzaehler_in",               "KWh",      "1094", "1091", "Stromverbrauch_zaehler_tag", "Stromverbrauch_zaehler_monat",  "Stromverbrauch_zaehler_jahr",   "Stromverbrauch", "kWh");
-  add_device("VD", "Strom out",    "Stromzaehler_out",             "KWh",       "1095", "1092", "Stromexport_tag", "Stromexport_monat", "Stromexport_jahr", "Stromexport", "kWh" );
-  add_device("VD", "Gaszäher",     "GasZaehler",                   "",          "1004", "1003", "GasVerbrauch_KWH_Tag", "GasVerbrauch_Monat", "GasVerbrauch_Jahr", "Gasverbrauch", "kWh");
+  add_device("VD", "Strom in",     "Stromzaehler_in",                "",      "1094", "1091", "Stromverbrauch_zaehler_tag", "Stromverbrauch_zaehler_monat",  "Stromverbrauch_zaehler_jahr",   "Stromverbrauch", "kWh");
+  add_device("VD", "Strom out",    "Stromzaehler_out",               "",       "1095", "1092", "Stromexport_tag", "Stromexport_monat", "Stromexport_jahr", "Stromexport", "kWh" );
+  add_device("VD", "Gaszäher",     "GasZaehler",                     "",          "1004", "1003", "GasVerbrauch_KWH_Tag", "GasVerbrauch_Monat", "GasVerbrauch_Jahr", "Gasverbrauch", "kWh");
   add_device("DG", "Temp",         "Keller_Temp",                  "&deg;C",    "30",   "1d", "line",    "Temperatur", "1");
   add_device("DG", "Batt",         "N111_Ubatt",                   "Volt",      "5014", "3m", "line",    "Spannung", "2");
 
