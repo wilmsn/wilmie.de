@@ -11,7 +11,7 @@ $mindata = 10;
 $range = "1d";
 $sizex=650;
 $sizey=370;
-$database = "rf24hub";
+$database = "datahub";
 $gtype = "line";
 //sensor1
 $sensor1color = "#000000";
