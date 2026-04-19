@@ -19,7 +19,7 @@ $(document).ready(function() {
   add_room("Solaranlage");
   add_device("VD", "PV Anlage",    "Solaranlage_Erzeugung_Aktuell",  "W",       "1050", "1053", "Solaranlage_Erzeugung_Tag", "Solaranlage_Erzeugung_Monat", "Solaranlage_Erzeugung_Jahr", "Stromerzeugung", "kWh" );
   add_device("MD", "Akku Ladung",  "Solaranlage_Batt_Proz",          "%",       "1056", "1056", "Ladestand", "Ladestand", "rbar");
-  add_device("DG", "Akku",         "Solaranlage_Ladezyklen",        "Zyk.",   "1051", "1", "line", "Laden/Entladen", "1");
+  add_device("DG", "Akku Zyklen",  "Solaranlage_Ladezyklen",         "",   "1051", "1", "line", "Laden/Entladen", "1");
   add_device("VD", "Balkon KW",    "Balkonkraftwerk_cur",            "W",       "1010", "1011", "Balkonkraftwerk_Tag", "Balkonkraftwerk_Monat", "Balkonkraftwerk_Jahr", "Stromerzeugung", "kWh");
 
   add_room("Keller");
