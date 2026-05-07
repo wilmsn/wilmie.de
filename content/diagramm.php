@@ -357,7 +357,11 @@ mk_dia_time($offset, $range);
 			}
 	}
 if ( $gtype == "rbar" ) {
-  $stmt = " select min(value) as lval, max(value) as hval, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) as ut from ".$table." where sensor_id = ".$sensor1." and utime >= ".$starttime." and utime < ".$endtime."-10 group by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) order by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) asc";
+  if ( $offset == 0 ) {
+    $stmt = " select min(value) as lval, max(value) as hval, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) as ut from ".$table." where sensor_id = ".$sensor1." and utime >= ".$starttime." group by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) order by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) asc";
+  } else {
+    $stmt = " select min(value) as lval, max(value) as hval, UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) as ut from ".$table." where sensor_id = ".$sensor1." and utime >= ".$starttime." and utime < ".$endtime."-10 group by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) order by UNIX_TIMESTAMP(FROM_UNIXTIME(utime,'%Y%m%d')) asc";
+  }
 } else {
   $stmt = " select value, utime as ut from ".$table." where sensor_id = ".$sensor1." and utime >= ".$starttime." and utime < ".$endtime."-10 order by utime asc";
 #  error_log($stmt);
