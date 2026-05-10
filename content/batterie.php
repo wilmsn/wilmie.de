@@ -1,5 +1,5 @@
 <?php
-$instance="test";
+$instance="intern";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot.'/php_inc/check_mobile.php');
 
