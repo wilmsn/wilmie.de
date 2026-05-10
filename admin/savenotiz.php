@@ -1,5 +1,5 @@
 <?php
-$instance="intern";
+$instance="test";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 $www_db = new PDO("mysql:host=$db_www_server;dbname=$db_www_db", $db_www_user, $db_www_pass);
 

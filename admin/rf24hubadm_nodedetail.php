@@ -1,5 +1,5 @@
 <?php
-$instance="intern";
+$instance="test";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 require_once ($webroot."/php_inc/check_mobile.php");
 $db = new PDO("mysql:host=$db_sh_server;dbname=$db_sh_db", $db_sh_user, $db_sh_pass);

@@ -1,5 +1,5 @@
 <?php
-$instance="intern";
+$instance="test";
 require_once ('/etc/webserver/'.$instance.'_config.php');
 
 if (isset($_GET["tn_in"])) {  $tn_in=$_GET["tn_in"]; }
