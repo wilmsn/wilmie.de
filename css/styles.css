@@ -476,20 +476,22 @@ font-family : arial;
 font-size : 15px;
 padding : 1px 3px;
 }
-.myButton {
-color : #ffffff;
-width : auto;
-height : 27px;
-margin : 0;
-padding : 0;
-background : url(/img/bg-bubplastic.gif) top left repeat-x #000000;
+.button {
+  border-radius: 3rem;
+  line-height: 2.4rem;
+  font-size: 1.2rem;
+  width: 100%;
+  margin-top: 1rem;
+  padding: unset;
+  background: #444444;
+  color: #faffff;
 }
-.myButton:hover {
-background-color : #5cbf2a;
+.button:hover {
+  background-color : #a80329;
 }
-.myButton:active {
-position : relative;
-top : 1px;
+.button:active {
+  position : relative;
+  top : 1px;
 }
 .myButtonBig {
 width : 200px;
