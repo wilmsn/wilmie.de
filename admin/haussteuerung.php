@@ -10,6 +10,7 @@ $(document).ready(function() {
   haus("Haussteuerung");
   add_room("Draussen");
   add_device("DG", "Temp",         "Aussen_Temp",                   "&deg;C",   "1",   "1d", "line", "Temperatur", "1");
+  add_device("DG", "Feuchte",      "Aussen_Humi",                   "%",        "3",   "1d", "line", "Luftfeuchte", "0");
   add_device("SW", "Balkon",       "Terassennode_Balkon",           " ",        "HS_Balkon_Steckdose",  "504");
   add_device("SW", "Terasse",      "Terassennode_Terasse",          " ",        "HS_Terasse_Steckdose", "505");
   add_device("SW", "Teich",        "TeichPumpe",                    " ",        "HS_Teichpumpe",        "500");
