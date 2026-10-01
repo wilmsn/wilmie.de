@@ -191,26 +191,130 @@ function add_room(room_name ) {
  *
  * Aufruf ist teilweise abhängig von dem Typ (dev_typ):
  * Einheitlicher Teil:
- * dev_typ = Geräte Typ; dev_name = Beschriftung; fhem_dev = FHEM Device für den aktuellen Wert; einheit = physikalische Einheit von "fhem_dev"
+ * dev_typ = Geräte Typ; dev_name = Beschriftung; fhem_dev = FHEM Device für den aktuellen Wert; einheit = unit / physikalische Einheit von "fhem_dev"
  *
- * Die weiteren Parameter (p1 bis p6) sind abhängig vom Geräte Typ.
+ * Die weiteren Parameter (p1 bis p8) sind abhängig vom Geräte Typ.
  *
- * Geräte Typ Shalter     (SW): p1 = Hauptschalterdevice p2 = SensorID p3 ... p6 = ""
- * Heizungsthermostat     (HT): p1 ... p6 = ""
- * Diagramm generisch     (DG): p1 = Sensorno; p2 = Zeitspanne (1d, 1m, 3m, 1y); p3 = Diagrammtyp; p4 = Legende;
- *                              p5 = Nachkommastellen; p6 = ""
+ * Geräte Typ Shalter     (SW): p1 = Hauptschalterdevice p2 = SensorID p3 ... p8 = ""
+ * Heizungsthermostat     (HT): p1 ... p8 = ""
+ * Diagramm generisch     (DG): p1 = Sensorno; p2 = Zeitspanne (1d, 1m, 1y); p3 = Diagrammtyp; p4 = Label / Beschriftung des Messwertes;
+ *                              p5 = Nachkommastellen; p6 = Dia min;  p7 = Dia max.; p8 ... p10 = ""
  * Verbrauchsdiagramm     (VD)  p1 = Sensorno intraday; p2 = Sensorno monatlich und mehr; p3 = Fhem Tagesverbrauch; p4 = Fhem Monatsverbrauch;
- *                              p5 = Fhem Jahresverbrauch; p6 = Legende; p7 Einheit Diagramm
- * Multidiagramm          (MD)  p1 = Sensorno intraday; p2 = Sensorno monatlich und mehr; p3 = Legende intraday; p4 = Legende monatlich und mehr
- *                              p5 = Säulenty (bar oder rbar)
+ *                              p5 = Fhem Jahresverbrauch; p6 = Beschriftung des Messwertes; p7 = Einheit Diagramm monatlich; p8 ... p10 = ""
+ * Multidiagramm          (MD)  p1 = Sensorno intraday; p2 = Sensorno monatlich; p3 = Legende intraday; p4 = Legende monatlich
+ *                              p5 = Säulenty (bar oder rbar) p6 ... p10 = ""
  * Ohne Pulldown          (--): p1 = Dezimalstellen p2 ... p6 = ""
  ****************************************************************/
-function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6, p7, p8) {
+function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) {
   dev_no++;
   var result = " ";
   var value  = 0;
   var room = room_no;
   var dev = dev_no;
+  var dia_range_str = "";
+  var dia_graph_str = "";
+  var dia_ymin_str = "";
+  var dia_ymax_str = "";
+  var dia_dg_str = "";
+  var kommastellen = 0;
+  var dia_sno1_str = "";
+  var dia_unit1_str = "&sensor1unit=" + einheit;
+  var dia_name1_str = "dianame1str";
+  var dia_sno_day_str = "";
+  var dia_sno_mon_str = "";
+  var dia_vd_day_str = "";
+  var dia_vd_mon_str = "";
+  var dia_md_day_str = "";
+  var dia_md_mon_str = "";
+  var dia_unit_mon_str = "";
+  var dia_graph_mon_str = "";
+  var dia_range = "";
+  // Parameter p1 bis px in sprechende Variablen übersetzen
+  if (dev_typ.localeCompare("DG") == 0) {
+    if (typeof p1 !== 'undefined') {
+      dia_sno1_str = "&sensor1=" + p1;
+    } else {
+      alert("Diagramm DG Error p1: " + dev_typ + " " + dev_name + " " + fhem_dev);
+    }
+    if (typeof p2 !== 'undefined') {
+      if ( (p2.localeCompare("1d") == 0) || (p2.localeCompare("1m") == 0) || (p2.localeCompare("1y") == 0) ) {
+        dia_range_str = "&range=" + p2;
+        dia_range = p2;
+      }
+    }
+    if (typeof p3 !== 'undefined') {
+      if ( (p3.localeCompare("line") == 0) || (p3.localeCompare("bar") == 0) ) dia_graph_str = "&graph=" + p3;
+    } else {
+      alert("Diagramm DG Error p1: " + dev_typ + " " + dev_name + " " + fhem_dev);
+    }
+    if (typeof p4 !== 'undefined') {
+      dia_name1_str = "&sensor1name=" + p4;
+    }
+    if (typeof p5 !== 'undefined') {
+      kommastellen = p5;
+    }
+    if (typeof p6 !== 'undefined') {
+      dia_ymin_str = "&ymin=" + p6;
+    }
+    if (typeof p7 !== 'undefined') {
+      dia_ymax_str = "&ymax=" + p7;
+    }
+    dia_dg_str = dia_sno1_str + dia_graph_str + dia_name1_str + dia_unit1_str + dia_ymin_str + dia_ymax_str;
+  }
+  if (dev_typ.localeCompare("VD") == 0) {
+    if (typeof p1 !== 'undefined') {
+      dia_sno_day_str = "&sensor1="+p1;
+    } else {
+      alert("Diagramm VD Error p1: "+dev_typ+" "+dev_name+" "+fhem_dev);
+    }
+    if (typeof p2 !== 'undefined') {
+      dia_sno_mon_str = "&sensor1="+p2;
+    } else {
+      alert("Diagramm VD Error p2: "+dev_typ+" "+dev_name+" "+fhem_dev);
+    }
+    if (typeof p3 !== 'undefined') {
+      var fhem_day = p3;
+    }
+    if (typeof p4 !== 'undefined') {
+      var fhem_mon = p4;
+    }
+    if (typeof p5 !== 'undefined') {
+      var fhem_year = p5;
+    }
+    if (typeof p6 !== 'undefined') {
+      dia_name1_str = "&sensor1name=" + p6;
+    }
+    if (typeof p7 !== 'undefined') {
+      dia_unit_mon_str = "&sensor1unit=" + p7;
+    }
+    dia_vd_day_str = dia_sno_day_str + "&graph=line" + dia_unit1_str + dia_name1_str;
+    dia_vd_mon_str = dia_sno_mon_str + "&graph=bar" + dia_unit_mon_str + dia_name1_str;
+  }
+  if (dev_typ.localeCompare("MD") == 0) {
+    if (typeof p1 !== 'undefined') {
+      dia_sno_day_str = "&sensor1="+p1;
+    } else {
+      alert("Diagramm MD Error p1: "+dev_typ+" "+dev_name+" "+fhem_dev);
+    }
+    if (typeof p2 !== 'undefined') {
+      dia_sno_mon_str = "&sensor1="+p2;
+    } else {
+      alert("Diagramm MD Error p2: "+dev_typ+" "+dev_name+" "+fhem_dev);
+    }
+    if (typeof p3 !== 'undefined') {
+      dia_name1_str = "&sensor1name=" + p3;
+    }
+    if (typeof p4 !== 'undefined') {
+      dia_graph_mon_str = "&graph=" + p4;
+    }
+    dia_md_day_str = dia_sno_day_str + "&graph=line" + dia_unit1_str + dia_name1_str;
+    dia_md_mon_str = dia_sno_mon_str + dia_graph_mon_str + dia_unit1_str + dia_name1_str;
+  }
+  if (dev_typ.localeCompare("--") == 0) {
+    if (typeof p5 !== 'undefined') {
+      kommastellen = p1;
+    }
+  }
   $("#r" + room_no + "d" + dev_no).append("<div class='dev_l' id='r" + room_no + "d" + dev_no + "l'>" + dev_name + "</div>")
                                   .append("<div class='dev_v' id='r" + room_no + "d" + dev_no + "v'></div>")
                                   .append("<div class='dev_p' id='r" + room_no + "d" + dev_no + "p'></div>")
@@ -238,23 +342,22 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
   if ((dev_typ.localeCompare("DG") == 0) || (dev_typ.localeCompare("VD") == 0) || (dev_typ.localeCompare("MD") == 0)) {
     $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
       if (dev_typ.localeCompare("DG") == 0) {
-        if ( p5 == 0 ) value = Math.round(data);
-        if ( p5 == 1 ) value = Math.round(data * 10) / 10;
-        if ( p5 == 2 ) value = Math.round(data * 100) / 100;
+        if ( kommastellen == 0 ) value = Math.round(data);
+        if ( kommastellen == 1 ) value = Math.round(data * 10) / 10;
+        if ( kommastellen == 2 ) value = Math.round(data * 100) / 100;
       } else {
         value = Math.round(data * 10) / 10;
       }
       result = value + " " + einheit;
-//      alert(fhem_dev+" "+data+" "+value+" "+result);
       show_val(room, dev, result, 15, 20, 25);
     });
   }
 //######## -- Kein Diagramm ###########
   if (dev_typ.localeCompare("--") == 0) {
     $.get(basedir+'getfhem.php',{geraet: fhem_dev, eigenschaft: "state" }, function(data) {
-      if ( p2 == 0 ) value = Math.round(data);
-      if ( p2 == 1 ) value = Math.round(data * 10) / 10;
-      if ( p2 == 2 ) value = Math.round(data * 100) / 100;
+      if ( kommastellen == 0 ) value = Math.round(data);
+      if ( kommastellen == 1 ) value = Math.round(data * 10) / 10;
+      if ( kommastellen == 2 ) value = Math.round(data * 100) / 100;
       result = value + " " + einheit;
       show_val(room, dev, result, 15, 20, 25);
     });
@@ -273,19 +376,19 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
     const array2 = array1[1].split("d");
     const my_room = array2[0];
     const my_dev  = array2[1].substring(0,1);
-    // Altes Device schliessen
+// Altes Device schliessen
     if ( ! ( $("#r" + my_room + "x").html() == 0 || $("#r" + my_room + "x").html() == my_dev ) ) {
       const old_dev = $("#r" + my_room + "x").html();
       $("#r" + my_room + "d" + old_dev + "ba").attr("src", arrow_up);
     }
-    // Aktuelles Device schliessen
+// Aktuelles Device schliessen
     if ($("#r" + my_room + "x").html() == my_dev) {
       $("#r" + my_room + "d" + my_dev + "ba").attr("src", arrow_up);
       $("#r" + my_room + "x").html(0);
       $("#r" + my_room + "a").hide();
       $("#r" + my_room + "a1").hide();
     } else {
-    // Neues Device öffnen
+// Neues Device öffnen
       $("#r" + my_room + "d" + my_dev + "ba").attr("src", arrow_down);
       $("#r" + my_room + "x").html(my_dev);
       $("#r" + my_room + "a").show();
@@ -299,11 +402,9 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
                                   .append("<div id='r"+my_room+"dh2' class='hist hist_m'>Monat</div>")
                                   .append("<div id='r"+my_room+"dh3' class='hist hist_y'>Jahr</div>");
           $("#r" + my_room + "dh1").click(function() {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&ymin=0&sensor1legend="+p6);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex=" + w + "&sizey=370&ymin=0&range=1d" + dia_vd_day_str);
             buttondia(my_room,"d");
             but_color_old = but_active;
-            $("#r" + my_room + "_buf1").html("1d");
-            $("#r" + my_room + "_buf2").html("0");
           }).on( "mouseover", function() {
             but_color_old = $(this).css("background-color");
             $(this).css("background-color", but_handover);
@@ -311,11 +412,9 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
             $(this).css("background-color", but_color_old);
           }).css("cursor","pointer");
           $("#r" + my_room + "dh2").click(function(){
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sum=y&sizey=370&range=1m&graph=bar&sensor1legend="+p7);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sum=y&sizey=370&range=1m" + dia_vd_mon_str);
             buttondia(my_room,"m");
             but_color_old = but_active;
-            $("#r" + my_room + "_buf1").html("1m");
-            $("#r" + my_room + "_buf2").html("0");
           }).on( "mouseover", function() {
             but_color_old = $(this).css("background-color");
             $(this).css("background-color", but_handover);
@@ -323,11 +422,9 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
             $(this).css("background-color", but_color_old);
           }).css("cursor","pointer");
           $("#r" + my_room + "dh3").click(function(){
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sum=y&sizey=370&range=1y&graph=bar&sensor1legend="+p7);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sum=y&sizey=370&range=1y" + dia_vd_mon_str);
             buttondia(my_room,"y");
             but_color_old = but_active;
-            $("#r" + my_room + "_buf1").html("1y");
-            $("#r" + my_room + "_buf2").html("0");
           }).on( "mouseover", function() {
             but_color_old = $(this).css("background-color");
             $(this).css("background-color", but_handover);
@@ -359,140 +456,130 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
                                 .css("background-color","#aaaaaa");
 // Initiales Diagramm
         if (dev_typ.localeCompare("DG") == 0) {
-          $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range="+p2+"&graph="+p3+"&sensor1legend="+p4+"'>");
+          $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?sizex="+w+"&sizey=370"+dia_dg_str+dia_range_str+"'>");
+          if (dia_range.localeCompare("1d") == 0) buttondia(my_room,"d");
+          if (dia_range.localeCompare("1m") == 0) buttondia(my_room,"m");
+          if (dia_range.localeCompare("1y") == 0) buttondia(my_room,"y");
+          if (dia_range.localeCompare("10y") == 0) buttondia(my_room,"c");
         }
         if (dev_typ.localeCompare("VD") == 0) {
-          $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&ymin=0&graph=line&sensor1legend="+p6+"'>");
+          $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?sizex="+w+"&sizey=370&range=1d"+dia_vd_day_str+"'>");
+          buttondia(my_room,"d");
         }
         if (dev_typ.localeCompare("MD") == 0) {
-          $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p3+"'>");
+          $("#r" + my_room + "dx").html("<img id='r" + my_room + "dia' src='/content/diagramm.php?sizex="+w+"&sizey=370&range=1d&graph=line" + dia_md_day_str + "'>");
+          buttondia(my_room,"d");
         }
 // Ende: Initiales Diagramm
 // Initiale Schalterfarben
-        buttondia(my_room,"d");
         $("#r" + my_room + "a1").show();
-        $("#r" + my_room + "_buf1").html("1d");
-        $("#r" + my_room + "_buf2").html("0");
 // ENDE Initiale Schalterfarben
+// Navigationstaste 1 Tag
         $("#r" + my_room + "_nav1").click(function(){
-          $("#r" + my_room + "_buf1").html("1d");
-          $("#r" + my_room + "_buf2").html("0");
           buttondia(my_room, "d");
-// Diagramm nach Klick auf den "1 Tag" Button
           if (dev_typ.localeCompare("DG") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p4);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range=1d"+dia_dg_str);
           }
           if (dev_typ.localeCompare("VD") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p6);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range=1d"+dia_vd_day_str);
           }
           if (dev_typ.localeCompare("MD") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range=1d&graph=line&sensor1legend="+p3);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range=1d"+dia_md_day_str);
           }
-// Ende: Diagramm nach Klick auf den "1 Tag" Button
-// Schalterfarben 1 Tag
           buttondia(my_room,"d");
           but_color_old = but_active;
-// Ende: Schalterfarben 1 Tag
         }).on( "mouseover", function() {
           but_color_old = $(this).css("background");
           $(this).css("background", but_handover);
         }).on( "mouseout", function() {
           $(this).css("background", but_color_old);
         }).css("cursor","pointer");
+// Navigationstaste 1 Monat
         $("#r" + my_room + "_nav2").click(function(){
-          $("#r" + my_room + "_buf1").html("1m");
-          $("#r" + my_room + "_buf2").html("0");
           buttondia(my_room, "m");
-// Diagramm nach Klick auf den "1 Monat" Button
           if (dev_typ.localeCompare("DG") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range=1m&graph="+p3+"&sensor1legend="+p4);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range=1m"+dia_dg_str);
           }
           if (dev_typ.localeCompare("VD") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&sum=y&range=1m&graph=bar&sensor1legend="+p7);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sum=y&sizey=370&range=1m"+dia_vd_mon_str);
           }
           if (dev_typ.localeCompare("MD") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&range=1m&graph="+p5+"&sensor1legend="+p4);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range=1m"+dia_md_mon_str);
           }
-// Ende: Diagramm nach Klick auf den "1 Monat" Button
-// Schalterfarben 1 Monat
+          buttondia(my_room,"m");
           but_color_old = but_active;
-// Ende: Schalterfarben 1 Monat
         }).on( "mouseover", function() {
           but_color_old = $(this).css("background-color");
           $(this).css("background-color", but_handover);
         }).on( "mouseout", function() {
           $(this).css("background-color", but_color_old);
         }).css("cursor","pointer");
+// Navigationstaste 1 Jahr
         $("#r" + my_room + "_nav3").click(function(){
-          $("#r" + my_room + "_buf1").html("1y");
-          $("#r" + my_room + "_buf2").html("0");
           buttondia(my_room, "y");
           if (dev_typ.localeCompare("DG") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?&sensor1="+p1+"&sizex="+w+"&sizey=370&range=1y&graph="+p3+"&sensor1legend="+p4);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range=1y"+dia_dg_str);
           }
           if (dev_typ.localeCompare("VD") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&sum=y&range=1y&graph=bar&sensor1legend="+p7);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sum=y&sizey=370&range=1y"+dia_vd_mon_str);
           }
           if (dev_typ.localeCompare("MD") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&range=1y&graph="+p5+"&sensor1legend="+p4);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range=1y"+dia_md_mon_str);
           }
-// Schalterfarben 1 Jahr
           buttondia(my_room,"y");
           but_color_old = but_active;
-// Ende: Schalterfarben 1 Jahr
         }).on( "mouseover", function() {
           but_color_old = $(this).css("background-color");
           $(this).css("background-color", but_handover);
         }).on( "mouseout", function() {
           $(this).css("background-color", but_color_old);
         }).css("cursor","pointer");
+// Navigationstaste 10 Jahre
         $("#r" + my_room + "_nav4").click(function() {
-          $("#r" + my_room + "_buf1").html("10y");
-          $("#r" + my_room + "_buf2").html("0");
           buttondia(my_room, "c");
           if (dev_typ.localeCompare("DG") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range=10y&graph="+p3+"&sensor1legend="+p4);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range=10y"+dia_dg_str);
           }
           if (dev_typ.localeCompare("VD") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&sum=y&range=10y&graph=bar&sensor1legend="+p7);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sum=y&sizey=370&range=10y"+dia_vd_mon_str);
           }
           if (dev_typ.localeCompare("MD") == 0) {
-            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&range=10y&graph="+p5+"&sensor1legend="+p4);
+            $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range=10y"+dia_md_mon_str);
           }
-// Schalterfarben 10 Jahre
           buttondia(my_room,"c");
           but_color_old = but_active;
-// Ende: Schalterfarben 10 Jahre
         }).on( "mouseover", function() {
           but_color_old = $(this).css("background-color");
           $(this).css("background-color", but_handover);
         }).on( "mouseout", function() {
           $(this).css("background-color", but_color_old);
         }).css("cursor","pointer");
+// Navigation mittels Pfeiltasten
+// 1) Pfeil nach links
         $("#r" + my_room + "_nav5").click(function() {
-          var offset=parseInt($("#r" + my_room + "_buf2").html()) +1;
-          var ts=$("#r" + my_room + "_buf1").html();
+          var offset = parseInt($("#r" + my_room + "_buf2").html()) +1;
+          var ts = $("#r" + my_room + "_buf1").html();
           $("#r" + my_room + "_nav6_img").attr("src","/img/arrow_right.gif");
           $("#r" + my_room + "_buf2").html(offset);
           if ( ts.localeCompare("1d") == 0 ) {
             if (dev_typ.localeCompare("DG") == 0) {
-              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p4);
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+dia_dg_str);
             }
             if (dev_typ.localeCompare("VD") == 0) {
-              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&sum=y&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p6);
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sum=y&sizey=370&range="+ts+"&offset="+offset+dia_vd_day_str);
             }
             if (dev_typ.localeCompare("MD") == 0) {
-              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p3);
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+dia_md_day_str);
             }
           } else {
             if (dev_typ.localeCompare("DG") == 0) {
-              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph="+p3+"&sensor1legend="+p4);
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+dia_dg_str);
             }
             if (dev_typ.localeCompare("VD") == 0) {
-              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&sum=y&range="+ts+"&offset="+offset+"&graph=bar&sensor1legend="+p7);
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sum=y&sizey=370&range="+ts+"&offset="+offset+dia_vd_mon_str);
             }
             if (dev_typ.localeCompare("MD") == 0) {
-              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph="+p5+"&sensor1legend="+p4);
+              $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+dia_md_mon_str);
             }
           }
         }).on( "mouseover", function() {
@@ -501,30 +588,32 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
         }).on( "mouseout", function() {
           $(this).css("background-color", but_color_old);
         }).css("cursor","pointer");
+// Navigation mittels Pfeiltasten
+// 1) Pfeil nach links
         $("#r" + my_room + "_nav6").click(function() {
           if (parseInt($("#r" + my_room + "_buf2").html()) > 0) {
-            var offset=parseInt($("#r" + my_room + "_buf2").html()) -1;
-            var ts=$("#r" + my_room + "_buf1").html();
+            var offset = parseInt($("#r" + my_room + "_buf2").html()) -1;
+            var ts = $("#r" + my_room + "_buf1").html();
             $("#r" + my_room + "_buf2").html(offset);
             if ( ts.localeCompare("1d") == 0 ) {
               if (dev_typ.localeCompare("DG") == 0) {
-                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p4);
+                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+dia_dg_str);
               }
               if (dev_typ.localeCompare("VD") == 0) {
-                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&sum=y&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p6);
+                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sum=y&sizey=370&range="+ts+"&offset="+offset+dia_vd_day_str);
               }
               if (dev_typ.localeCompare("MD") == 0) {
-                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph=line&sensor1legend="+p3);
+                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+dia_md_day_str);
               }
             } else {
               if (dev_typ.localeCompare("DG") == 0) {
-                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p1+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph="+p3+"&sensor1legend="+p4);
+                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+dia_dg_str);
               }
               if (dev_typ.localeCompare("VD") == 0) {
-                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&sum=y&range="+ts+"&offset="+offset+"&graph=bar&sensor1legend="+p7);
+                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sum=y&sizey=370&range="+ts+"&offset="+offset+dia_vd_mon_str);
               }
               if (dev_typ.localeCompare("MD") == 0) {
-                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+"&graph="+p5+"&sensor1legend="+p4);
+                $("#r" + my_room + "dia").attr("src","/content/diagramm.php?sizex="+w+"&sizey=370&range="+ts+"&offset="+offset+dia_md_mon_str);
               }
             }
           } else {
@@ -536,6 +625,7 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
         }).on( "mouseout", function() {
           $(this).css("background-color", but_color_old);
         }).css("cursor","pointer");
+// ENDE Navigation mittels Pfeiltasten
         if ( window.innerWidth < 600 ) {
           $("#r" + my_room + "ds").css("height","130px");
           $("#r" + my_room + "_nav4").removeClass("nav4").addClass("nav4_mobile");
@@ -613,9 +703,7 @@ function add_device(dev_typ, dev_name, fhem_dev, einheit, p1, p2, p3, p4, p5, p6
         $("#r" + my_room + "sws2").append("<button type='button' id='r" + my_room + "sws2b' class='button_akt'>Auto</button>");
         $("#r" + my_room + "sws3").append("<button type='button' id='r" + my_room + "sws3b' class='button_akt'>Ein</button>");
           //Diagrammfeld aufbauen
-        if (parseInt(p2) > 0) {
-          $("#r" + my_room + "swd").html("<img src='/content/diagramm.php?sensor1="+p2+"&sizex="+w+"&sizey=100&range=1d&graph=bar&sensor1color=#000000'>");
-        }
+        $("#r" + my_room + "swd").html("<img src='/content/diagramm.php?sizex="+w+dia_sno_mon_str+"&sizey=100&range=1d&graph=bar&sensor1color=#000000'>");
           //Abfrage des Hauptschalters und Einstellung der Schalter
         device_switch_get_state(my_room, my_dev, p1, fhem_dev);
           //Click Funktionen
@@ -645,6 +733,7 @@ function buttondia(room,timeline) {
   if ( timeline == "d" ) {
     $("#r" + room + "dh1").css("background",but_active);
     $("#r" + room + "_nav1").css("background",but_active);
+    $("#r" + room + "_buf1").html("1d");
   } else {
     $("#r" + room + "dh1").css("background",but_passive);
     $("#r" + room + "_nav1").css("background",but_passive);
@@ -652,6 +741,7 @@ function buttondia(room,timeline) {
   if ( timeline == "m" ) {
     $("#r" + room + "dh2").css("background",but_active);
     $("#r" + room + "_nav2").css("background",but_active);
+    $("#r" + room + "_buf1").html("1m");
   } else {
     $("#r" + room + "dh2").css("background",but_passive);
     $("#r" + room + "_nav2").css("background",but_passive);
@@ -659,13 +749,16 @@ function buttondia(room,timeline) {
   if ( timeline == "y" ) {
     $("#r" + room + "dh3").css("background",but_active);
     $("#r" + room + "_nav3").css("background",but_active);
+    $("#r" + room + "_buf1").html("1y");
   } else {
     $("#r" + room + "dh3").css("background",but_passive);
     $("#r" + room + "_nav3").css("background",but_passive);
   }
   if ( timeline == "c" ) {
     $("#r" + room + "_nav4").css("background",but_active);
+    $("#r" + room + "_buf1").html("10y");
   } else {
     $("#r" + room + "_nav4").css("background",but_passive);
   }
+  $("#r" + room + "_buf2").html("0");
 }
